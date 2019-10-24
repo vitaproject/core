@@ -1,62 +1,78 @@
 
+# cython: language_level=3
+
 import numpy as np
-from raysect.core import World, Point3D
-from cherab.core.math.function import VectorFunction3D
+cimport numpy as np
+from raysect.core cimport Vector3D
 
 
-class Method:
+cdef class Method:
 
-    def step(self, point, field, *args):
+    cdef Point3D step(self, Point3D point, VectorFunction3D field):
         raise NotImplementedError("The inheriting class must implement this step function.")
 
 
-class Euler(Method):
+cdef class Euler(Method):
 
     def __init__(self, step_size=1E-6):
         self.step_size = step_size
 
-    def step(self, point, field):
+    cdef Point3D step(self, Point3D point, VectorFunction3D field):
 
-        vector = field(point.x, point.y, point.z).normalise()
+        cdef:
+            Vector3D vector
 
-        new_point = point + vector * self.step_size
+        vector = field.evaluate(point.x, point.y, point.z).normalise()
+        return point.add(vector.mul(self.step_size))
 
-        return new_point
 
-
-class RK2(Method):
+cdef class RK2(Method):
 
     def __init__(self, step_size=1E-6):
         self.step_size = step_size
 
-    def step(self, point, field):
+    cdef Point3D step(self, Point3D point, VectorFunction3D field):
 
-        vector = field(point.x, point.y, point.z).normalise()
+        cdef:
+            Point3D p2
+            Vector3D v1, v2
 
-        point_star = point + vector * self.step_size
-        new_vector = field(point_star.x, point_star.y, point_star.z).normalise()
+        v1 = field.evaluate(point.x, point.y, point.z).normalise()
 
-        new_point = point + (vector + new_vector) * 0.5 * self.step_size
+        p2 = point.add(v1.mul(self.step_size))
+        v2 = field.evaluate(p2.x, p2.y, p2.z).normalise()
 
-        return new_point
-
-
-class RK4(Method):
-
-    pass
+        return point.add(v1.add(v2).mul(0.5 * self.step_size))
 
 
-class FieldlineTracer:
+# class RK4(Method):
+#
+#     pass
+
+
+cdef class FieldlineTracer:
 
     def __init__(self, field, method=Euler()):
 
         if not issubclass(type(field), VectorFunction3D):
             raise TypeError('The specified field must be of type VectorFunction3D().')
 
+        if not isinstance(method, Method):
+            raise TypeError('The specified field line tracing method variable must be of type Method().')
+
         self.field = field
         self.method = method
 
-    def trace(self, world, seed_point, max_length=100, save_trajectory=False, save_resolution=0.001):
+    cpdef tuple trace(self, World world, Point3D seed_point, double max_length=100,
+                      bint save_trajectory=False, double save_resolution=0.001):
+
+        cdef:
+            list trajectory
+            Point3D last_point, last_saved_point, new_point, end_point, position
+            VectorFunction3D field
+            double distance_travelled
+            int num_segments, ith_position
+            np.ndarray trajectory_array
 
         if not isinstance(world, World):
             raise TypeError('The world variable must be a Raysect scene-graph of type World().')

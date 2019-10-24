@@ -1,2 +1,2 @@
 
-from .fieldline_tracer import FieldlineTracer, Euler, RK2
+from .tracer import FieldlineTracer, Euler, RK2
