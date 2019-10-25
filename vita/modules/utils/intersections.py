@@ -37,14 +37,14 @@ def getRectangleIntersections(func1, func2):
     n2 = len(x2)-1
     
     if n1 >= n2:
-        X1 = np.c_[x1[:-1],x1[1:]]
-        Y1 = np.c_[y1[:-1],y1[1:]]
-        ifun1 = []
-        ifun2 = []
-        min_x1 = X1.min(axis=1)
-        max_x1 = X1.max(axis=1)
-        min_y1 = Y1.min(axis=1)
-        max_y1 = Y1.max(axis=1)
+        x1_segment = np.c_[x1[:-1],x1[1:]]
+        y1_segment = np.c_[y1[:-1],y1[1:]]
+        intersect_fun1 = []
+        intersect_fun2 = []
+        min_x1 = x1_segment.min(axis=1)
+        max_x1 = x1_segment.max(axis=1)
+        min_y1 = y1_segment.min(axis=1)
+        max_y1 = y1_segment.max(axis=1)
         for k in range(n2):
             k1 = k + 1
             intersect = np.where(\
@@ -54,24 +54,24 @@ def getRectangleIntersections(func1, func2):
                                  & (max_y1 >= min(y2[k],y2[k1])))
             intersect = np.array(intersect)
             if intersect.size != 0:
-                ifun1.append(intersect[0])
-                ifun2.append(np.repeat(k,len(intersect[0])))
+                intersect_fun1.append(intersect[0])
+                intersect_fun2.append(np.repeat(k,len(intersect[0])))
 
-        if (len(ifun1) and len(ifun2))>0:
-            i = np.concatenate(ifun1)
-            j = np.concatenate(ifun2)
+        if (len(intersect_fun1) and len(intersect_fun2))>0:
+            i = np.concatenate(intersect_fun1)
+            j = np.concatenate(intersect_fun2)
         else:
             i = []
             j = []
     else:
-        X2 = np.c_[x2[:-1],x2[1:]]
-        Y2 = np.c_[y2[:-1],y2[1:]]
-        ifun1 = []
-        ifun2 = []
-        min_x2 = X2.min(axis=1)
-        max_x2 = X2.max(axis=1)
-        min_y2 = Y2.min(axis=1)
-        max_y2 = Y2.max(axis=1)
+        x2_segment = np.c_[x2[:-1],x2[1:]]
+        y2_segment = np.c_[y2[:-1],y2[1:]]
+        intersect_fun1 = []
+        intersect_fun2 = []
+        min_x2 = x2_segment.min(axis=1)
+        max_x2 = x2_segment.max(axis=1)
+        min_y2 = y2_segment.min(axis=1)
+        max_y2 = y2_segment.max(axis=1)
         for k in range(n1):
             k1 = k + 1
             intersect = np.where(\
@@ -81,12 +81,12 @@ def getRectangleIntersections(func1, func2):
                                  & (max_y2 >= min(y1[k],y1[k1])))
             intersect = np.array(intersect)
             if intersect.size != 0:
-                ifun2.append(intersect[0])
-                ifun1.append(np.repeat(k,len(intersect[0])))
+                intersect_fun2.append(intersect[0])
+                intersect_fun1.append(np.repeat(k,len(intersect[0])))
         
-        if (len(ifun1) and len(ifun2))>0:
-            i = np.concatenate(ifun1) 
-            j = np.concatenate(ifun2)       
+        if (len(intersect_fun1) and len(intersect_fun2))>0:
+            i = np.concatenate(intersect_fun1) 
+            j = np.concatenate(intersect_fun2)       
         else:
             i = []
             j = []
@@ -227,7 +227,7 @@ if __name__ == '__main__':
 
     # a piece of a prolate cycloid, and am going to find
     a, b = 1, 2
-    phi1 = np.linspace(3, 10, 2000)
+    phi1 = np.linspace(3, 10, 1000)
     phi2 = np.linspace(3, 10, 2000)
     x1 = a*phi1 - b*np.sin(phi1)
     y1 = a - b*np.cos(phi1)
