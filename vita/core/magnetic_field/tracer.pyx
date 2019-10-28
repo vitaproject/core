@@ -4,6 +4,8 @@
 import numpy as np
 cimport numpy as np
 from raysect.core cimport Vector3D
+from raysect.core.ray cimport Ray as CoreRay
+from raysect.core.intersection cimport Intersection
 
 
 cdef class Method:
@@ -68,11 +70,13 @@ cdef class FieldlineTracer:
 
         cdef:
             list trajectory
-            Point3D last_point, last_saved_point, new_point, end_point, position
+            Point3D last_point, last_saved_point, new_point, end_point, position, hit_point
+            Vector3D direction
             VectorFunction3D field
-            double distance_travelled
+            double distance_travelled, segment_distance
             int num_segments, ith_position
             np.ndarray trajectory_array
+            Intersection intersection
 
         if not isinstance(world, World):
             raise TypeError('The world variable must be a Raysect scene-graph of type World().')
@@ -90,13 +94,31 @@ cdef class FieldlineTracer:
         while distance_travelled < max_length:
 
             new_point = self.method.step(last_point, field)
-            distance_travelled += last_point.distance_to(new_point)
 
-            if save_trajectory and last_saved_point.distance_to(new_point) > save_resolution:
-                last_saved_point = new_point
-                trajectory.append(last_saved_point)
+            segment_distance = last_point.distance_to(new_point)
+            direction = last_point.vector_to(new_point).normalise()
 
-            last_point = new_point
+            intersection = world.hit(CoreRay(new_point, direction, max_distance=segment_distance))
+
+            if intersection is not None:
+
+                hit_point = intersection.hit_point.transform(intersection.primitive_to_world)
+                distance_travelled += segment_distance
+
+                if save_trajectory:
+                    trajectory.append(hit_point.copy())
+
+                break
+
+            else:
+
+                distance_travelled += last_point.distance_to(new_point)
+
+                if save_trajectory and last_saved_point.distance_to(new_point) > save_resolution:
+                    last_saved_point = new_point
+                    trajectory.append(last_saved_point)
+
+                last_point = new_point
 
         end_point = last_point
 

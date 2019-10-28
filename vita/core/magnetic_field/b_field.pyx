@@ -51,5 +51,3 @@ cdef class MagneticField(VectorFunction3D):
 
         # TODO - replace this transform with direct manipulation
         return b_vector.transform(rotate_z(theta))
-
-
