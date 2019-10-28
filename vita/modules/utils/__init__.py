@@ -1,0 +1,2 @@
+
+from .intersections import intersection
