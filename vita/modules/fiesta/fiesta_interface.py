@@ -15,7 +15,7 @@ import scipy.io as sio
 # Other imports
 from intersections import intersection
 
-class FieldLines(object):
+class Fiesta(object):
     '''
     Class for tracing the magnetic field lines given a FIESTA equlibrium
     
