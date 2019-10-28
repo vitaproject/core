@@ -13,17 +13,28 @@ from matplotlib import pyplot as plt
 import numpy as np
 import scipy.io as sio
 # Other imports
-from intersections import intersection
+from vita.core import MagneticField
+from vita.modules.utils import intersection
+
 
 class Fiesta(object):
     '''
     Class for tracing the magnetic field lines given a FIESTA equlibrium
+
+    :param str filename: the path to the FIESTA MATLAB save file.
+
+    :ivar VectorFunction3D b_field: A 3D vector function of the magnetic field .
 
     member functions:
     '''
     def __init__(self, filename):
         self.filename = filename
         self.readFiestaModel()
+
+    @property
+    def b_field(self):
+        return MagneticField(self.r, self.z,
+                             np.swapaxes(self.Br, 0, 1), np.swapaxes(self.Bz, 0, 1), np.swapaxes(self.Bphi, 0, 1))
 
     def readFiestaModel(self):
         '''
