@@ -66,6 +66,7 @@ class Fiesta(object):
         self.psi_n = mat['psi_n']
         self.Br = mat['Br']
         self.Bz = mat['Bz']
+        self.Bphi = mat['Bphi']
         self.irod = mat['irod']
 
     def getMidplaneLCFS(self, psi_p=1.0):
