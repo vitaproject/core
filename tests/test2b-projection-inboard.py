@@ -18,10 +18,10 @@ if str(path_utils) not in sys.path:
     sys.path.append(str(path_utils)) # Adds higher directory to python modules path.
 print(sys.path)
 
-from modelFiesta.fiestaInterface import FieldLines
+from fiesta.fiesta_interface import Fiesta
 
 filepath = "T:\\USERS\\J_Wood\\STF1_equilibriums\\export_R200.mat"
-field_line = FieldLines(filepath)
+field_line = Fiesta(filepath)
 R = field_line.getMidplaneLCFS()
 r0 = 0.6
 rf = 1.

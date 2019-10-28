@@ -18,11 +18,11 @@ path_utils = pathlib.Path('../vita/modules/utils')
 if str(path_utils) not in sys.path:
     sys.path.append(str(path_utils)) # Adds higher directory to python modules path.
 
-from modelFiesta.fiestaInterface import FieldLines
+from fiesta.fiesta_interface import Fiesta
 from intersections import intersection
 
 filepath = "T:\\USERS\\J_Wood\\STF1_equilibriums\\export_R200.mat"
-field_line = FieldLines(filepath)
+field_line = Fiesta(filepath)
 R = field_line.getMidplaneLCFS()
 r0 = 0.85
 rf = 0.95

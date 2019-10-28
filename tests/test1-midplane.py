@@ -11,7 +11,7 @@ path_modules = pathlib.Path('../vita/modules')
 if str(path_modules) not in sys.path:
     sys.path.append(str(path_modules)) # Adds higher directory to python modules path.
 
-from modelSOLHeatFlux.eich import Eich
+from sol_heat_flux.eich import Eich
 import numpy as np
 
 footprint = Eich(2.5,0.0005)# lambda_q=2.5, S=0.5
