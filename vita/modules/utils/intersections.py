@@ -11,93 +11,93 @@ Based on a MatLab script by Douglas Schwarz found at
 import numpy as np
 import matplotlib.pyplot as plt
 
-def getRectangleIntersections(func1, func2):
+def _get_rectangle_intersections(func1, func2):
     '''
     Function dividing two functions of [x,y] coordinates into rectangles
     corresponding to the number of elements in each function and evaluating
     the indices where the rectangles intersect.
-    
+
     input: func1, a numpy array with the two numpy arrays corresponding to x and y
                   for the first function
            func2, a numpy array with the two numpy arrays corresponding to x and y
                   for the second function
-                  
-    return: (i, j), a tuple where 
+
+    return: (i, j), a tuple where
                     i is a numpy array with the indices for the
                     intersections in the first function and
                     j is a numpy array with the indices for the
                     intersections in the second function
     '''
-    x1 = func1[0,:]
-    y1 = func1[1,:]
-    x2 = func2[0,:]
-    y2 = func2[1,:]
-    
-    n1 = len(x1)-1
-    n2 = len(x2)-1
-    
-    if n1 >= n2:
-        x1_segment = np.c_[x1[:-1],x1[1:]]
-        y1_segment = np.c_[y1[:-1],y1[1:]]
+    x_1 = func1[0, :]
+    y_1 = func1[1, :]
+    x_2 = func2[0, :]
+    y_2 = func2[1, :]
+
+    n_1 = len(x_1)-1
+    n_2 = len(x_2)-1
+
+    if n_1 >= n_2:
+        x1_segment = np.c_[x_1[:-1], x_1[1:]]
+        y1_segment = np.c_[y_1[:-1], y_1[1:]]
         intersect_fun1 = []
         intersect_fun2 = []
         min_x1 = x1_segment.min(axis=1)
         max_x1 = x1_segment.max(axis=1)
         min_y1 = y1_segment.min(axis=1)
         max_y1 = y1_segment.max(axis=1)
-        for k in range(n2):
-            k1 = k + 1
+        for k in range(n_2):
+            k_1 = k + 1
             intersect = np.where(\
-                                 (min_x1 <= max(x2[k],x2[k1]))\
-                                 & (max_x1 >= min(x2[k],x2[k1]))\
-                                 & (min_y1 <= max(y2[k],y2[k1]))\
-                                 & (max_y1 >= min(y2[k],y2[k1])))
+                                 (min_x1 <= max(x_2[k], x_2[k_1]))\
+                                 & (max_x1 >= min(x_2[k], x_2[k_1]))\
+                                 & (min_y1 <= max(y_2[k], y_2[k_1]))\
+                                 & (max_y1 >= min(y_2[k], y_2[k_1])))
             intersect = np.array(intersect)
             if intersect.size != 0:
                 intersect_fun1.append(intersect[0])
-                intersect_fun2.append(np.repeat(k,len(intersect[0])))
+                intersect_fun2.append(np.repeat(k, len(intersect[0])))
 
-        if (len(intersect_fun1) and len(intersect_fun2))>0:
+        if (len(intersect_fun1) and len(intersect_fun2)) > 0:
             i = np.concatenate(intersect_fun1)
             j = np.concatenate(intersect_fun2)
         else:
             i = []
             j = []
     else:
-        x2_segment = np.c_[x2[:-1],x2[1:]]
-        y2_segment = np.c_[y2[:-1],y2[1:]]
+        x2_segment = np.c_[x_2[:-1], x_2[1:]]
+        y2_segment = np.c_[y_2[:-1], y_2[1:]]
         intersect_fun1 = []
         intersect_fun2 = []
         min_x2 = x2_segment.min(axis=1)
         max_x2 = x2_segment.max(axis=1)
         min_y2 = y2_segment.min(axis=1)
         max_y2 = y2_segment.max(axis=1)
-        for k in range(n1):
-            k1 = k + 1
+        for k in range(n_1):
+            k_1 = k + 1
             intersect = np.where(\
-                                 (min_x2 <= max(x1[k],x1[k1]))\
-                                 & (max_x2 >= min(x1[k],x1[k1]))\
-                                 & (min_y2 <= max(y1[k],y1[k1]))\
-                                 & (max_y2 >= min(y1[k],y1[k1])))
+                                 (min_x2 <= max(x_1[k], x_1[k_1]))\
+                                 & (max_x2 >= min(x_1[k], x_1[k_1]))\
+                                 & (min_y2 <= max(y_1[k], y_1[k_1]))\
+                                 & (max_y2 >= min(y_1[k], y_1[k_1])))
             intersect = np.array(intersect)
             if intersect.size != 0:
                 intersect_fun2.append(intersect[0])
-                intersect_fun1.append(np.repeat(k,len(intersect[0])))
-        
-        if (len(intersect_fun1) and len(intersect_fun2))>0:
-            i = np.concatenate(intersect_fun1) 
-            j = np.concatenate(intersect_fun2)       
-        else:
-            i = []
-            j = []
+                intersect_fun1.append(np.repeat(k, len(intersect[0])))
 
-    return (i,j)
+        if (len(intersect_fun1) and len(intersect_fun2)) > 0:
+            i = np.concatenate(intersect_fun1)
+            j = np.concatenate(intersect_fun2)
+        else:
+            i = np.array([])
+            j = np.array([])
+
+    return (i, j)
 
 def intersection(func1, func2, robust=True):
     '''
     Function for calculated the intersection between two curves.
     Computes the (x,y) locations where two curves intersect.
-    
+
     The theory is;
     Given two line segments, L1 and L2,
 
@@ -128,99 +128,101 @@ def intersection(func1, func2, robust=True):
     Once we have our solution we just have to look at t1 and t2 to determine
     whether L1 and L2 intersect.  If 0 <= t1 < 1 and 0 <= t2 < 1 then the two
     line segments cross and we can include (x0,y0) in the output.
-    
+
     To avoid having to do this for every line segment, it is checked if the line
     segments can possibly intersect by dividing line segments into rectangles
     and testing for an overlap between the triangles.
-    
+
     input: func1, a numpy array with the two numpy arrays corresponding to x and y
                   for the first function
            func2, a numpy array with the two numpy arrays corresponding to x and y
                   for the second function
-            
+
     return: x0,   a numpy array with the x positions of the intersections
             y0,   a numpy array with the y positions of the intersections
     '''
-    (i, j) = getRectangleIntersections(func1,func2)
-    
-    if len(i)>0:
-        x1 = func1[0,:]
-        y1 = func1[1,:]
-        x2 = func2[0,:]
-        y2 = func2[1,:]
-    
-        dxy1=np.diff(np.c_[x1,y1],axis=0)
-        dxy2=np.diff(np.c_[x2,y2],axis=0)
-        
-        remove = np.isfinite(np.sum(dxy1[i,:] + dxy2[j,:],axis=1))
+    (i, j) = _get_rectangle_intersections(func1, func2)
+
+    if not i.size == 0:
+        x_1 = func1[0, :]
+        y_1 = func1[1, :]
+        x_2 = func2[0, :]
+        y_2 = func2[1, :]
+
+        dxy1 = np.diff(np.c_[x_1, y_1], axis=0)
+        dxy2 = np.diff(np.c_[x_2, y_2], axis=0)
+
+        remove = np.isfinite(np.sum(dxy1[i, :] + dxy2[j, :], axis=1))
         i = i[remove]
         j = j[remove]
 
-        n = len(i)
-        T = np.zeros((4, n))
-        A = np.zeros((4, 4, n))
-        A[0:2, 2, :] = -1
-        A[2:4, 3, :] = -1
-        A[0::2, 0, :] = dxy1[i, :].T
-        A[1::2, 1, :] = dxy2[j, :].T
-    
-        B=np.zeros((4,n))
-        B[0, :] = -x1[i].ravel()
-        B[1, :] = -x2[j].ravel()
-        B[2, :] = -y1[i].ravel()
-        B[3, :] = -y2[j].ravel()
-        
-        if robust:
-            overlap = np.zeros((n), dtype=bool)
-            for ii in range(n):
-                try:
-                    T[:,ii]=np.linalg.solve(A[:,:,ii],B[:,ii])
-                except:
-                    T[1,ii]=np.nan
-                    eps = np.finfo(float).eps
-                    g = []
-                    g.append(dxy1[i[ii],:])
-                    g.append(func2[:,j[ii]]-func1[:,j[ii]])
-                    g = np.array(g)
-                    overlap[ii] = 1./np.linalg.cond(g) < eps
+        n_intersect = len(i)
+        vector_t = np.zeros((4, n_intersect))
+        matrix_a = np.zeros((4, 4, n_intersect))
+        matrix_a[0:2, 2, :] = -1
+        matrix_a[2:4, 3, :] = -1
+        matrix_a[0::2, 0, :] = dxy1[i, :].T
+        matrix_a[1::2, 1, :] = dxy2[j, :].T
 
-            in_range = (T[0,:] >=0) & (T[1,:] >=0) & (T[0,:] <=1) & (T[1,:] <=1)
-        
+        vector_b = np.zeros((4, n_intersect))
+        vector_b[0, :] = -x_1[i].ravel()
+        vector_b[1, :] = -x_2[j].ravel()
+        vector_b[2, :] = -y_1[i].ravel()
+        vector_b[3, :] = -y_2[j].ravel()
+
+        if robust:
+            overlap = np.zeros((n_intersect), dtype=bool)
+            for k in range(n_intersect):
+                try:
+                    vector_t[:, k] = np.linalg.solve(matrix_a[:, :, k], vector_b[:, k])
+                except:
+                    vector_t[1, k] = np.nan
+                    eps = np.finfo(float).eps
+                    condition_matrix = []
+                    condition_matrix.append(dxy1[i[k], :])
+                    condition_matrix.append(func2[:, j[k]]-func1[:, j[k]])
+                    condition_matrix = np.array(condition_matrix)
+                    overlap[k] = 1./np.linalg.cond(condition_matrix) < eps
+
+            in_range = (vector_t[0, :] >= 0) & (vector_t[1, :] >= 0)\
+                        & (vector_t[0, :] <= 1) & (vector_t[1, :] <= 1)
+
             if np.any(overlap):
-                ia = i[overlap];
-                ja = j[overlap];
+                i_a = i[overlap]
+                j_a = j[overlap]
                 # set x0 and y0 to middle of overlapping region.
-                T[2,overlap] = (np.max(
-                                       (np.min((x1[ia],x1[ia+1]),axis=0),
-                                        np.min((x2[ja],x2[ja+1]),axis=0)),axis=0) 
-                                + np.min(
-                                       (np.max((x1[ia],x1[ia+1]),axis=0),
-                                        np.max((x2[ja],x2[ja+1]),axis=0)),axis=0)
-                                )/2
-                T[3,overlap] = (np.max(
-                                       (np.min((y1[ia],y1[ia+1]),axis=0),
-                                        np.min((y2[ja],y2[ja+1]),axis=0)),axis=0)
-                                + np.min(
-                                       (np.max((y1[ia],y1[ia+1]),axis=0),
-                                        np.max((y2[ja],y2[ja+1]),axis=0)),axis=0)
-                                )/2
+                vector_t[2, overlap] = (np.max(
+                    (np.min((x_1[i_a], x_1[i_a+1]), axis=0),
+                     np.min((x_2[j_a], x_2[j_a+1]), axis=0)), axis=0)
+                                        + np.min(
+                                            (np.max((x_1[i_a], x_1[i_a+1]), axis=0),
+                                             np.max((x_2[j_a], x_2[j_a+1]), axis=0)), axis=0)
+                                        )/2
+                vector_t[3, overlap] = (np.max(
+                    (np.min((y_1[i_a], y_1[i_a+1]), axis=0),
+                     np.min((y_2[j_a], y_2[j_a+1]), axis=0)), axis=0)
+                                        + np.min(
+                                            (np.max((y_1[i_a], y_1[i_a+1]), axis=0),
+                                             np.max((y_2[j_a], y_2[j_a+1]), axis=0)), axis=0)
+                                        )/2
                 selected = in_range | overlap
             else:
-                selected = in_range;
-            xy0=T[2:,selected]
+                selected = in_range
+            xy0 = vector_t[2:, selected]
         else:
-             for ii in range(n):
+            for k in range(n_intersect):
                 try:
-                    T[:,ii]=np.linalg.solve(A[:,:,ii],B[:,ii])
+                    vector_t[:, k] = np.linalg.solve(matrix_a[:, :, k], vector_b[:, k])
                 except:
-                    T[:,ii]=np.nan
-             in_range= (T[0,:] >=0) & (T[1,:] >=0) & (T[0,:] <=1) & (T[1,:] <=1)
-             xy0=T[2:,in_range]
+                    vector_t[:, k] = np.nan
+            in_range = (vector_t[0, :] >= 0) & (vector_t[1, :] >= 0)\
+                        & (vector_t[0, :] <= 1) & (vector_t[1, :] <= 1)
+            xy0 = vector_t[2:, in_range]
 
-        xy0=xy0.T
-        x0 = xy0[:,0]
-        y0 = xy0[:,1]
-        return x0, y0
+        xy0 = xy0.T
+        x_0 = xy0[:, 0]
+        y_0 = xy0[:, 1]
+        return x_0, y_0
     else:
         print("Warning: Curves do not overlap")
         return np.nan, np.nan
@@ -229,21 +231,20 @@ def intersection(func1, func2, robust=True):
 if __name__ == '__main__':
 
     # a piece of a prolate cycloid, and am going to find
-    a, b = 1, 2
-    phi1 = np.linspace(3, 10, 1000)
-    phi2 = np.linspace(3, 10, 2000)
-    x1 = a*phi1 - b*np.sin(phi1)
-    y1 = a - b*np.cos(phi1)
-    
-    
-    x2=a*phi1 - b*np.sin(phi1)
-    y2= a - b*np.cos(phi1) + 0.1
+    A, B = 1, 2
+    PHI_1 = np.linspace(3, 10, 1000)
+    PHI_2 = np.linspace(3, 10, 2000)
+    X_1 = A*PHI_1 - B*np.sin(PHI_1)
+    Y_1 = A - B*np.cos(PHI_1)
+
+    X_2 = A*PHI_1 - B*np.sin(PHI_1) + 0.1
+    Y_2 = A - B*np.cos(PHI_1)
 #    x2=phi2
 #    y2=np.sin(phi2)+2
-    func1 = np.array([x1, y1])
-    func2 = np.array([x2, y2])
-    x, y = intersection(func1,func2,False)
-    plt.plot(x1,y1,c='r')
-    plt.plot(x2,y2,c='g')
-    plt.plot(x,y,'*k')
+    FUNC_1 = np.array([X_1, Y_1])
+    FUNC_2 = np.array([X_2, Y_2])
+    X, Y = intersection(FUNC_1, FUNC_2, False)
+    plt.plot(X_1, Y_1, c='r')
+    plt.plot(X_2, Y_2, c='g')
+    plt.plot(X, Y, '*k')
     plt.show()
