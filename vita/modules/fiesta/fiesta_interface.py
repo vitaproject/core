@@ -15,7 +15,7 @@ import scipy.io as sio
 # Other imports
 from intersections import intersection
 
-class FieldLines(object):
+class Fiesta(object):
     '''
     Class for tracing the magnetic field lines given a FIESTA equlibrium
     
@@ -73,8 +73,11 @@ class FieldLines(object):
             c_ = cont[i]
             is_core = any(c_[:,1]>0) * any(c_[:,1]<0)
             if is_core:
-                Rcross, _, _, _ = intersection(c_[:,0],c_[:,1],np.array([0.,1.]),np.array([0.,0.]))
-
+                func1 = np.array((c_[:,0],c_[:,1]))
+                func2 = np.array((np.array([0.,1.]),np.array([0.,0.])))
+                Rcross, _ = intersection(func1,func2)
+        plt.close() # plt.contour opens a plot, close it
+        
         return Rcross  
         
     def followFieldinPlane(self, p0, maxl=10.0, nr=2000, rtol=2e-10):
@@ -147,6 +150,7 @@ class FieldLines(object):
 if __name__ == '__main__':
     filepath = '/home/jmbols/Postdoc/ST40/Programme 1/Equilibrium/eq001_limited.mat'
     field_line = FieldLines(filepath)
+    R = field_line.getMidplaneLCFS()
     p0 = [0.7,0,0]
     field_line_dict = field_line.followFieldinPlane(p0=p0, maxl=10.0)
     plt.plot(field_line_dict['R'],field_line_dict['Z'])

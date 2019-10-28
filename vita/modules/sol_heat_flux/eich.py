@@ -5,7 +5,7 @@
 Created on Sun Oct 20 18:28:22 2019
 @author: Daniel.Iglesias@tokamak.energy.co.uk
 """
-from modelSOLHeatFlux.midPlaneHeatFlux import HeatLoad
+from sol_heat_flux.mid_plane_heat_flux import HeatLoad
 import numpy as np
 from scipy import special
 
