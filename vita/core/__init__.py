@@ -1,2 +1,2 @@
 
-from .fieldline import *
+from .magnetic_field import *
