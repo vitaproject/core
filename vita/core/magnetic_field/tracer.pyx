@@ -77,6 +77,7 @@ cdef class FieldlineTracer:
             int num_segments, ith_position
             np.ndarray trajectory_array
             Intersection intersection
+            CoreRay ray
 
         if not isinstance(world, World):
             raise TypeError('The world variable must be a Raysect scene-graph of type World().')
@@ -90,6 +91,8 @@ cdef class FieldlineTracer:
 
         field = self.field
 
+        ray = CoreRay()
+
         distance_travelled = 0
         while distance_travelled < max_length:
 
@@ -98,7 +101,11 @@ cdef class FieldlineTracer:
             segment_distance = last_point.distance_to(new_point)
             direction = last_point.vector_to(new_point).normalise()
 
-            intersection = world.hit(CoreRay(new_point, direction, max_distance=segment_distance))
+            ray.origin = last_point
+            ray.direction = direction
+            ray.max_distance = segment_distance
+
+            intersection = world.hit(ray)
 
             if intersection is not None:
 
