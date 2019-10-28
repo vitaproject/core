@@ -3,11 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mayavi import mlab
 from raysect.core import Point3D, World
-from cherab.core.math import VectorAxisymmetricMapper
 
-
-from vita.core import FieldlineTracer, Euler, RK2
-# from vita.modules.modelFiesta import import_fiesta
+from vita.core import FieldlineTracer, RK2
 from vita.modules.fiesta import Fiesta
 
 
