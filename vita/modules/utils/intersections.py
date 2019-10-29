@@ -58,11 +58,11 @@ def _get_rectangle_intersections(func1, func2):
                 intersect_fun2.append(np.repeat(k, len(intersect[0])))
 
         if (len(intersect_fun1) and len(intersect_fun2)) > 0:
-            i = np.concatenate(intersect_fun1)
-            j = np.concatenate(intersect_fun2)
+            i = np.array( np.concatenate(intersect_fun1) )
+            j = np.array( np.concatenate(intersect_fun2) )
         else:
-            i = []
-            j = []
+            i = np.array([])
+            j = np.array([])
     else:
         x2_segment = np.c_[x_2[:-1], x_2[1:]]
         y2_segment = np.c_[y_2[:-1], y_2[1:]]
@@ -85,8 +85,8 @@ def _get_rectangle_intersections(func1, func2):
                 intersect_fun1.append(np.repeat(k, len(intersect[0])))
 
         if (len(intersect_fun1) and len(intersect_fun2)) > 0:
-            i = np.concatenate(intersect_fun1)
-            j = np.concatenate(intersect_fun2)
+            i = np.array( np.concatenate(intersect_fun1) )
+            j = np.array( np.concatenate(intersect_fun2) )
         else:
             i = np.array([])
             j = np.array([])

@@ -47,6 +47,6 @@ class HeatLoad():
     plt.plot(self.__s, self.__q)
     plt.xlabel('$s$')
     plt.ylabel('$q(s)$')
-    plt.show
+    plt.show()
 
 
