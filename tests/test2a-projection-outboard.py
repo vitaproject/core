@@ -7,20 +7,11 @@ Created on Sun Oct 20 18:28:22 2019
 """
 import numpy as np
 from matplotlib import pyplot as plt
-import sys
-import pathlib
 
-path_modules = pathlib.Path('../vita/modules')
-if str(path_modules) not in sys.path:
-    sys.path.append(str(path_modules)) # Adds higher directory to python modules path.
-path_utils = pathlib.Path('../vita/modules/utils')
-if str(path_utils) not in sys.path:
-    sys.path.append(str(path_utils)) # Adds higher directory to python modules path.
-print(sys.path)
+from vita.modules.fiesta import Fiesta
 
-from fiesta.fiesta_interface import Fiesta
-
-filepath = "T:\\USERS\\J_Wood\\STF1_equilibriums\\export_R200.mat"
+#filepath = "T:\\USERS\\J_Wood\\STF1_equilibriums\\export_R200.mat"
+filepath = "/home/daniel.iglesias/Simulations/plasma_scenarios/ST-F1/ST200/python_responses/export_R200.mat"
 field_line = Fiesta(filepath)
 R = field_line.getMidplaneLCFS()
 r0 = 3.05
@@ -41,4 +32,6 @@ for i in field_line_dict:
     ax.plot(i['R'],i['Z'])
 f.gca().set_aspect('equal', adjustable='box')
 f.gca().set_ylim([-4,0])
+plt.show(block=True)
 print (len(field_line_dict))
+

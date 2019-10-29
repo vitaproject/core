@@ -8,20 +8,12 @@ Created on Sun Oct 20 18:28:22 2019
 import numpy as np
 from matplotlib import pyplot as plt
 import math
-import sys
-import pathlib
 
-path_modules = pathlib.Path('../vita/modules')
-if str(path_modules) not in sys.path:
-    sys.path.append(str(path_modules)) # Adds higher directory to python modules path.
-path_utils = pathlib.Path('../vita/modules/utils')
-if str(path_utils) not in sys.path:
-    sys.path.append(str(path_utils)) # Adds higher directory to python modules path.
+from vita.modules.fiesta import Fiesta
+from vita.modules.utils import intersection
 
-from fiesta.fiesta_interface import Fiesta
-from intersections import intersection
-
-filepath = "T:\\USERS\\J_Wood\\STF1_equilibriums\\export_R200.mat"
+#filepath = "T:\\USERS\\J_Wood\\STF1_equilibriums\\export_R200.mat"
+filepath = "/home/daniel.iglesias/Simulations/plasma_scenarios/ST-F1/ST200/python_responses/export_R200.mat"
 field_line = Fiesta(filepath)
 R = field_line.getMidplaneLCFS()
 r0 = 0.85
@@ -66,7 +58,7 @@ plt.plot(divertor_x,divertor_y,c='g')
 plt.plot(x_p,y_p,'*k')
 plt.gca().set_aspect('equal', adjustable='box')
 plt.gca().set_ylim([2.2,4])
-plt.show()
+plt.show(block=True)
 
 print(midplane_range)
 fx = []
