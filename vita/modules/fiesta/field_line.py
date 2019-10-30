@@ -1,0 +1,101 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Oct 30 15:38:46 2019
+
+@author: jmbols
+"""
+import numpy as np
+from scipy.integrate import solve_ivp
+from scipy.interpolate import interp2d
+from scipy.constants import mu_0 as mu0
+import matplotlib.pyplot as plt
+from vita.modules.fiesta.fiesta_interface import Fiesta
+
+class FieldLine():
+    '''
+    Bla bla
+    '''
+    def __init__(self, filename):
+        self.fiesta_equil = Fiesta(filename)
+
+    def follow_field_in_plane(self, p_0, max_length=10.0, max_points=2000, rtol=2e-10):
+        '''
+        Function following the magnetic field-lines given a starting point
+
+        solves the set of coupled ODEs:
+
+            d/dl R   = B_r / (|B|)
+            d/dl phi = B_phi / (R |B|)
+            d/dl Z   = B_z / (|B|),
+
+        where B_r, B_phi, B_z are the cylindrical components of the magnetic field, |B| is the
+        magnitude of the magnetic field, R, phi and Z are the cylindrical
+        positions of the field line
+        and l is the length along the magnetic field line
+
+        input: self, the object parameters
+               p0,   a tuple with the initial position of the field-line to be tracked
+               maxl, a float with the maximum length of the field lines used for
+                     solving the set of ODE's
+               nr,   an integer with the maximum number of radial points used when solving the ODE
+               rtol, a float with the maximum relative error tolerance
+
+        return: field_line, a dictionary with the R, phi and Z components along the field line
+
+        use:
+        '''
+
+        def dx_dl(l_dist, x_vec):
+            '''
+            The function describing the ode to solve in order to track the magnetic field lines
+
+            input: l, np.array with the distance along the magnetic field-line
+                   x, vector with the R, phi and Z initial positions
+
+            return: dXdl_rhs, the right-hand side of the ode to solve
+            '''
+            r_init = x_vec[0]
+            z_init = x_vec[2]
+
+            br_interp = interp2d(self.fiesta_equil.r_vec, self.fiesta_equil.z_vec,
+                                 self.fiesta_equil.b_r)
+            bz_interp = interp2d(self.fiesta_equil.r_vec, self.fiesta_equil.z_vec,
+                                 self.fiesta_equil.b_z)
+            br_init = br_interp(r_init, z_init)[0]
+            br_interp = None
+            bz_init = bz_interp(r_init, z_init)[0]
+            bz_interp = None
+            bphi_init = self.fiesta_equil.i_rod*mu0 / (2*np.pi*r_init)
+
+            b_mag = np.sqrt(br_init**2 + bphi_init**2 + bz_init**2)
+
+            dx_dl_rhs = np.zeros(3)
+            dx_dl_rhs[0] = br_init / b_mag
+            dx_dl_rhs[1] = bphi_init / (r_init * b_mag)
+            dx_dl_rhs[2] = bz_init / b_mag
+
+            return dx_dl_rhs
+
+        dist_along_fieldline = np.linspace(0.0, max_length, max_points)
+
+        ivp_solution = solve_ivp(fun=dx_dl, t_span=tuple([0.0, max_length]),
+                                 y0=p_0, t_eval=dist_along_fieldline, rtol=rtol)
+
+        field_line = {}
+        field_line['l'] = np.array(ivp_solution.t[:])
+        field_line['R'] = ivp_solution.y[0, :]
+        field_line['phi'] = ivp_solution.y[1, :]
+        field_line['Z'] = ivp_solution.y[2, :]
+
+        return field_line
+
+if __name__ == '__main__':
+    FILEPATH = '/home/jmbols/Postdoc/ST40/Programme 1/Equilibrium/eq001_limited.mat'
+    FIELD_LINE = FieldLine(FILEPATH)
+    print(FIELD_LINE.fiesta_equil.r_vec)
+    LCFS_INDEX = [0.69, 0.7, 0.71, 0.72]
+    for i in LCFS_INDEX:
+        P_0 = [i, 0, 0]
+        FIELD_LINE_DICT = FIELD_LINE.follow_field_in_plane(p_0=P_0, max_length=10.0)
+        plt.plot(FIELD_LINE_DICT['R'], FIELD_LINE_DICT['Z'])
