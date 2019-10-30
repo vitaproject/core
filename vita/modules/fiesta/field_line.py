@@ -34,26 +34,24 @@ class FieldLine():
         positions of the field line
         and l is the length along the magnetic field line
 
-        input: self, the object parameters
-               p0,   a tuple with the initial position of the field-line to be tracked
-               maxl, a float with the maximum length of the field lines used for
-                     solving the set of ODE's
-               nr,   an integer with the maximum number of radial points used when solving the ODE
-               rtol, a float with the maximum relative error tolerance
+        input: self,        the object parameters
+               p_0,         a tuple with the initial position of the field-line to be tracked
+               maxl_length, a float with the maximum length of the field lines used for
+                            solving the set of ODE's
+               max_points,  an integer with the maximum number of radial points used when solving the ODE
+               rtol,        a float with the maximum relative error tolerance
 
         return: field_line, a dictionary with the R, phi and Z components along the field line
-
-        use:
         '''
 
         def dx_dl(l_dist, x_vec):
             '''
             The function describing the ode to solve in order to track the magnetic field lines
 
-            input: l, np.array with the distance along the magnetic field-line
-                   x, vector with the R, phi and Z initial positions
+            input: l_dist, np.array with the distance along the magnetic field-line
+                   x_vec,  vector with the R, phi and Z initial positions
 
-            return: dXdl_rhs, the right-hand side of the ode to solve
+            return: dx_dl_rhs, the right-hand side of the ode to solve
             '''
             r_init = x_vec[0]
             z_init = x_vec[2]
