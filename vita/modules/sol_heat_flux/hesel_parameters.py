@@ -7,7 +7,7 @@ Created on Fri Nov  9 13:25:03 2018
 """
 import numpy as np
 import h5py
-from physics_constants import get_physics_constants
+from vita.modules.utils.physics_constants import get_physics_constants
 
 class HESELparams():
     '''
