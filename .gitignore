@@ -102,3 +102,7 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+vita/core/magnetic_field/b_field.c
+
+vita/core/magnetic_field/tracer.c

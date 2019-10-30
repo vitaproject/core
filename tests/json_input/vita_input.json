@@ -1,0 +1,48 @@
+{
+  "run_id": 123456789,
+  "run_date": "2019-10-29",
+  "user": "daniel-iglesias",
+  "plasma-settings": {
+    "isotopes": "DT",
+    "heating": {
+      "NBI-power": 2.5,
+      "Ohmic-power": 2.5,
+      "rf-power": 5
+    },
+    "equilibrium": "ST40-p45962.eqdsk",
+    "configuration": "DN",
+    "sol":{
+      "lambda_q": 0.002,
+      "S": 0.001
+    },
+    "sweep-frequency": 15
+  },
+  "machine-settings": {
+    "machine-id": "ST40",
+    "wall-components": [
+      {
+        "file": "tile1.ply",
+        "material": "Carbon"
+      },
+      {
+        "file": "tile2.ply",
+        "material": "Carbon"
+      },
+      {
+        "file": "vacuum_vessel.ply",
+        "material": "Stainless"
+      }
+    ]
+  },
+  "analysis": [
+    {
+      "mode": "midplane_power",
+      "type": "Eich"
+    },
+    {
+      "mode": "tile_power",
+      "particle-count": 10000000000,
+      "output-file": "tile1_power.vtk"
+    }
+  ]
+}

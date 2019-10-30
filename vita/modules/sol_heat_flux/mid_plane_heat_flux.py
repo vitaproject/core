@@ -9,44 +9,43 @@ import matplotlib.pyplot as plt
 
 class HeatLoad():
   def __init__(self):
-    self.fx = 1. # flux expansion
-    self.qb = 0. # background heat
-    self.R0 = 0. # edge radius at equatorial midplane
+    self.fx = 1. # edge radius at outboard equatorial midplane
+    self.fx_in_out = 1. # edge radius at outboard equatorial midplane
+    self.r0_hfs = 0. # edge radius at outboard equatorial midplane
+    self.r0_lfs = 0. # edge radius at inboard equatorial midplane
     self.__s = [] # equatorial midplane coordinate array
     self.__q = [] # heat flux density profile
     self.__totalPower = 0.
     self.model_type = None
+    self.s_disconnected_dn_max = 0.
     
-  def setCoordinates(self,s_in=[]):
+  def calculate_heat_flux_density(self):
+    raise NotImplementedError("The inheriting class must implement this virtual function.")
+
+  def set_coordinates(self,s_in=[]):
     if self.model_type=="Eich":
         self.__s = s_in
     else:
         print("Warning: The HeatFlux model in use does not allow setting coordinates")
         return -1
   
-  def getLocalCoordinates(self):
+  def set_edge_radius(self, radius_in):
+    self.ro_hfs = radius_in
+
+  def get_local_coordinates(self):
       return self.__s
 
-  def getGlobalCoordinates(self):
-      return self.__s + self.R0
+  def get_global_coordinates(self):
+      return self.__s + self.r0_hfs
 
-  def setEdgeRadius(self, radius_in):
-    self.R0 = radius_in
-
-  def setFluxExpansion(self, fx_in):
-    self.fx = fx_in
-    
-  def setBackgroundHeat(self, qb_in):
-    self.qb = qb_in
-
-  def calculateHeatPower(self):
+  def calculate_heat_power(self):
     self.__totalPower = integrate.simps(self.__q, self.__s)
     return self.__totalPower
 
-  def plotHeatPowerDensity(self):
+  def plot_heat_power_density(self):
     plt.plot(self.__s, self.__q)
     plt.xlabel('$s$')
     plt.ylabel('$q(s)$')
-    plt.show()
+    plt.show(block=True)
 
 
