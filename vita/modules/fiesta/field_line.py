@@ -14,7 +14,10 @@ from vita.modules.fiesta.fiesta_interface import Fiesta
 
 class FieldLine():
     '''
-    Bla bla
+    Class for following a magnetic field line given a Fiesta equilibrium.
+
+    Member functions:
+        follow_field_in_plane(p_0, max_length, max_points, rtol)
     '''
     def __init__(self, filename):
         self.fiesta_equil = Fiesta(filename)
