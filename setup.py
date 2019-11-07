@@ -6,13 +6,13 @@ import os
 import os.path as path
 import multiprocessing
 
-use_cython = True
+use_cython = False
 force = False
 profile = False
 
-if "--skip-cython" in sys.argv:
-    use_cython = False
-    del sys.argv[sys.argv.index("--skip-cython")]
+if "--include-cython" in sys.argv:
+    use_cython = True
+    del sys.argv[sys.argv.index("--include-cython")]
 
 if "--force" in sys.argv:
     force = True

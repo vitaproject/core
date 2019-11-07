@@ -6,7 +6,7 @@ from mayavi import mlab
 from raysect.core import World, Point3D, Vector3D
 from cherab.core.math import ConstantVector3D
 
-from vita.core import FieldlineTracer, Euler
+from vita.modules.cherab import FieldlineTracer, Euler
 
 
 # the world scene-graph
