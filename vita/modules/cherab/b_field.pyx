@@ -1,16 +1,24 @@
 
 import numpy as np
+cimport numpy as np
 from libc.math cimport sqrt, atan2
 
-from raysect.core.math cimport new_vector3d
+from raysect.core.math cimport Point3D, Vector3D, new_vector3d
 from raysect.core.math import rotate_z
+from raysect.core.math.function cimport Function2D
+
 from cherab.core.math import Interpolate2DCubic
+from cherab.core.math.function.vectorfunction3d cimport VectorFunction3D
 
 
 cdef double RAD2DEG = 360 / (2 * np.pi)
 
 
 cdef class MagneticField(VectorFunction3D):
+
+    cdef:
+        readonly np.ndarray _r_grid, _z_grid, _br_raw_data, _bz_raw_data, _btor_raw_data
+        Function2D _br, _bz, _btor
 
     def __init__(self, r_grid, z_grid, br, bz, btor):
         """

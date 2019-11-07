@@ -3,9 +3,10 @@
 
 import numpy as np
 cimport numpy as np
-from raysect.core cimport Vector3D
+from raysect.core cimport World, Point3D, Vector3D
 from raysect.core.ray cimport Ray as CoreRay
 from raysect.core.intersection cimport Intersection
+from cherab.core.math.function.vectorfunction3d cimport VectorFunction3D
 
 
 cdef class Method:
@@ -15,6 +16,8 @@ cdef class Method:
 
 
 cdef class Euler(Method):
+
+    cdef double step_size
 
     def __init__(self, step_size=1E-6):
         self.step_size = step_size
@@ -29,6 +32,8 @@ cdef class Euler(Method):
 
 
 cdef class RK2(Method):
+
+    cdef double step_size
 
     def __init__(self, step_size=1E-6):
         self.step_size = step_size
@@ -53,6 +58,10 @@ cdef class RK2(Method):
 
 
 cdef class FieldlineTracer:
+
+    cdef:
+        Method method
+        VectorFunction3D field
 
     def __init__(self, field, method=Euler()):
 

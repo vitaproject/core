@@ -7,12 +7,17 @@ import os.path as path
 import multiprocessing
 
 use_cython = True
+include_cherab = False
 force = False
 profile = False
 
 if "--skip-cython" in sys.argv:
     use_cython = False
     del sys.argv[sys.argv.index("--skip-cython")]
+
+if "--include-cherab" in sys.argv:
+    include_cherab = True
+    del sys.argv[sys.argv.index("--include-cherab")]
 
 if "--force" in sys.argv:
     force = True
@@ -38,6 +43,10 @@ if use_cython:
     extensions = []
     for package in source_paths:
         for root, dirs, files in os.walk(path.join(setup_path, package)):
+
+            if os.path.split(root)[1] == "cherab" and not include_cherab:
+                continue
+
             for file in files:
                 if path.splitext(file)[1] == ".pyx":
                     pyx_file = path.relpath(path.join(root, file), setup_path)

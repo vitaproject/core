@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from mayavi import mlab
 from raysect.core import Point3D, World
 
-from vita.core import FieldlineTracer, RK2
+from vita.modules.cherab import FieldlineTracer, RK2
 from vita.modules.fiesta import Fiesta
 
 

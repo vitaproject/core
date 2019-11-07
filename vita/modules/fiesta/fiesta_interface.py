@@ -9,7 +9,6 @@ from matplotlib import pyplot as plt
 import numpy as np
 import scipy.io as sio
 # Other imports
-from vita.core import MagneticField
 from vita.modules.utils import intersection
 
 
@@ -32,6 +31,12 @@ class Fiesta():
         '''
         Function for getting the magnetic a 3D vector function of the magnetic field
         '''
+
+        try:
+            from vita.modules.cherab import MagneticField
+        except ImportError:
+            raise RuntimeError("CHERAB integration not installed.")
+
         return MagneticField(self.r_vec, self.z_vec,
                              np.swapaxes(self.b_r, 0, 1), np.swapaxes(self.b_z, 0, 1),
                              np.swapaxes(self.b_phi, 0, 1))
