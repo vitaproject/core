@@ -28,10 +28,10 @@ def _get_rectangle_intersections(func1, func2):
                     j is a numpy array with the indices for the
                     intersections in the second function
     '''
-    x_1 = func1[0, :]
-    y_1 = func1[1, :]
-    x_2 = func2[0, :]
-    y_2 = func2[1, :]
+    x_1 = np.ma.array(func1[0, :], mask=np.isnan(func1[0, :]))
+    y_1 = np.ma.array(func1[1, :], mask=np.isnan(func1[1, :]))
+    x_2 = np.ma.array(func2[0, :], mask=np.isnan(func2[0, :]))
+    y_2 = np.ma.array(func2[1, :], mask=np.isnan(func2[1, :]))
 
     n_1 = len(x_1)-1
     n_2 = len(x_2)-1
