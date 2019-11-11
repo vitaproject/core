@@ -81,11 +81,13 @@ class FieldLine():
 
         # We don't want to find min and max at each solve_ivp timestep and
         # we want to be able to calculate the exact point of intersection hence
-        # the addition or subtraction of 0.001
-        inner_wall = min(self.fiesta_equil.r_limiter) - 0.001
-        lower_wall = min(self.fiesta_equil.z_limiter) - 0.001
-        outer_wall = max(self.fiesta_equil.r_limiter) + 0.001
-        upper_wall = max(self.fiesta_equil.z_limiter) + 0.001
+        # the addition or subtraction of 0.00025 (no intersection occurs if we
+        # terminate the evaluation at the point of intersection)
+        displacement = 0.00025
+        inner_wall = min(self.fiesta_equil.r_limiter) - displacement
+        lower_wall = min(self.fiesta_equil.z_limiter) - displacement
+        outer_wall = max(self.fiesta_equil.r_limiter) + displacement
+        upper_wall = max(self.fiesta_equil.z_limiter) + displacement
 
         def event(_l_dist, x_vec):
             '''
