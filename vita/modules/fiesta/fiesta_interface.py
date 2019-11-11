@@ -74,11 +74,13 @@ class Fiesta():
         self.b_phi = mat['Bphi']
         self.i_rod = mat['irod']
 
-    def get_midplane_lcfs(self, psi_p=1.0):
+    def get_midplane_lcfs(self, psi_p=1.005):
         '''
         Function for getting the inner and outer radial position of the LCFS at the midplane
 
-        input: self, a reference to the object itself
+        input: self,  a reference to the object itself
+               psi_p, the flux surface of the LCFS, standard is psi_p = 1.005 (otherwise the field-line
+                      is located inside the LCFS)
 
         return: Rcross, a list with the outer and inner radial position of the mid-plane LCFS
         '''
