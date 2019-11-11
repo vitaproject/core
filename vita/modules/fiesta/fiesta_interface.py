@@ -94,7 +94,7 @@ class Fiesta():
             if is_core:
                 func1 = np.array((c_i[:, 0], c_i[:, 1]))
                 func2 = np.array((np.array([0., 1.]), np.array([0., 0.])))
-                r_lcfs, _ = intersection(func1, func2)
+                (_, _), (r_lcfs, _) = intersection(func1, func2)
 
         plt.close() # plt.contour opens a plot, close it
 
@@ -104,4 +104,3 @@ if __name__ == '__main__':
     FILEPATH = '/home/jmbols/Postdoc/ST40/Programme 1/Equilibrium/eq001_limited.mat'
     FIESTA_EQUIL = Fiesta(FILEPATH)
     print(FIESTA_EQUIL.get_midplane_lcfs())
-    print(type(FIESTA_EQUIL.r_limiter))
