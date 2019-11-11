@@ -58,8 +58,8 @@ def _get_rectangle_intersections(func1, func2):
                 intersect_fun2.append(np.repeat(k, len(intersect[0])))
 
         if (len(intersect_fun1) and len(intersect_fun2)) > 0:
-            i = np.array( np.concatenate(intersect_fun1) )
-            j = np.array( np.concatenate(intersect_fun2) )
+            i = np.array(np.concatenate(intersect_fun1))
+            j = np.array(np.concatenate(intersect_fun2))
         else:
             i = np.array([])
             j = np.array([])
@@ -85,8 +85,8 @@ def _get_rectangle_intersections(func1, func2):
                 intersect_fun1.append(np.repeat(k, len(intersect[0])))
 
         if (len(intersect_fun1) and len(intersect_fun2)) > 0:
-            i = np.array( np.concatenate(intersect_fun1) )
-            j = np.array( np.concatenate(intersect_fun2) )
+            i = np.array(np.concatenate(intersect_fun1))
+            j = np.array(np.concatenate(intersect_fun2))
         else:
             i = np.array([])
             j = np.array([])
@@ -222,10 +222,10 @@ def intersection(func1, func2, robust=True):
         xy0 = xy0.T
         x_0 = xy0[:, 0]
         y_0 = xy0[:, 1]
-        return x_0, y_0
+        return (i, j), (x_0, y_0)
     else:
         print("Warning: Curves do not overlap")
-        return np.nan, np.nan
+        return (np.nan, np.nan), (np.nan, np.nan)
 
 
 if __name__ == '__main__':
@@ -243,7 +243,7 @@ if __name__ == '__main__':
 #    y2=np.sin(phi2)+2
     FUNC_1 = np.array([X_1, Y_1])
     FUNC_2 = np.array([X_2, Y_2])
-    X, Y = intersection(FUNC_1, FUNC_2, False)
+    (I, J), (X, Y) = intersection(FUNC_1, FUNC_2, False)
     plt.plot(X_1, Y_1, c='r')
     plt.plot(X_2, Y_2, c='g')
     plt.plot(X, Y, '*k')
