@@ -222,7 +222,12 @@ def intersection(func1, func2, robust=True):
         xy0 = xy0.T
         x_0 = xy0[:, 0]
         y_0 = xy0[:, 1]
-        return (i, j), (x_0, y_0)
+        
+        if not x_0.size == 0 or not y_0.size == 0:
+            return (i, j), (x_0, y_0)
+        else:
+            print("Warning: Curves do not overlap")
+            return (np.nan, np.nan), (np.nan, np.nan)
     else:
         print("Warning: Curves do not overlap")
         return (np.nan, np.nan), (np.nan, np.nan)
