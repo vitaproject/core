@@ -41,13 +41,14 @@ class FieldLine():
                p_0,         a tuple with the initial position of the field-line to be tracked
                maxl_length, a float with the maximum length of the field lines used for
                             solving the set of ODE's
-               max_points,  an integer with the maximum number of radial points used when solving the ODE
+               max_points,  an integer with the maximum number of radial points
+                            used when solving the ODE
                rtol,        a float with the maximum relative error tolerance
 
         return: field_line, a dictionary with the R, phi and Z components along the field line
         '''
 
-        def dx_dl(l_dist, x_vec):
+        def dx_dl(_l_dist, x_vec):
             '''
             The function describing the ode to solve in order to track the magnetic field lines
 
@@ -78,10 +79,35 @@ class FieldLine():
 
             return dx_dl_rhs
 
+        # We don't want to find min and max at each solve_ivp timestep
+        inner_wall = min(self.fiesta_equil.r_limiter)
+        lower_wall = min(self.fiesta_equil.z_limiter)
+        outer_wall = max(self.fiesta_equil.r_limiter)
+        upper_wall = max(self.fiesta_equil.z_limiter)
+
+        def event(_l_dist, x_vec):
+            '''
+            Function for determining whether the solution to the ODE passes a wall,
+            which terminates the ODE solver
+
+            input: l_dist, np.array with the distance along the magnetic field-line
+                   x_vec,  vector with the R, phi and Z initial positions
+
+            return: intersect_wall, returns 0 if any wall surface is intersected,
+                                    otherwise returns a float (the event function of
+                                    solve_ivp only looks for events = 0)
+            '''
+            intersect_wall = (x_vec[0] - inner_wall)*(x_vec[2] - lower_wall)\
+                             *(x_vec[0] - outer_wall)*(x_vec[2] - upper_wall)
+            return intersect_wall
+        event.terminal = True
+
+
         dist_along_fieldline = np.linspace(0.0, max_length, max_points)
 
         ivp_solution = solve_ivp(fun=dx_dl, t_span=tuple([0.0, max_length]),
-                                 y0=p_0, t_eval=dist_along_fieldline, rtol=rtol)
+                                 y0=p_0, t_eval=dist_along_fieldline,
+                                 events=event, rtol=rtol)
 
         field_line = {}
         field_line['l'] = np.array(ivp_solution.t[:])
@@ -94,9 +120,9 @@ class FieldLine():
 if __name__ == '__main__':
     FILEPATH = '/home/jmbols/Postdoc/ST40/Programme 1/Equilibrium/eq001_limited.mat'
     FIELD_LINE = FieldLine(FILEPATH)
-    print(FIELD_LINE.fiesta_equil.r_vec)
+    #print(FIELD_LINE.fiesta_equil.r_vec)
     LCFS_INDEX = [0.69, 0.7, 0.71, 0.72]
     for i in LCFS_INDEX:
         P_0 = [i, 0, 0]
-        FIELD_LINE_DICT = FIELD_LINE.follow_field_in_plane(p_0=P_0, max_length=10.0)
+        FIELD_LINE_DICT = FIELD_LINE.follow_field_in_plane(p_0=P_0, max_length=15.0)
         plt.plot(FIELD_LINE_DICT['R'], FIELD_LINE_DICT['Z'])
