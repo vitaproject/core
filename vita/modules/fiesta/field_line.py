@@ -106,7 +106,6 @@ class FieldLine():
             return intersect_wall
         event.terminal = True
 
-
         dist_along_fieldline = np.linspace(0.0, max_length, max_points)
 
         ivp_solution = solve_ivp(fun=dx_dl, t_span=tuple([0.0, max_length]),
