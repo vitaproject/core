@@ -8,12 +8,12 @@ Created on Sun Oct 20 18:28:22 2019
 import numpy as np
 from matplotlib import pyplot as plt
 
-from vita.modules.fiesta import Fiesta
-
+from vita.modules.fiesta import FieldLine
 #filepath = "T:\\USERS\\J_Wood\\STF1_equilibriums\\export_R200.mat"
-filepath = "/home/daniel.iglesias/Simulations/plasma_scenarios/ST-F1/ST200/python_responses/export_R200.mat"
-field_line = Fiesta(filepath)
-R = field_line.getMidplaneLCFS()
+#filepath = "/home/daniel.iglesias/Simulations/plasma_scenarios/ST-F1/ST200/python_responses/export_R200.mat"
+filepath = '/home/jmbols/Postdoc/export_R200.mat'
+field_line = FieldLine(filepath)
+R = field_line.fiesta_equil.get_midplane_lcfs()
 r0 = 0.6
 rf = 1.
 midplane_range = np.linspace(r0,rf,10)
@@ -25,7 +25,7 @@ for r in midplane_range:
 print(lengths)
 field_line_dict = []
 for idx, val in enumerate(points):
-    field_line_dict.append( field_line.followFieldinPlane(val, lengths[idx]) )
+    field_line_dict.append( field_line.follow_field_in_plane(val, lengths[idx]) )
 #    p1 = [3.15,0,0]
 #    field_line_dict.append( field_line.followFieldinPlane(p0=p1, maxl=40.0) )
 f, ax = plt.subplots(1)
