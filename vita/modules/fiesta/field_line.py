@@ -22,7 +22,8 @@ class FieldLine():
     def __init__(self, filename):
         self.fiesta_equil = Fiesta(filename)
 
-    def follow_field_in_plane(self, p_0, max_length=10.0, max_points=2000, rtol=2e-10):
+    def follow_field_in_plane(self, p_0, max_length=10.0, max_points=2000, rtol=2e-10,
+                              break_at_limiter=True):
         '''
         Function following the magnetic field-lines given a starting point
 
@@ -43,7 +44,9 @@ class FieldLine():
                             solving the set of ODE's
                max_points,  an integer with the maximum number of radial points
                             used when solving the ODE
-               rtol,        a float with the maximum relative error tolerance
+               rtol,             a float with the maximum relative error tolerance
+               break_at_limiter, a boolean with true if you don't want the ODE solver
+                                 to continue after the field line intersects the vessel limits
 
         return: field_line, a dictionary with the R, phi and Z components along the field line
         '''
@@ -104,7 +107,8 @@ class FieldLine():
             intersect_wall = (x_vec[0] - inner_wall)*(x_vec[2] - lower_wall)\
                              *(x_vec[0] - outer_wall)*(x_vec[2] - upper_wall)
             return intersect_wall
-        event.terminal = True
+        if break_at_limiter:
+            event.terminal = True
 
         dist_along_fieldline = np.linspace(0.0, max_length, max_points)
 

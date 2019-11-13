@@ -28,7 +28,7 @@ for r in midplane_range:
 print(lengths)
 field_line_dict = []
 for idx, val in enumerate(points):
-    field_line_dict.append( field_line.follow_field_in_plane(val, lengths[idx]) )
+    field_line_dict.append( field_line.follow_field_in_plane(val, lengths[idx], break_at_limiter=False) )
 #    p1 = [3.15,0,0]
 #    field_line_dict.append( field_line.followFieldinPlane(p0=p1, maxl=40.0) )
 #f, ax = plt.subplots(1)

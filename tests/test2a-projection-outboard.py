@@ -26,13 +26,13 @@ for r in midplane_range:
 print(lengths)
 field_line_dict = []
 for idx, val in enumerate(points):
-    field_line_dict.append( field_line.follow_field_in_plane(val, lengths[idx]) )
+    field_line_dict.append(field_line.follow_field_in_plane(val, lengths[idx], break_at_limiter=False) )
 f, ax = plt.subplots(1)
 for i in field_line_dict:
     ax.plot(i['R'],i['Z'])
     ax.plot(i['R'],i['Z'])
 f.gca().set_aspect('equal', adjustable='box')
 f.gca().set_ylim([-4,0])
-plt.show(block=True)
+plt.show()
 print (len(field_line_dict))
 
