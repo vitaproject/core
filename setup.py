@@ -90,6 +90,13 @@ setup(
     ],
     install_requires=['numpy', 'cython>=0.28'],
     packages=find_packages(),
+    entry_points={
+        'console_scripts': [
+            'vita_add_resource = vita.utility.scripts.add_resource:main',
+            'vita_update_resource = vita.utility.scripts.update_resource:main',
+            'vita_remove_resource = vita.utility.scripts.remove_resource:main',
+        ]
+    },
     include_package_data=True,
     zip_safe=False,
     ext_modules=extensions

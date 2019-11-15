@@ -7,14 +7,17 @@ from raysect.primitive import import_ply
 
 from vita.modules.cherab import FieldlineTracer, RK2
 from vita.modules.fiesta import Fiesta
+from vita.utility import get_resource
 
 
 # the world scene-graph
 world = World()
-import_ply("Simple_40-7001_IVC_STEP_190522.ply", scaling=0.001, parent=world)
+ST40_mesh = get_resource("ST40", "MESH", "IVC_190522")
+import_ply(ST40_mesh, scaling=0.001, parent=world)
 
 
-fiesta = Fiesta('eq_0002_export.mat')
+eq002 = get_resource("ST40", "equilibrium", "eq002")
+fiesta = Fiesta(eq002)
 b_field = fiesta.b_field
 
 

@@ -6,9 +6,11 @@ from raysect.core import Point3D, World
 
 from vita.modules.cherab import FieldlineTracer, RK2
 from vita.modules.fiesta import Fiesta
+from vita.utility import get_resource
 
 
-fiesta = Fiesta('eq_0002_export.mat')
+eq002 = get_resource("ST40", "equilibrium", "eq002")
+fiesta = Fiesta(eq002)
 b_field = fiesta.b_field
 
 
