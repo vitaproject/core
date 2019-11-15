@@ -29,15 +29,6 @@ print(lengths)
 field_line_dict = []
 for idx, val in enumerate(points):
     field_line_dict.append( field_line.follow_field_in_plane(val, lengths[idx], break_at_limiter=False) )
-#    p1 = [3.15,0,0]
-#    field_line_dict.append( field_line.followFieldinPlane(p0=p1, maxl=40.0) )
-#f, ax = plt.subplots(1)
-#for i in field_line_dict:
-#    ax.plot(i['R'],i['Z'])
-#    ax.plot(i['R'],i['Z'])
-#f.gca().set_aspect('equal', adjustable='box')
-#f.gca().set_ylim([0,4])
-#print (len(field_line_dict))
 
 field_lines = []
 for fl in field_line_dict:
