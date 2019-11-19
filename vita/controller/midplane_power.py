@@ -24,7 +24,8 @@ def run_midplane_power(midplane_model, plasma):
       alpha_power = aux_power*0.20
       print("Alpha heating = {}".format(alpha_power))
       
-    else: alpha_heating = 0.
+    else:
+        alpha_power = 0.
     print("Total heating = {}".format(aux_power + alpha_power))
 
     footprint.q0 = (aux_power + alpha_power)/(0.00245419*2.*footprint.R0*math.pi)
@@ -39,4 +40,6 @@ def run_midplane_power(midplane_model, plasma):
     footprint.xlabel='$s\quad [m]$'
     footprint.ylabel='$q//(s)\quad [MW/m^2]$'
     footprint.plot_heat_power_density()
-    print(footprint.calculateHeatPower())
+    print(footprint.calculate_heat_power())
+
+    return footprint
