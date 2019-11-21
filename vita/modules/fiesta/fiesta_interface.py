@@ -53,7 +53,9 @@ class Fiesta():
                 self.z_vec,     a numpy array with the vertical grid coordinates
                 self.psi_n,
                 self.b_r,       a numpy array with the radial magnetic field component
-                self.b_z        a numpy array with the poloidal field component
+                self.b_z        a numpy array with the vertical field component
+                self.b_phi,     a numpy array with the toroidal field component
+                self.b_theta,   a numpy array with the poloidal magnetic field component
                 self.i_rod      a float with the current in the rod
         '''
         # Read data from .mat file
@@ -72,6 +74,7 @@ class Fiesta():
         self.b_r = mat['Br']
         self.b_z = mat['Bz']
         self.b_phi = mat['Bphi']
+        self.b_theta = mat['Btheta']
         self.i_rod = mat['irod']
 
     def get_midplane_lcfs(self, psi_p=1.005):
