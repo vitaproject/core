@@ -219,6 +219,8 @@ def intersection(func1, func2, robust=True):
                         & (vector_t[0, :] <= 1) & (vector_t[1, :] <= 1)
             xy0 = vector_t[2:, in_range]
 
+        i = i[in_range] + vector_t[0, in_range]
+        j = j[in_range] + vector_t[1, in_range]
         xy0 = xy0.T
         x_0 = xy0[:, 0]
         y_0 = xy0[:, 1]
