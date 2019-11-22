@@ -138,7 +138,11 @@ def intersection(func1, func2, robust=True):
            func2, a numpy array with the two numpy arrays corresponding to x and y
                   for the second function
 
-    return: x0,   a numpy array with the x positions of the intersections
+    return: i,    a numpy array of floats with the sum of the indices and distances
+                  [0; 1[ to the intersections of func1
+            j,    a numpy array of floats with the sum of the indices and distances
+                  [0; 1[ to the intersections of func2
+            x0,   a numpy array with the x positions of the intersections
             y0,   a numpy array with the y positions of the intersections
     '''
     (i, j) = _get_rectangle_intersections(func1, func2)
@@ -224,12 +228,12 @@ def intersection(func1, func2, robust=True):
         xy0 = xy0.T
         x_0 = xy0[:, 0]
         y_0 = xy0[:, 1]
-        
+
         if not x_0.size == 0 or not y_0.size == 0:
             return (i, j), (x_0, y_0)
-        else:
-            print("Warning: Curves do not overlap")
-            return (np.nan, np.nan), (np.nan, np.nan)
+
+        print("Warning: Curves do not overlap")
+        return (np.nan, np.nan), (np.nan, np.nan)
     else:
         print("Warning: Curves do not overlap")
         return (np.nan, np.nan), (np.nan, np.nan)
