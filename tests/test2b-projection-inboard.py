@@ -9,14 +9,14 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 from vita.modules.fiesta import FieldLine
-#filepath = "T:\\USERS\\J_Wood\\STF1_equilibriums\\export_R200.mat"
-#filepath = "/home/daniel.iglesias/Simulations/plasma_scenarios/ST-F1/ST200/python_responses/export_R200.mat"
-filepath = '/home/jmbols/Postdoc/export_R200.mat'
-field_line = FieldLine(filepath)
+from vita.utility import get_resource
+
+R200 = get_resource("ST-F1", "equilibrium", "R200")
+field_line =  FieldLine(R200)
 R = field_line.fiesta_equil.get_midplane_lcfs()
 r0 = 0.6
 rf = 1.
-midplane_range = np.linspace(r0,rf,10)
+midplane_range = np.linspace(r0,rf,5)
 points = []
 lengths = []
 for r in midplane_range:

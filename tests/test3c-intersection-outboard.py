@@ -9,13 +9,13 @@ import numpy as np
 from matplotlib import pyplot as plt
 import math
 
-from vita.modules.fiesta import Fiesta
+from vita.modules.fiesta import FieldLine
 from vita.modules.utils import intersection
+from vita.utility import get_resource
 
-#filepath = "T:\\USERS\\J_Wood\\STF1_equilibriums\\export_R200.mat"
-filepath = "/home/daniel.iglesias/Simulations/plasma_scenarios/ST-F1/ST110/python_responses/export_R110.mat"
-field_line = Fiesta(filepath)
-R = field_line.getMidplaneLCFS()
+R200 = get_resource("ST-F1", "equilibrium", "R200")
+field_line = FieldLine(R200)
+R = field_line.fiesta_equil.get_midplane_lcfs()
 r0 = 1.696
 rf = 1.74
 midplane_range = np.linspace(r0,rf,3)
@@ -28,7 +28,7 @@ for r in midplane_range:
 print(lengths)
 field_line_dict = []
 for idx, val in enumerate(points):
-    field_line_dict.append( field_line.followFieldinPlane(val, lengths[idx]) )
+    field_line_dict.append(field_line.follow_field_in_plane(val, lengths[idx], break_at_limiter=False))
 #f, ax = plt.subplots(1)
 #for i in field_line_dict:
 #    ax.plot(i['R'],i['Z'])

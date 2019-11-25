@@ -11,11 +11,10 @@ import math
 
 from vita.modules.fiesta import FieldLine
 from vita.modules.utils import intersection
+from vita.utility import get_resource
 
-#filepath = "T:\\USERS\\J_Wood\\STF1_equilibriums\\export_R200.mat"
-#filepath = "/home/daniel.iglesias/Simulations/plasma_scenarios/ST-F1/ST200/python_responses/export_R200.mat"
-filepath = '/home/jmbols/Postdoc/export_R200.mat'
-field_line = FieldLine(filepath)
+R200 = get_resource("ST-F1", "equilibrium", "R200")
+field_line = FieldLine(R200)
 R = field_line.fiesta_equil.get_midplane_lcfs()
 r0 = 3.05
 rf = 3.1
@@ -62,7 +61,7 @@ plt.show()#block=True)
 
 print(midplane_range)
 fx = []
-print("fx =", math.hypot(x_p[1] - x_p[0], y_p[1] - y_p[0]), "/", midplane_range[1] - midplane_range[0], "*", 
+print("fx =", math.hypot(x_p[1] - x_p[0], y_p[1] - y_p[0]), "/", midplane_range[1] - midplane_range[0], "*")
 for i in range(len(midplane_range)-1):
     fx.append( math.hypot(x_p[i+1] - x_p[i], y_p[i+1] - y_p[i]) / 
               ( midplane_range[i+1] - midplane_range[i] ) *
