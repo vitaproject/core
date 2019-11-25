@@ -26,6 +26,8 @@ def run_midplane_power(midplane_model, plasma):
         raise NotImplementedError(
             "The midplane_model {} is not yet implemented.".format(midplane_model))
 
+    footprint.s_disconnected_dn_max = 0.003
+    footprint.fx_in_out = 2.5
     footprint.R0 = 1.7
     aux_power = plasma['heating']['NBI-power'] + plasma['heating']['Ohmic-power']\
                 + plasma['heating']['rf-power']

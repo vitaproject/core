@@ -21,6 +21,7 @@ class Eich(HeatLoad):
     
   def calculate_heat_flux_density(self, where="hfs"):
     self._HeatLoad__q = np.zeros( len(self._HeatLoad__s) )
+    self._s_disconnected_dn_inboard = self.fx_in_out*self.s_disconnected_dn_max
     if(where=="hfs"):
       a = self.S / (2 * self.lambda_q * self.fx)
       self._HeatLoad__q = self.q0/2*np.exp(a**2 - self._HeatLoad__s/(self.lambda_q*self.fx)) * \
@@ -29,13 +30,13 @@ class Eich(HeatLoad):
       i_cut = np.where( self._HeatLoad__s > 0 )[0]
       self._HeatLoad__q[i_cut] = self.q0 * np.exp( - self._HeatLoad__s[i_cut]/(self.lambda_q*self.fx) )
     if(where=="lfs-mp"):
-      i_cut = np.where( np.logical_and(self._HeatLoad__s > 0, self._HeatLoad__s < self.s_disconnected_dn_max) )[0]
+      i_cut = np.where( np.logical_and(self._HeatLoad__s > 0, self._HeatLoad__s < self._s_disconnected_dn_inboard) )[0]
       profile = np.zeros( len(self._HeatLoad__s) )
       profile[i_cut] = self.q0 * np.exp( - self._HeatLoad__s[i_cut]/(self.lambda_q*self.fx) )
       gaussian = self.q0 * np.exp( - (self._HeatLoad__s - 2.25*self._HeatLoad__s[i_cut[-1]])**2 / 0.05 )
       print(self._HeatLoad__q.size, profile.size, gaussian.size)
-      self._HeatLoad__q = convolve1d(profile, gaussian)
-#      self._HeatLoad__q = profile
+#      self._HeatLoad__q = convolve1d(profile, gaussian)
+      self._HeatLoad__q = profile
 #      self._HeatLoad__q = gaussian
     elif(where=="lfs"):
       a = self.S / (2 * self.lambda_q * self.fx)
