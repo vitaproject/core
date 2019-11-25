@@ -17,7 +17,8 @@ class HeatLoad():
     self.__q = [] # heat flux density profile
     self.__totalPower = 0.
     self.model_type = None
-    self.s_disconnected_dn_max = 0.
+    self.s_disconnected_dn_max = 0.001
+    self._s_disconnected_dn_inboard = 0.001
     
   def calculate_heat_flux_density(self):
     raise NotImplementedError("The inheriting class must implement this virtual function.")

@@ -13,17 +13,18 @@ from vita.modules.fiesta import Fiesta
 from vita.modules.utils import intersection
 
 #filepath = "T:\\USERS\\J_Wood\\STF1_equilibriums\\export_R200.mat"
-filepath = "/home/daniel.iglesias/Simulations/plasma_scenarios/ST-F1/ST200/python_responses/export_R200.mat"
+filepath = "/home/daniel.iglesias/Simulations/plasma_scenarios/ST-F1/ST110/python_responses/export_R110.mat"
 field_line = Fiesta(filepath)
 R = field_line.getMidplaneLCFS()
-r0 = 3.05
-rf = 3.1
+r0 = 1.696
+rf = 1.74
 midplane_range = np.linspace(r0,rf,3)
 points = []
 lengths = []
 for r in midplane_range:
     points.append( [r,0,0] )
-    lengths.append( 60 - (r-r0)*120 )
+    lengths.append( 12 - (r-r0)*40 )
+#    lengths.append( 10 )
 print(lengths)
 field_line_dict = []
 for idx, val in enumerate(points):
@@ -43,8 +44,8 @@ for fl in field_line_dict:
 divertor_points = 3
 #divertor_x = np.linspace( 1.9, 2.45,divertor_points)
 #divertor_y = np.linspace(-3,-3.6,divertor_points)
-divertor_x = np.array([2.15, 2.15, 2.27])
-divertor_y = np.array([-2.9, -3.25, -3.6])
+divertor_x = np.array([1.2, 1.2, 1.15])
+divertor_y = np.array([-1.5, -1.7, -2.05])
 divertor_xy = np.array([divertor_x, divertor_y])
 
 result = [intersection(i, divertor_xy) for i in field_lines]
@@ -53,14 +54,13 @@ x_p,y_p = zip (*result)
 for i in field_line_dict:
     plt.plot(i['R'],i['Z'],c='r')
 plt.plot(divertor_x,divertor_y,c='g')
-plt.plot(x_p,y_p,'*k')
+#plt.plot(x_p,y_p,'*k')
 plt.gca().set_aspect('equal', adjustable='box')
-plt.gca().set_ylim([-4,-2.5])
+#plt.gca().set_ylim([-4,-2.5])
 plt.show(block=True)
 
 print(midplane_range)
 fx = []
-print("fx =", math.hypot(x_p[1] - x_p[0], y_p[1] - y_p[0]), "/", midplane_range[1] - midplane_range[0], "*", 
 for i in range(len(midplane_range)-1):
     fx.append( math.hypot(x_p[i+1] - x_p[i], y_p[i+1] - y_p[i]) / 
               ( midplane_range[i+1] - midplane_range[i] ) *

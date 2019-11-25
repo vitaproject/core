@@ -16,6 +16,8 @@ def run_midplane_power(midplane_model, plasma):
     else:
       raise NotImplementedError("The midplane_model {} is not yet implemented.".format(midplane_model))
 
+    footprint.s_disconnected_dn_max = 0.003
+    footprint.fx_in_out = 2.5
     footprint.R0 = 1.7
     aux_power = plasma['heating']['NBI-power'] + plasma['heating']['Ohmic-power'] + plasma['heating']['rf-power']
     print("Auxiliary heating = {}".format(aux_power))
@@ -39,4 +41,4 @@ def run_midplane_power(midplane_model, plasma):
     footprint.xlabel='$s\quad [m]$'
     footprint.ylabel='$q//(s)\quad [MW/m^2]$'
     footprint.plot_heat_power_density()
-    print(footprint.calculateHeatPower())
+    print(footprint.calculate_heat_power())
