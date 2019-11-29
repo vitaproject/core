@@ -52,9 +52,24 @@ cdef class RK2(Method):
         return point.add(v1.add(v2).mul(0.5 * self.step_size))
 
 
-# class RK4(Method):
+# cdef class RK4(Method):
 #
-#     pass
+#     cdef double step_size
+#
+#     def __init__(self, step_size=1E-6):
+#         self.step_size = step_size
+#
+#     cdef Point3D step(self, Point3D point, VectorFunction3D field):
+#
+#         cdef:
+#             Point3D p2
+#             Vector3D v1, v2
+#
+#         v1 = field.evaluate(point.x, point.y, point.z).normalise()
+#
+#         pa = point.add(v1.mul(self.step_size*2))
+#
+#         v2 = field.evaluate(p2.x, p2.y, p2.z).normalise()
 
 
 cdef class FieldlineTracer:
@@ -147,7 +162,7 @@ cdef class FieldlineTracer:
                 trajectory_array[ith_position, 1] = position.y
                 trajectory_array[ith_position, 2] = position.z
 
-            return end_point, trajectory_array
+            return end_point, intersection, trajectory_array
         else:
-            return end_point, None
+            return end_point, intersection, None
 
