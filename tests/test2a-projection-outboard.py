@@ -8,12 +8,12 @@ Created on Sun Oct 20 18:28:22 2019
 import numpy as np
 from matplotlib import pyplot as plt
 
-from vita.modules.fiesta import FieldLine
+from vita.modules.fiesta import Fiesta, FieldLine
+from vita.utility import get_resource
 
-#filepath = "T:\\USERS\\J_Wood\\STF1_equilibriums\\export_R200.mat"
-#filepath = "/home/daniel.iglesias/Simulations/plasma_scenarios/ST-F1/ST200/python_responses/export_R200.mat"
-filepath = '/home/jmbols/Postdoc/export_R200.mat'
-field_line = FieldLine(filepath)
+R200 = get_resource("ST-F1", "equilibrium", "R200")
+field_line =  FieldLine(R200)
+
 R = field_line.fiesta_equil.get_midplane_lcfs()
 r0 = 3.05
 rf = 3.1
@@ -34,5 +34,5 @@ for i in field_line_dict:
 f.gca().set_aspect('equal', adjustable='box')
 f.gca().set_ylim([-4,0])
 plt.show()
-print (len(field_line_dict))
+print (len(fiesta_dict))
 
