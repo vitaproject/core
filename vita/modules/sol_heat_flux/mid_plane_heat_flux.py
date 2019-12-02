@@ -5,6 +5,7 @@ Created on Mon Oct 21 09:51:09 2019
 @author: Daniel.Iglesias@tokamak.energy.co.uk
 """
 import scipy.integrate as integrate
+from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
 
 
@@ -21,6 +22,18 @@ class HeatLoad:
         self.model_type = None
         self.s_disconnected_dn_max = 0.001
         self._s_disconnected_dn_inboard = 0.001
+        self._interp_func = None
+
+    def __call__(self, s):
+
+        if not self._interp_func:
+
+            if len(self.__s) > 0 and len(self.__q) > 0:
+                self._interp_func = interp1d(self.__s, self.__q)
+            else:
+                raise RuntimeError("Heatflux model not evaluated yet.")
+
+        return self._interp_func(s)
 
     def calculate_heat_flux_density(self):
         raise NotImplementedError("The inheriting class must implement this virtual function.")
