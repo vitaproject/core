@@ -9,7 +9,7 @@ import math
 import numpy as np
 from vita.modules.sol_heat_flux.eich import Eich
 
-def run_midplane_power(midplane_model, plasma):
+def run_midplane_power(midplane_model, plasma, plot=False):
     '''
     Function for running the specified mid-plane model
 
@@ -20,6 +20,7 @@ def run_midplane_power(midplane_model, plasma):
     return: footprint,     an object of the midplane_model class specified
     '''
     print(plasma)
+    print(plasma['sol'])
     if midplane_model == 'Eich':
         footprint = Eich(5*plasma['sol']['lambda_q'], plasma['sol']['S'])# lambda_q=2., S=0.1
     else:
@@ -50,7 +51,8 @@ def run_midplane_power(midplane_model, plasma):
 
     footprint.xlabel = r'$s\quad [m]$'
     footprint.ylabel = r'$q//(s)\quad [MW/m^2]$'
-    footprint.plot_heat_power_density()
+    if plot:
+        footprint.plot_heat_power_density()
     print(footprint.calculate_heat_power())
 
     return footprint
