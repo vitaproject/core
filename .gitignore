@@ -107,3 +107,6 @@ venv.bak/
 vita/core/magnetic_field/b_field.c
 
 vita/core/magnetic_field/tracer.c
+
+# editors
+*.kate-swp

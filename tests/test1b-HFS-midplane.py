@@ -15,6 +15,6 @@ footprint.set_coordinates(x)
 footprint.s_disconnected_dn_max = 2.1
 footprint.fx_in_out = 5.
 
-footprint.calculate_heat_flux_density("lfs-mp")
+footprint.calculate_heat_flux_density("hfs-mp")
 footprint.plot_heat_power_density()
 print(footprint.calculate_heat_power())

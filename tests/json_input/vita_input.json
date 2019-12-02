@@ -2,37 +2,38 @@
   "run_id": 123456789,
   "run_date": "2019-10-29",
   "user": "daniel-iglesias",
-  "plasma-settings": {
-    "isotopes": "DT",
-    "heating": {
-      "NBI-power": 2.5,
-      "Ohmic-power": 2.5,
-      "rf-power": 5
-    },
-    "equilibrium": "ST40-p45962.eqdsk",
-    "configuration": "DN",
-    "sol":{
-      "lambda_q": 0.002,
-      "S": 0.001
-    },
-    "sweep-frequency": 15
-  },
   "machine-settings": {
     "machine-id": "ST40",
+    "version": "P3",
     "wall-components": [
       {
         "file": "tile1.ply",
-        "material": "Carbon"
+        "material": "Molybdenum"
       },
       {
         "file": "tile2.ply",
-        "material": "Carbon"
+        "material": "Molybdenum"
       },
       {
         "file": "vacuum_vessel.ply",
         "material": "Stainless"
       }
     ]
+  },
+  "plasma-settings": {
+    "isotopes": "DT",
+    "heating": {
+      "NBI-power": 2,
+      "Ohmic-power": 0,
+      "rf-power": 2
+    },
+    "equilibrium": "eq003",
+    "configuration": "DN",
+    "sol":{
+      "lambda_q": 0.002,
+      "S": 0.001
+    },
+    "sweep-frequency": 4
   },
   "analysis": [
     {
