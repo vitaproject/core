@@ -7,26 +7,12 @@ Created on Sun Oct 20 18:28:22 2019
 """
 
 import os
-
-def is_valid_file(parser, arg):
-    '''
-    Function for checking it a file exists
-
-    Input:  parser, an argparse.ArgumentParser object for parsing the terminal input
-            arg,    a terminal input with the file to load
-
-    return: open(arg, 'r'), an open file handle if file exists, else -1
-    '''
-    if not os.path.exists(arg):
-        parser.error("The file %s does not exist!" % arg)
-        return -1
-
-    return open(arg, 'r')
+import json
+import argparse
+from vita.controller.parser import is_valid_file
+from vita.controller.midplane_power import run_midplane_power
 
 if __name__ == "__main__":
-    import json
-    import argparse
-    from vita.controller.midplane_power import run_midplane_power
 
     PARSER = argparse.ArgumentParser(description='Run VITA controller processes in batch mode.\
                                          Input is read from a JSON file (required).')
