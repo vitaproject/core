@@ -123,7 +123,7 @@ def intersection(func1, func2, robust=True):
          y1(2)-y1(1)       0        0  -1;       x0;       -y1(1);
               0       y2(2)-y2(1)   0  -1]       y0]       -y2(1)]
 
-    Let's call that A*T = B.  We can solve for T with T = A\B.
+    Let's call that A*T = B.  We can solve for T with T = A/B.
 
     Once we have our solution we just have to look at t1 and t2 to determine
     whether L1 and L2 intersect.  If 0 <= t1 < 1 and 0 <= t2 < 1 then the two
@@ -232,11 +232,13 @@ def intersection(func1, func2, robust=True):
         if not x_0.size == 0 or not y_0.size == 0:
             return (i, j), (x_0, y_0)
 
+        # end "if not x_0.size == 0 or not y_0.size == 0:"
         print("Warning: Curves do not overlap")
         return (np.nan, np.nan), (np.nan, np.nan)
-    else:
-        print("Warning: Curves do not overlap")
-        return (np.nan, np.nan), (np.nan, np.nan)
+
+    # end "if not i.size == 0:"
+    print("Warning: Curves do not overlap")
+    return (np.nan, np.nan), (np.nan, np.nan)
 
 
 if __name__ == '__main__':
