@@ -22,14 +22,15 @@ def run_midplane_power(midplane_model, plasma, plot=False):
     print(plasma)
     print(plasma['sol'])
     if midplane_model == 'Eich':
-        footprint = Eich(5*plasma['sol']['lambda_q'], plasma['sol']['S'])# lambda_q=2., S=0.1
+        footprint = Eich(plasma['sol']['lambda_q'], plasma['sol']['S'])# lambda_q=2., S=0.1
     else:
         raise NotImplementedError(
             "The midplane_model {} is not yet implemented.".format(midplane_model))
 
-    footprint.s_disconnected_dn_max = 0.003
-    footprint.fx_in_out = 2.5
-    footprint.R0 = 1.7
+#    footprint.s_disconnected_dn_max = 0.003
+#    footprint.fx_in_out = 2.5
+#    footprint.fx = 20
+    footprint.R0 = 1.25*(1.+1./1.9)
     aux_power = plasma['heating']['NBI-power'] + plasma['heating']['Ohmic-power']\
                 + plasma['heating']['rf-power']
     print("Auxiliary heating = {}".format(aux_power))
@@ -51,6 +52,7 @@ def run_midplane_power(midplane_model, plasma, plot=False):
 
     footprint.calculate_heat_flux_density("hfs")
 
+    print("calculated footprint power is {}".format(footprint.calculate_heat_power()), "MW/m")
     footprint.xlabel = r'$s\quad [m]$'
     footprint.ylabel = r'$q//(s)\quad [MW/m^2]$'
     if plot:

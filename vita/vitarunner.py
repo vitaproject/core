@@ -6,14 +6,13 @@ Created on Sun Oct 20 18:28:22 2019
 @author: Daniel.Ibanez
 """
 
-import os
 import json
 import argparse
 from vita.controller.parser import is_valid_file
 from vita.controller.midplane_power import run_midplane_power
 
-if __name__ == "__main__":
-
+#if __name__ == "__main__":
+def main():
     PARSER = argparse.ArgumentParser(description='Run VITA controller processes in batch mode.\
                                          Input is read from a JSON file (required).')
     PARSER.add_argument("file",
@@ -29,9 +28,9 @@ if __name__ == "__main__":
         VITA_INPUT = json.load(fh)
 
     print()
-    print(VITA_INPUT['run_id'])
-    print(VITA_INPUT['run_date'])
-    print(VITA_INPUT['user'])
+    print(VITA_INPUT['general']['run_id'])
+    print(VITA_INPUT['general']['run_date'])
+    print(VITA_INPUT['general']['user'])
     print()
     print('Plasma Settings:')
     print('- Isotopes -> {}'.format(VITA_INPUT['plasma-settings']['isotopes']))

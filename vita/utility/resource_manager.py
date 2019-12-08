@@ -35,8 +35,8 @@ def add_resource(machine, type, id, path, symlink=False):
     _test_allowed_characters(machine)
     _test_allowed_characters(id)
 
-    if type not in ["equilibrium", "mesh"]:
-        raise ValueError("Resources must be of type ['equilibrium', 'mesh'].")
+    if type not in ["equilibrium", "geometry", "mesh"]:
+        raise ValueError("Resources must be of type ['equilibrium', 'geometry', 'mesh'].")
 
     directory = os.path.join(_RESOURCE_ROOT, machine, type)
     # create directory structure if missing
@@ -75,8 +75,8 @@ def update_resource(machine, type, id, path, symlink=False):
     _test_allowed_characters(machine)
     _test_allowed_characters(id)
 
-    if type not in ["equilibrium", "mesh"]:
-        raise ValueError("Resources must be of type ['equilibrium', 'mesh'].")
+    if type not in ["equilibrium", "geometry", "mesh"]:
+        raise ValueError("Resources must be of type ['equilibrium', 'geometry', 'mesh'].")
 
     directory = os.path.join(_RESOURCE_ROOT, machine, type)
     if not os.path.isdir(directory):
@@ -113,8 +113,8 @@ def get_resource(machine, type, id):
     _test_allowed_characters(machine)
     _test_allowed_characters(id)
 
-    if type not in ["equilibrium", "mesh"]:
-        raise ValueError("Resources must be of type ['equilibrium', 'mesh'].")
+    if type not in ["equilibrium", "geometry", "mesh"]:
+        raise ValueError("Resources must be of type ['equilibrium', 'geometry', 'mesh'].")
 
     directory = os.path.join(_RESOURCE_ROOT, machine, type)
     if not os.path.isdir(directory):
