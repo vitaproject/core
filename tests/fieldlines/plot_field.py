@@ -9,7 +9,7 @@ from cherab.tools.equilibrium import plot_equilibrium
 
 # load the equilibrium
 eq002 = get_resource("ST40", "equilibrium", "eq002")
-fiesta = Fiesta("eq_0002_test.mat")
+fiesta = Fiesta(eq002)
 equilibrium = fiesta.to_cherab_equilibrium()
 
 plt.ion()
