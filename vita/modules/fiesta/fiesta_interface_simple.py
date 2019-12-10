@@ -14,7 +14,9 @@ from vita.modules.utils import intersection
 
 class Fiesta():
     '''
-    Class for tracing the magnetic field lines given a FIESTA equlibrium
+    Class for tracing the magnetic field lines given a FIESTA equlibrium.
+    This uses a limited set of FIESTA data, making it backward compatible with older FIESTA files,
+    but does not have CHERAB functionallity
 
     :param str filename: the path to the FIESTA MATLAB save file.
 
@@ -75,18 +77,11 @@ class Fiesta():
         self.psi_n = mat['psi_n']
         self.psi_axis = mat['psi_a']
         self.psi_lcfs = mat['psi_b']
-        self.mag_axis = mat['mag_axis']
         self.b_r = mat['Br']
         self.b_z = mat['Bz']
         self.b_phi = mat['Bphi']
         self.b_theta = mat['Btheta']
-        self.b_vac_radius = mat['b_vacuum_radius']
-        self.b_vac = mat['b_vacuum_magnitude']
         self.i_rod = mat['irod']
-        self.x_points = mat['xpoints']
-        self.f_profile = mat['f_profile']
-        self.q_profile = mat['q_profile']
-        self.lcfs_polygon = mat['lcfs_polygon']
 
     def get_midplane_lcfs(self, psi_p=1.005):
         '''
@@ -115,53 +110,6 @@ class Fiesta():
         plt.close() # plt.contour opens a plot, close it
 
         return r_lcfs
-
-    def to_cherab_equilibrium(self):
-        """
-        Function for converting this Fiesta object to a CHERAB equilibrium.
-
-        rtype: EFITEquilibrium
-        """
-
-        try:
-            from raysect.core import Point2D
-            from cherab.tools.equilibrium import EFITEquilibrium
-
-        except ImportError:
-            raise RuntimeError("CHERAB integration not installed.")
-
-        r_vec = self.r_vec
-        z_vec = self.z_vec
-        psi = np.swapaxes(self.psi, 0, 1)
-        psi_axis = self.psi_axis
-        psi_lcfs = self.psi_lcfs
-        magnetic_axis = Point2D(self.mag_axis[0], self.mag_axis[1])
-
-        x_points = []
-        for point in self.x_points:
-            x_points.append(Point2D(point[0], point[1]))
-
-        strike_points = []
-
-        f_profile = self.f_profile
-        q_profile = self.q_profile
-
-        b_vacuum_radius = self.b_vac_radius
-        b_vacuum_magnitude = self.b_vac
-
-        lcfs_polygon = self.lcfs_polygon  # shape 2xM, indexing to remove duplicated point
-        if np.all(lcfs_polygon[:, 0] == lcfs_polygon[:, -1]):
-            lcfs_polygon = lcfs_polygon[:, 0:-1]
-
-        limiter_polygon = np.array([self.r_limiter, self.z_limiter])  # 2xM
-
-        time = 0.0
-
-        equilibrium = EFITEquilibrium(r_vec, z_vec, psi, psi_axis, psi_lcfs, magnetic_axis, x_points, strike_points,
-                                      f_profile, q_profile, b_vacuum_radius, b_vacuum_magnitude,
-                                      lcfs_polygon, limiter_polygon, time)
-
-        return equilibrium
 
 
 if __name__ == '__main__':

@@ -95,6 +95,7 @@ setup(
             'vita_add_resource = vita.utility.scripts.add_resource:main',
             'vita_update_resource = vita.utility.scripts.update_resource:main',
             'vita_remove_resource = vita.utility.scripts.remove_resource:main',
+            'vitarunner = vita.vitarunner:main'
         ]
     },
     include_package_data=True,

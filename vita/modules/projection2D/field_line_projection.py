@@ -72,12 +72,13 @@ def project_heat_flux(heat_flux_profile_omp, surface_position, equilibrium):
     not_in_div = len(intersection_x)
     x_after_lcfs = x_after_lcfs[:not_in_div]
     f_x = np.zeros(not_in_div)
-    dist_div = np.sqrt(np.square(intersection_x[1:]-intersection_x[:-1])\
-               + np.square(intersection_y[1:]-intersection_y[:-1]))
+    dist_div = np.sqrt(np.square(intersection_x[1:]-intersection_x[:-1])
+                       + np.square(intersection_y[1:]-intersection_y[:-1]))
     f_x[0:-1] = (dist_div)/(x_after_lcfs[1:]-x_after_lcfs[:-1])
     f_x[-1] = f_x[-2]
     f_x = savgol_filter(f_x, 51, 3)
-    q_div = x_after_lcfs/intersection_x*heat_flux_profile_omp[1, :not_in_div]/f_x
+    q_div = x_after_lcfs/intersection_x * \
+          heat_flux_profile_omp[1, :not_in_div]/f_x
 
     heat_flux_at_intersection = np.array([intersection_x, intersection_y, q_div])
 

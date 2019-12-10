@@ -14,4 +14,5 @@ equilibrium = fiesta.to_cherab_equilibrium()
 
 plt.ion()
 plot_equilibrium(equilibrium, detail=True)
-plt.show()
+plt.show(block=True)
+
