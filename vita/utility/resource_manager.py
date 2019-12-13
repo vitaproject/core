@@ -97,7 +97,19 @@ def update_resource(machine, type, id, path, symlink=False):
 
 
 def list_resources():
-    pass
+    dict_list = {}
+    dict_list['path'] = _RESOURCE_ROOT
+    dict_list['machines'] = next(os.walk(dict_list['path']))[1]
+    dict_list['equilibrium'] = {}
+    dict_list['geometry'] = {}
+    for machine in dict_list['machines']:
+        for resource in ['equilibrium', 'geometry']:
+            localpath = _RESOURCE_ROOT + '/' + machine + '/' + resource
+            if not os.path.isdir(localpath): # resource type not found
+                dict_list[resource][machine] = []
+            else:
+                dict_list[resource][machine] = os.listdir(localpath)
+    return dict_list
 
 
 def get_resource(machine, type, id):
@@ -129,7 +141,6 @@ def get_resource(machine, type, id):
         raise ValueError("Existing resource not found, you must add this as a new resource.")
 
     return resource_path
-
 
 def remove_resource(machine, type, id, prompt_user=False):
     """

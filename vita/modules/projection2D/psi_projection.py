@@ -16,7 +16,7 @@ class PsiMapper:
     def __init__(self):
         self.r0_hfs = 0.  # edge radius at outboard equatorial midplane
         self.r0_lfs = 0.  # edge radius at inboard equatorial midplane
-        self.__s = []  # equatorial midplane coordinate array
+        self.__s = []  # limiter profile coordinate array
         self.__q = []  # heat flux density profile
         self.__totalPower = 0.
         self.model_type = None
@@ -24,5 +24,19 @@ class PsiMapper:
         self._s_disconnected_dn_inboard = 0.001
         self._interp_func = None
  
+    def setEquilibrium(self,equil_in):
+        self.equil = equil_in
+    
+    def setLimiterProfile(self,profile_in):
+        self.__profile = profile_in
+        
     def mapMidPlaneFlux(self, q_mp, r_mp, equil):
         self.__q = q_mp
+        self.__s
+
+if __name__ == '__main__':
+    from vita.utility import get_resource
+
+    equil = get_resource("ST40", "equilibrium", "eq002")
+    FIESTA_EQUIL = Fiesta(equil)
+    print(FIESTA_EQUIL.get_midplane_lcfs())

@@ -8,9 +8,9 @@ Created on Sun Oct 20 18:28:22 2019
 from vita.modules.sol_heat_flux.eich import Eich
 import numpy as np
 
-footprint = Eich(2.5, 0.5)# lambda_q=2.5, S=0.5
+footprint = Eich(2.5, 0.5)  # lambda_q=2.5, S=0.5
 
-x=np.linspace(-1, 10, 100)
+x = np.linspace(-1, 10, 100)
 footprint.set_coordinates(x)
 footprint.s_disconnected_dn_max = 2.1
 footprint.fx_in_out = 5.
