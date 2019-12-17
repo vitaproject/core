@@ -2,7 +2,7 @@
 """
 Created on Mon Oct 21 09:51:09 2019
 
-@author: Daniel.Iglesias@tokamak.energy.co.uk
+@author: Daniel.Iglesias@tokamakenergy.co.uk
 """
 import scipy.integrate as integrate
 from scipy.interpolate import interp1d
