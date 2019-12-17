@@ -148,7 +148,7 @@ for i in range(q_vals.shape[0]):
 q_to_s_func = interp1d(q_cumulative_values, s_vals, fill_value="extrapolate")
 
 TOTAL_POWER = 1E6 / 8  # 1MW
-NUM_OF_FIELDLINES = 30000  # 50000
+NUM_OF_FIELDLINES = 300  # 50000
 
 
 ##############################
