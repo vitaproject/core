@@ -109,7 +109,7 @@ class Fiesta():
             is_core = any(c_i[:, 1] > 0)*any(c_i[:, 1] < 0)
             if is_core:
                 func1 = np.array((c_i[:, 0], c_i[:, 1]))
-                func2 = np.array((np.array([0., 1.]), np.array([0., 0.])))
+                func2 = np.array((np.array([0., np.max(r_vec)]), np.array([0., 0.])))
                 (_, _), (r_lcfs, _) = intersection(func1, func2)
 
         plt.close() # plt.contour opens a plot, close it
@@ -167,10 +167,6 @@ class Fiesta():
 if __name__ == '__main__':
     from vita.utility import get_resource
 
-    #FILEPATH = '/home/jmbols/Postdoc/ST40/Programme 1/Equilibrium/eq001_limited.mat'
-    #FIESTA_EQUIL = Fiesta(FILEPATH)
-    #print(FIESTA_EQUIL.get_midplane_lcfs())
-
-    equil = get_resource("ST40", "equilibrium", "eq002")
+    equil = get_resource("ST40", "equilibrium", "limited_eq001_export")
     FIESTA_EQUIL = Fiesta(equil)
     print(FIESTA_EQUIL.get_midplane_lcfs())
