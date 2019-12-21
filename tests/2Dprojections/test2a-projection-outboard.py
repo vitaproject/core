@@ -11,7 +11,7 @@ from matplotlib import pyplot as plt
 from vita.modules.fiesta import Fiesta, FieldLine
 from vita.utility import get_resource
 
-R200 = get_resource("ST-F1", "equilibrium", "R200")
+R200 = get_resource("ST200", "equilibrium", "R200")
 field_line =  FieldLine(R200)
 
 R = field_line.fiesta_equil.get_midplane_lcfs()
