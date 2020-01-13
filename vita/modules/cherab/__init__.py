@@ -1,4 +1,4 @@
 
 
 from .b_field import MagneticField
-from .tracer import FieldlineTracer, Euler, RK2
+from .tracer import FieldlineTracer, Euler, RK2, RK4
