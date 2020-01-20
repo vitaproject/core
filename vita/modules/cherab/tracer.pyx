@@ -52,24 +52,37 @@ cdef class RK2(Method):
         return point.add(v1.add(v2).mul(0.5 * self.step_size))
 
 
-# cdef class RK4(Method):
-#
-#     cdef double step_size
-#
-#     def __init__(self, step_size=1E-6):
-#         self.step_size = step_size
-#
-#     cdef Point3D step(self, Point3D point, VectorFunction3D field):
-#
-#         cdef:
-#             Point3D p2
-#             Vector3D v1, v2
-#
-#         v1 = field.evaluate(point.x, point.y, point.z).normalise()
-#
-#         pa = point.add(v1.mul(self.step_size*2))
-#
-#         v2 = field.evaluate(p2.x, p2.y, p2.z).normalise()
+cdef class RK4(Method):
+
+    cdef double step_size
+
+    def __init__(self, step_size=1E-6):
+        self.step_size = step_size
+
+    cdef Point3D step(self, Point3D point, VectorFunction3D field):
+
+        cdef:
+            Point3D pk, pk2
+            Vector3D va, vb, vc, vd, v_temp
+
+        pk = point
+
+        va = field.evaluate(pk.x, pk.y, pk.z).normalise()
+        va = va.mul(2 * self.step_size)
+
+        vb = field.evaluate(pk.x + va.x/2, pk.y + va.y/2, pk.z + va.z/2)
+        vb = vb.mul(2 * self.step_size)
+
+        vc = field.evaluate(pk.x + vb.x/2, pk.y + vb.y/2, pk.z + vb.z/2)
+        vc = vc.mul(2 * self.step_size)
+
+        vd = field.evaluate(pk.x + vc.x/2, pk.y + vc.y/2, pk.z + vc.z/2)
+        vd = vd.mul(2 * self.step_size)
+
+        v_temp = va.add(vb.mul(2)).add(vc.mul(2)).add(vd).div(6)
+        pk2 = pk.add(v_temp)
+
+        return pk2
 
 
 cdef class FieldlineTracer:
