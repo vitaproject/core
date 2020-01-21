@@ -10,6 +10,7 @@ import pathlib
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.signal import savgol_filter
+from vita.utility import get_resource
 from vita.modules.utils import intersection
 from vita.modules.fiesta.field_line import FieldLine
 from vita.modules.fiesta.map_field_lines import map_field_lines
@@ -89,7 +90,7 @@ if __name__ == '__main__':
     HESELDATA = HESELdata(HESEL_FILE_PATH)
     HESELDATA.evaluate_parallel_heat_fluxes()
 
-    FILEPATH = '/media/jmbols/Data/jmbols/ST40/Programme 3/Equilibrium/eq_0002.mat'
+    FILEPATH = get_resource("ST40", "equilibrium", "eq002")
 
     FIELD_LINE = FieldLine(FILEPATH)
     MID_PLANE_LOC = FIELD_LINE.fiesta_equil.get_midplane_lcfs()[1]
