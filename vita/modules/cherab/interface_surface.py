@@ -16,6 +16,15 @@ from vita.modules.sol_heat_flux.mid_plane_heat_flux import HeatLoad
 
 
 class InterfaceSurface:
+    """
+    Class for mapping power from an interface surface in the divertor onto the walls.
+
+    :param Point2D point_a: A 2D point representing the start of the interface surface.
+    :param Point2D point_b: A 2D point representing the end of the interface surface.
+    :param ndarray power_profile: A an array of power values representing the power
+      profile along the interface surface. These points are equally spaced and will be
+      re-normalised to give an integral of one over the surface.
+    """
 
     def __init__(self, point_a, point_b, power_profile, total_power):
 
@@ -65,6 +74,23 @@ class InterfaceSurface:
 
     def map_power(self, power, angle_period, field_tracer, world,
                   num_of_fieldlines=50000, max_tracing_length=15, debug_output=False):
+        """
+        Map the power from this surface onto the wall tiles.
+
+        :param float power: The total power that will be mapped onto the tiles using the
+          specified distribution.
+        :param float angle_period: the spatial period for the interface surface in degrees,
+          e.g. 45 degrees. Exploiting cylindrical symmetry will enable a significant speed up
+          of the calculations.
+        :param FieldlineTracer field_tracer: a pre-configured field line tracer object.
+        :param World world; A world scenegraph to be mapped. This scenegraph must contain all the
+          desired meshes for power tracking calculations.
+        :param int num_of_fieldlines: the number of fieldlines to launch in the mapping process.
+          Defaults to 50000 fieldlines.
+        :param float max_tracing_length: the maximum length for tracing fieldlines.
+        :param bool debug_output: toggle to print extra debug information output, such as the meshes
+          collided with and the amount of lost power.
+        """
 
         if not (isinstance(power, (float, int)) and power > 0):
             raise TypeError("The interface power must be a float/int > 0.")
@@ -166,6 +192,11 @@ class InterfaceSurface:
         return sample_point
 
     def plot(self, equilibrium):
+        """
+        Plot the interface surface line across the equilibrium.
+
+        :param EFITEquilibrium equilibrium: the equilibrium to plot.
+        """
 
         sample_points = []
         num_samples = self._power_profile.shape[0]
@@ -187,9 +218,23 @@ class InterfaceSurface:
         plt.plot(sample_distances, self._power_profile)
 
 
+# TODO - this should be replaced with Jeppe's mapping functions
 def sample_power_at_surface(point_a, point_b, equilibrium, heat_load,
                             s_min=-0.01, s_max=0.1, num_samples=1000,
                             lcfs_radii_min=0.7, lcfs_radii_max=0.9):
+    """
+    Sample the power profile from an upstream heat profile along an interface surface in the divertor.
+
+    :param Point2D point_a: A 2D point representing the start of the interface surface.
+    :param Point2D point_b: A 2D point representing the end of the interface surface.
+    :param EFITEquilibrium equilibrium: the equilibrium to use for the mapping.
+    :param HeatLoad heat_load: the upstream mid-plane heat profile.
+    :param float s_min: the lower range for heat profile sampling.
+    :param float s_max: the upper range for heat profile sampling.
+    :param int num_samples: the number of heat profile samples over the range.
+    :param float lcfs_radii_min: lower bound for lcfs radius search.
+    :param float lcfs_radii_max: upper bound for lcfs radius search.
+    """
 
     if not isinstance(point_a, Point2D):
         raise TypeError("Variable point_a must be a Point2D")
@@ -220,7 +265,7 @@ def sample_power_at_surface(point_a, point_b, equilibrium, heat_load,
         def psin(r, offset=0):
             return psin2d(r, 0) - 1 + offset
 
-        r_lcfs = brentq(psin, 0.7, 0.9, args=(0,))
+        r_lcfs = brentq(psin, lcfs_radii_min, lcfs_radii_max, args=(0,))
 
         return r_lcfs
 
