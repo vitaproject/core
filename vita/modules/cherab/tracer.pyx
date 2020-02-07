@@ -16,6 +16,11 @@ cdef class Method:
 
 
 cdef class Euler(Method):
+    """
+    A basic Euler solver for vector field tracing.
+
+    :param float step_size: the spatial step size for the solver.
+    """
 
     cdef double step_size
 
@@ -32,6 +37,11 @@ cdef class Euler(Method):
 
 
 cdef class RK2(Method):
+    """
+    A basic Runge-Kutta solver of order 2 for vector field tracing.
+
+    :param float step_size: the spatial step size for the solver.
+    """
 
     cdef double step_size
 
@@ -53,6 +63,11 @@ cdef class RK2(Method):
 
 
 cdef class RK4(Method):
+    """
+    A basic Runge-Kutta solver of order 4 for vector field tracing.
+
+    :param float step_size: the spatial step size for the solver.
+    """
 
     cdef double step_size
 
@@ -86,6 +101,16 @@ cdef class RK4(Method):
 
 
 cdef class FieldlineTracer:
+    """
+    A class for field line tracing.
+
+    Designed to trace a vector field function with configurable accuracy. Once initialised
+    with a vector field and solver method, the trace() function can be called repeatably.
+
+    :param VectorFunction3D field: the vector field to trace.
+    :param Method method: a configurable method for solving for the next step along the field
+      line. Typically a Runge-Kutta style ODE solver.
+    """
 
     cdef:
         Method method
@@ -104,6 +129,17 @@ cdef class FieldlineTracer:
 
     cpdef tuple trace(self, World world, Point3D seed_point, double max_length=100,
                       bint save_trajectory=False, double save_resolution=0.001):
+        """
+        Traces the vector vector field for a given seed point and world scenegraph.
+        
+        :param World world: the Raysect scenegraph being traced.
+        :param Point3D seed_point: the seed point for initialising the tracing.
+        :param float max_length: the maximum length for fieldline tracing.
+        :param bool save_trajectory: boolean flag to toggle whether the 3D trajectory
+          will be saved. Caution, this can generate large amounts of data.
+        :param float save_resolution: the spatial resolution for trajectory saving if
+          the save_trajectory toggle is turned on.
+        """
 
         cdef:
             list trajectory
