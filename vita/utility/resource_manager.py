@@ -35,8 +35,8 @@ def add_resource(machine, type, id, path, symlink=False):
     _test_allowed_characters(machine)
     _test_allowed_characters(id)
 
-    if type not in ["equilibrium", "geometry", "mesh"]:
-        raise ValueError("Resources must be of type ['equilibrium', 'geometry', 'mesh'].")
+    if type not in ["configuration", "equilibrium", "geometry", "mesh"]:
+        raise ValueError("Resources must be of type ['configuration', 'equilibrium', 'geometry', 'mesh'].")
 
     directory = os.path.join(_RESOURCE_ROOT, machine, type)
     # create directory structure if missing
@@ -75,8 +75,8 @@ def update_resource(machine, type, id, path, symlink=False):
     _test_allowed_characters(machine)
     _test_allowed_characters(id)
 
-    if type not in ["equilibrium", "geometry", "mesh"]:
-        raise ValueError("Resources must be of type ['equilibrium', 'geometry', 'mesh'].")
+    if type not in ["configuration", "equilibrium", "geometry", "mesh"]:
+        raise ValueError("Resources must be of type ['configuration', 'equilibrium', 'geometry', 'mesh'].")
 
     directory = os.path.join(_RESOURCE_ROOT, machine, type)
     if not os.path.isdir(directory):
@@ -125,8 +125,8 @@ def get_resource(machine, type, id):
     _test_allowed_characters(machine)
     _test_allowed_characters(id)
 
-    if type not in ["equilibrium", "geometry", "mesh"]:
-        raise ValueError("Resources must be of type ['equilibrium', 'geometry', 'mesh'].")
+    if type not in ["configuration", "equilibrium", "geometry", "mesh"]:
+        raise ValueError("Resources must be of type ['configuration', 'equilibrium', 'geometry', 'mesh'].")
 
     directory = os.path.join(_RESOURCE_ROOT, machine, type)
     if not os.path.isdir(directory):
@@ -142,6 +142,7 @@ def get_resource(machine, type, id):
 
     return resource_path
 
+
 def remove_resource(machine, type, id, prompt_user=False):
     """
     Remove a resource from the VITA resource file catalog.
@@ -155,8 +156,8 @@ def remove_resource(machine, type, id, prompt_user=False):
     _test_allowed_characters(machine)
     _test_allowed_characters(id)
 
-    if type not in ["equilibrium", "mesh"]:
-        raise ValueError("Resources must be of type ['equilibrium', 'mesh'].")
+    if type not in ["configuration", "equilibrium", "mesh"]:
+        raise ValueError("Resources must be of type ['configuration', 'equilibrium', 'mesh'].")
 
     directory = os.path.join(_RESOURCE_ROOT, machine, type)
     if not os.path.isdir(directory):
