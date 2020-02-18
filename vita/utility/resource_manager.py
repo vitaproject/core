@@ -130,7 +130,8 @@ def get_resource(machine, type, id):
 
     directory = os.path.join(_RESOURCE_ROOT, machine, type)
     if not os.path.isdir(directory):
-        raise ValueError("The specified resource was not found.")
+        raise ValueError("The specified resource was not found."
+                         "{} - {} - {}".format(machine, type, id))
 
     candidates = os.listdir(directory)
     for candidate in candidates:
