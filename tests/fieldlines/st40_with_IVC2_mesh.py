@@ -4,7 +4,7 @@ from mayavi import mlab
 from raysect.core import Point3D, World, rotate_z
 from raysect.primitive import import_ply
 
-from vita.modules.cherab import FieldlineTracer, RK2, RK4
+from vita.modules.cherab import FieldlineTracer, RK2, RK4, load_wall_configuration
 from vita.modules.fiesta import Fiesta
 from vita.utility import get_resource
 
@@ -15,57 +15,8 @@ world = World()
 ##########################
 # add machine components #
 
-vessel = get_resource("ST40-IVC2", "mesh", "vessel")
-vessel = import_ply(vessel, scaling=0.001, parent=world, name="vessel")
-
-vessel_lower = get_resource("ST40-IVC2", "mesh", "vessel_lower")
-vessel_lower = import_ply(vessel_lower, scaling=0.001, parent=world, name="vessel_lower")
-
-vessel_upper = get_resource("ST40-IVC2", "mesh", "vessel_upper")
-vessel_upper = import_ply(vessel_upper, scaling=0.001, parent=world, name="vessel_upper")
-
-centre_column = get_resource("ST40-IVC2", "mesh", "centre_column")
-centre_column = import_ply(centre_column, scaling=0.001, parent=world, name="centre_column")
-
-poloidal_coil_lower_45 = get_resource("ST40-IVC2", "mesh", "poloidal_coil_lower_45")
-poloidal_coil_lower_45 = import_ply(poloidal_coil_lower_45, scaling=0.001, name="poloidal_coil_lower_45")
-for i in range(8):
-    poloidal_coil_lower_45.instance(parent=world, transform=rotate_z(i * 45), name="poloidal_coil_lower_45")
-
-poloidal_coil_upper_45 = get_resource("ST40-IVC2", "mesh", "poloidal_coil_upper_45")
-poloidal_coil_upper_45 = import_ply(poloidal_coil_upper_45, scaling=0.001, name="poloidal_coil_upper_45")
-for i in range(8):
-    poloidal_coil_upper_45.instance(parent=world, transform=rotate_z(i * 45), name="poloidal_coil_upper_45")
-
-limiter_lower_45 = get_resource("ST40-IVC2", "mesh", "limiter_lower_45")
-limiter_lower_45 = import_ply(limiter_lower_45, scaling=0.001, name="limiter_lower_45")
-for i in range(8):
-    limiter_lower_45.instance(parent=world, transform=rotate_z(i * 45), name="limiter_lower_45")
-
-limiter_upper_45 = get_resource("ST40-IVC2", "mesh", "limiter_upper_45")
-limiter_upper_45 = import_ply(limiter_upper_45, scaling=0.001, name="limiter_upper_45")
-for i in range(8):
-    limiter_upper_45.instance(parent=world, transform=rotate_z(i * 45), name="limiter_upper_45")
-
-divertor_tile_lower_45 = get_resource("ST40-IVC2", "mesh", "divertor_tile_lower_45")
-divertor_tile_lower_45 = import_ply(divertor_tile_lower_45, scaling=0.001, name="divertor_tile_lower_45")
-for i in range(8):
-    divertor_tile_lower_45.instance(parent=world, transform=rotate_z(i * 45), name="divertor_tile_lower_45")
-
-divertor_tile_upper_45 = get_resource("ST40-IVC2", "mesh", "divertor_tile_upper_45")
-divertor_tile_upper_45 = import_ply(divertor_tile_upper_45, scaling=0.001, name="divertor_tile_upper_45")
-for i in range(8):
-    divertor_tile_upper_45.instance(parent=world, transform=rotate_z(i * 45), name="divertor_tile_upper_45")
-
-centre_column_tiles_lower_45 = get_resource("ST40-IVC2", "mesh", "centre_column_tiles_lower_45")
-centre_column_tiles_lower_45 = import_ply(centre_column_tiles_lower_45, scaling=0.001, name="centre_column_tiles_lower_45")
-for i in range(8):
-    centre_column_tiles_lower_45.instance(parent=world, transform=rotate_z(i * 45), name="centre_column_tiles_lower_45")
-
-centre_column_tiles_upper_45 = get_resource("ST40-IVC2", "mesh", "centre_column_tiles_upper_45")
-centre_column_tiles_upper_45 = import_ply(centre_column_tiles_upper_45, scaling=0.001, name="centre_column_tiles_upper_45")
-for i in range(8):
-    centre_column_tiles_upper_45.instance(parent=world, transform=rotate_z(i * 45), name="centre_column_tiles_upper_45")
+config_file = get_resource("ST40-IVC2", "configuration", 'st40_ivc2_config')
+load_wall_configuration(config_file, world)
 
 
 eq002 = get_resource("ST40", "equilibrium", "eq002")
