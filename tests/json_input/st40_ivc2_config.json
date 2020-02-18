@@ -1,0 +1,67 @@
+{
+  "machine-settings": {
+    "machine-id": "ST40-IVC2",
+    "wall-components": [
+      {
+        "mesh-resource-id": "vessel",
+        "scaling": 0.001,
+        "period": 360
+      },
+      {
+        "mesh-resource-id": "vessel_lower",
+        "scaling": 0.001,
+        "period": 360
+      },
+      {
+        "mesh-resource-id": "vessel_upper",
+        "scaling": 0.001,
+        "period": 360
+      },
+      {
+        "mesh-resource-id": "centre_column",
+        "scaling": 0.001,
+        "period": 360
+      },
+      {
+        "mesh-resource-id": "poloidal_coil_lower_45",
+        "scaling": 0.001,
+        "period": 45
+      },
+      {
+        "mesh-resource-id": "poloidal_coil_upper_45",
+        "scaling": 0.001,
+        "period": 45
+      },
+      {
+        "mesh-resource-id": "limiter_lower_45",
+        "scaling": 0.001,
+        "period": 45
+      },
+      {
+        "mesh-resource-id": "limiter_upper_45",
+        "scaling": 0.001,
+        "period": 45
+      },
+      {
+        "mesh-resource-id": "divertor_tile_lower_45",
+        "scaling": 0.001,
+        "period": 45
+      },
+      {
+        "mesh-resource-id": "divertor_tile_upper_45",
+        "scaling": 0.001,
+        "period": 45
+      },
+      {
+        "mesh-resource-id": "centre_column_tiles_lower_45",
+        "scaling": 0.001,
+        "period": 45
+      },
+      {
+        "mesh-resource-id": "centre_column_tiles_upper_45",
+        "scaling": 0.001,
+        "period": 45
+      }
+    ]
+  }
+}
