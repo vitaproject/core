@@ -49,7 +49,8 @@ def load_wall_configuration(config_file, parent):
         mesh_instances = int(360 / period)
 
         mesh_file = get_resource(machine_id, 'mesh', resource_id)
-        name, ext = os.path.splitext(mesh_file)
+        path, filename = os.path.split(mesh_file)
+        name, ext = os.path.splitext(filename)
 
         importer = _import_functions[ext]
 
