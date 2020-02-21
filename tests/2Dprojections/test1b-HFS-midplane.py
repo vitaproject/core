@@ -12,9 +12,11 @@ footprint = Eich(2.5,0.5)# lambda_q=2.5, S=0.5
 
 x=np.linspace(-1,10,100)
 footprint.set_coordinates(x)
-footprint.s_disconnected_dn_max = 2.1
-footprint.fx_in_out = 5.
+footprint.s_disconnected_dn_max = 1.0
+footprint.fx_in_out = 5.0
+
 
 footprint.calculate_heat_flux_density("hfs-mp")
 footprint.plot_heat_power_density()
+print(footprint._s_disconnected_dn_inboard)
 print(footprint.calculate_heat_power())
