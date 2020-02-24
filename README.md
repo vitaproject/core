@@ -6,10 +6,10 @@ cd raysect
 'git checkout feature/mesh_uv_points'
 'python setup.py develop'
 
-- Install Cherab with develop branch
+- Install Cherab with master branch
 git clone https://github.com/cherab/core.git cherab
 cd cherab
-git checkout development
+git checkout master
 python setup.py develop
 
 - install VITA
