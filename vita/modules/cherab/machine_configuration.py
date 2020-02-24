@@ -43,6 +43,11 @@ def load_wall_configuration(config_file, parent):
         except KeyError:
             period = 360
 
+        try:
+            rotation_offset = component["rotation_offset"]
+        except KeyError:
+            rotation_offset = 0
+
         # TODO - add proper material handling
         material = AbsorbingSurface()
 
@@ -54,7 +59,7 @@ def load_wall_configuration(config_file, parent):
 
         importer = _import_functions[ext]
 
-        mesh = importer(mesh_file, scaling=scaling, name=name)
+        mesh = importer(mesh_file, scaling=scaling, name=name, transform=rotate_z(rotation_offset))
         for i in range(mesh_instances):
             mesh.instance(material=material, parent=parent, transform=rotate_z(i * 45), name=name)
 
