@@ -43,10 +43,20 @@ cdef class RK2(Method):
     :param float step_size: the spatial step size for the solver.
     """
 
-    cdef double step_size
+    cdef:
+        double step_size, _direction
+        str direction
 
-    def __init__(self, step_size=1E-6):
+    def __init__(self, step_size=1E-6, direction="positive"):
+
         self.step_size = step_size
+        self.direction = direction
+        if direction=="positive":
+            self._direction = 1
+        elif direction=="negative":
+            self._direction = -1
+        else:
+            raise ValueError()
 
     cdef Point3D step(self, Point3D point, VectorFunction3D field):
 
@@ -56,10 +66,10 @@ cdef class RK2(Method):
 
         v1 = field.evaluate(point.x, point.y, point.z).normalise()
 
-        p2 = point.add(v1.mul(self.step_size))
+        p2 = point.add(v1.mul(self.step_size * self._direction))
         v2 = field.evaluate(p2.x, p2.y, p2.z).normalise()
 
-        return point.add(v1.add(v2).mul(0.5 * self.step_size))
+        return point.add(v1.add(v2).mul(0.5 * self.step_size * self._direction))
 
 
 cdef class RK4(Method):
