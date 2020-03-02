@@ -1,5 +1,7 @@
 
+import vtk
 import time
+from math import atan2
 import numpy as np
 from numpy.random import random
 import matplotlib.pyplot as plt
@@ -8,7 +10,7 @@ import scipy.integrate as integrate
 from scipy.interpolate import interp1d
 from scipy.optimize import brentq
 
-from raysect.core import Point2D, Point3D
+from raysect.core import Point2D, Point3D, rotate_z
 from raysect.primitive import export_vtk
 from cherab.tools.equilibrium import EFITEquilibrium, plot_equilibrium
 
@@ -111,6 +113,7 @@ class InterfaceSurface:
 
         meshes = {}
         mesh_powers = {}
+        mesh_hitpoints = {}
         null_intersections = 0
         lost_power = 0
 
@@ -134,6 +137,7 @@ class InterfaceSurface:
                 except KeyError:
                     meshes[intersection.primitive.name] = intersection.primitive
 
+                # extract power array for intersected mesh and save results
                 try:
                     powers = mesh_powers[intersection.primitive.name]
                 except KeyError:
@@ -143,6 +147,20 @@ class InterfaceSurface:
 
                 tri_id = intersection.primitive_coords[0]
                 powers[tri_id] += power_per_fieldline
+
+                # save hit points for saving to a separate vtk file
+                try:
+                    hitpoints = mesh_hitpoints[intersection.primitive.name]
+                except KeyError:
+                    hitpoints = []
+                    mesh_hitpoints[intersection.primitive.name] = hitpoints
+
+                # map the hit point back to the starting sector (angular period)
+                hit_point = intersection.hit_point.transform(intersection.primitive_to_world)
+                theta = np.rad2deg(atan2(hit_point.y, hit_point.x))
+                phase_theta = theta - theta % angle_period
+                mapped_point = hit_point.transform(rotate_z(-phase_theta))
+                hitpoints.append((mapped_point.x, mapped_point.y, mapped_point.z))
 
             else:
                 null_intersections += 1
@@ -168,20 +186,13 @@ class InterfaceSurface:
 
             mesh_primitive = meshes[mesh_name]
             powers = mesh_powers[mesh_name]
+            hitpoints = np.array(mesh_hitpoints[mesh_name])
 
-            # normalise power per area
-            for i in range(powers.shape[0]):
-                if powers[i] > 0:
-                    triangle = mesh_primitive.data.triangle(i)
-                    p1 = mesh_primitive.data.vertex(triangle[0])
-                    p2 = mesh_primitive.data.vertex(triangle[1])
-                    p3 = mesh_primitive.data.vertex(triangle[2])
-                    v12 = p1.vector_to(p2)
-                    v13 = p1.vector_to(p3)
-                    tri_area = v12.cross(v13).length / 2
-                    powers[i] /= tri_area
+            output_filename = mesh_name + ".vtk"
+            self._write_mesh_power_vtk(output_filename, powers, mesh_primitive)
 
-            export_vtk(mesh_primitive, mesh_name + ".vtk", triangle_data={"power": powers})
+            point_filename = mesh_name + ".vtp"
+            self._write_mesh_points_vtk(point_filename, hitpoints)
 
     def _generate_sample_point(self):
 
@@ -190,6 +201,48 @@ class InterfaceSurface:
         sample_point = self._point_a + self._interface_vector * x
 
         return sample_point
+
+    def _write_mesh_power_vtk(self, filename, powers, mesh_primitive):
+
+        # normalise power per area
+        for i in range(powers.shape[0]):
+            if powers[i] > 0:
+                triangle = mesh_primitive.data.triangle(i)
+                p1 = mesh_primitive.data.vertex(triangle[0])
+                p2 = mesh_primitive.data.vertex(triangle[1])
+                p3 = mesh_primitive.data.vertex(triangle[2])
+                v12 = p1.vector_to(p2)
+                v13 = p1.vector_to(p3)
+                tri_area = v12.cross(v13).length / 2
+                powers[i] /= tri_area
+
+        export_vtk(mesh_primitive, filename, triangle_data={"power": powers})
+
+    def _write_mesh_points_vtk(self, filename, points):
+
+        # setup points and vertices
+        Points = vtk.vtkPoints()
+        Vertices = vtk.vtkCellArray()
+
+        for i in range(points.shape[0]):
+            id = Points.InsertNextPoint(points[i, 0], points[i, 1], points[i, 2])
+            Vertices.InsertNextCell(1)
+            Vertices.InsertCellPoint(id)
+
+        polydata = vtk.vtkPolyData()
+        polydata.SetPoints(Points)
+        polydata.SetVerts(Vertices)
+        polydata.Modified()
+        if vtk.VTK_MAJOR_VERSION <= 5:
+            polydata.Update()
+
+        writer = vtk.vtkXMLPolyDataWriter()
+        writer.SetFileName(filename)
+        if vtk.VTK_MAJOR_VERSION <= 5:
+            writer.SetInput(polydata)
+        else:
+            writer.SetInputData(polydata)
+        writer.Write()
 
     def plot(self, equilibrium):
         """
