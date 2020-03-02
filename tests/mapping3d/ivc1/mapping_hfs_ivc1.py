@@ -74,4 +74,4 @@ angle_period = 45
 
 interface_surface = InterfaceSurface(POINT_A, POINT_B, power_profile, interface_power)
 interface_surface.map_power(interface_power, angle_period, field_tracer, world,
-                            num_of_fieldlines=5000, debug_output=True)
+                            num_of_fieldlines=5000, phi_offset=-angle_period/2, debug_output=True)

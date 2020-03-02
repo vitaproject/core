@@ -75,7 +75,7 @@ class InterfaceSurface:
         self._q_to_x_func = interp1d(q_cumulative_values, x_samples, fill_value="extrapolate")
 
     def map_power(self, power, angle_period, field_tracer, world,
-                  num_of_fieldlines=50000, max_tracing_length=15, debug_output=False):
+                  num_of_fieldlines=50000, max_tracing_length=15, phi_offset=0, debug_output=False):
         """
         Map the power from this surface onto the wall tiles.
 
@@ -90,6 +90,8 @@ class InterfaceSurface:
         :param int num_of_fieldlines: the number of fieldlines to launch in the mapping process.
           Defaults to 50000 fieldlines.
         :param float max_tracing_length: the maximum length for tracing fieldlines.
+        :param float phi_offset: the angular range offset for collision point mapping.
+          Important for cases where the periodic divertor tiles straddle phi=0.
         :param bool debug_output: toggle to print extra debug information output, such as the meshes
           collided with and the amount of lost power.
         """
@@ -157,9 +159,9 @@ class InterfaceSurface:
 
                 # map the hit point back to the starting sector (angular period)
                 hit_point = intersection.hit_point.transform(intersection.primitive_to_world)
-                theta = np.rad2deg(atan2(hit_point.y, hit_point.x))
-                phase_theta = theta - theta % angle_period
-                mapped_point = hit_point.transform(rotate_z(-phase_theta))
+                phi = np.rad2deg(atan2(hit_point.y, hit_point.x)) - phi_offset
+                phase_phi = phi - phi % angle_period
+                mapped_point = hit_point.transform(rotate_z(-phase_phi))
                 hitpoints.append((mapped_point.x, mapped_point.y, mapped_point.z))
 
             else:
