@@ -194,7 +194,7 @@ class InterfaceSurface:
             self._write_mesh_power_vtk(output_filename, powers, mesh_primitive)
 
             point_filename = mesh_name + ".vtp"
-            self._write_mesh_points_vtk(point_filename, hitpoints)
+            self._write_mesh_points_vtk(point_filename, hitpoints, power_per_fieldline)
 
     def _generate_sample_point(self):
 
@@ -220,20 +220,24 @@ class InterfaceSurface:
 
         export_vtk(mesh_primitive, filename, triangle_data={"power": powers})
 
-    def _write_mesh_points_vtk(self, filename, points):
+    def _write_mesh_points_vtk(self, filename, points, power_per_point):
 
         # setup points and vertices
-        Points = vtk.vtkPoints()
-        Vertices = vtk.vtkCellArray()
+        vtk_points = vtk.vtkPoints()
+        vtk_vertices = vtk.vtkCellArray()
+        vtk_point_values = vtk.vtkDoubleArray()
+        vtk_point_values.SetName("CollisionEnergies")
 
         for i in range(points.shape[0]):
-            id = Points.InsertNextPoint(points[i, 0], points[i, 1], points[i, 2])
-            Vertices.InsertNextCell(1)
-            Vertices.InsertCellPoint(id)
+            id = vtk_points.InsertNextPoint(points[i, 0], points[i, 1], points[i, 2])
+            vtk_vertices.InsertNextCell(1)
+            vtk_vertices.InsertCellPoint(id)
+            vtk_point_values.InsertNextValue(power_per_point)
 
         polydata = vtk.vtkPolyData()
-        polydata.SetPoints(Points)
-        polydata.SetVerts(Vertices)
+        polydata.SetPoints(vtk_points)
+        polydata.SetVerts(vtk_vertices)
+        polydata.GetCellData().SetScalars(vtk_point_values)
         polydata.Modified()
         if vtk.VTK_MAJOR_VERSION <= 5:
             polydata.Update()
