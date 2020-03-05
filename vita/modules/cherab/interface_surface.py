@@ -1,7 +1,7 @@
 
 import vtk
 import time
-from math import atan2
+from math import atan2, sqrt
 import numpy as np
 from numpy.random import random
 import matplotlib.pyplot as plt
@@ -200,7 +200,8 @@ class InterfaceSurface:
 
         # sample a point along surface proportional to power
         x = self._q_to_x_func(random())
-        sample_point = self._point_a + self._interface_vector * x
+        interface_vector = self._interface_vector.normalise()
+        sample_point = self._point_a + interface_vector * x
 
         return sample_point
 
@@ -276,11 +277,40 @@ class InterfaceSurface:
         plt.figure()
         plt.plot(sample_distances, self._power_profile)
 
+    def poloidal_trajectory_plot(self, field_tracer, world, equilibrium,
+                                 num_of_fieldlines=5, max_tracing_length=15):
+
+        if not (isinstance(num_of_fieldlines, int) and num_of_fieldlines > 0):
+            raise TypeError("The number of fieldlines to trace must be an integer > 0.")
+
+        null_intersections = 0
+
+        point_a = Point3D(self._point_a.x, 0, self._point_a.y)
+        point_b = Point3D(self._point_b.x, 0, self._point_b.y)
+        interface_vector = point_a.vector_to(point_b)
+
+        plot_equilibrium(equilibrium, detail=False)
+
+        for i in range(num_of_fieldlines):
+
+            sample_point = point_a + interface_vector * i / num_of_fieldlines
+
+            _, _, trajectory = field_tracer.trace(world, sample_point,
+                                                  max_length=max_tracing_length, save_trajectory=True)
+
+            rz_trajectory = np.zeros((trajectory.shape[0], 2))
+            for i in range(trajectory.shape[0]):
+                r = sqrt(trajectory[i, 0]**2 + trajectory[i, 1]**2)
+                z = trajectory[i, 2]
+                rz_trajectory[i, :] = r, z
+
+            plt.plot(rz_trajectory[:, 0], rz_trajectory[:, 1], 'g')
+
 
 # TODO - this should be replaced with Jeppe's mapping functions
 def sample_power_at_surface(point_a, point_b, equilibrium, heat_load,
                             s_min=-0.01, s_max=0.1, num_samples=1000,
-                            lcfs_radii_min=0.7, lcfs_radii_max=0.9):
+                            lcfs_radii_min=0.7, lcfs_radii_max=0.9, side="LFS"):
     """
     Sample the power profile from an upstream heat profile along an interface surface in the divertor.
 
@@ -293,6 +323,7 @@ def sample_power_at_surface(point_a, point_b, equilibrium, heat_load,
     :param int num_samples: the number of heat profile samples over the range.
     :param float lcfs_radii_min: lower bound for lcfs radius search.
     :param float lcfs_radii_max: upper bound for lcfs radius search.
+    :param str side: the LFS or HFS of the tokamak (default='HFS').
     """
 
     if not isinstance(point_a, Point2D):
@@ -334,8 +365,26 @@ def sample_power_at_surface(point_a, point_b, equilibrium, heat_load,
     s_vals = np.linspace(s_min, s_max, num_samples)
     s_vals_cm = s_vals * 100  # convert array to cm for HeatLoad units
     q_vals = np.array([heat_load(s) for s in s_vals_cm])
-    r_vals = s_vals + lcfs_radius
-    psin_vals = np.array([psin2d(r, 0) for r in r_vals])
+    if side == "LFS":
+        r_vals = lcfs_radius + s_vals
+    else:
+        r_vals = lcfs_radius - s_vals
+    # print('r_vals', r_vals)
+
+    # sample psi over footprint, but handle case where psi goes beyond equilibrium domain
+    psin_vals = []
+    psi_last = 0
+    for r in r_vals:
+        try:
+            psi = psin2d(r, 0)
+            if psi < psi_last:
+                break
+            psin_vals.append(psi)
+            psi_last = psi
+        except ValueError:
+            break
+    psi_q_vals = q_vals[:len(psin_vals)]
+    psin_vals = np.array(psin_vals)
 
     integral = integrate.simps(q_vals, s_vals)
     q_vals /= integral
@@ -349,15 +398,17 @@ def sample_power_at_surface(point_a, point_b, equilibrium, heat_load,
             q_cumulative_values.append(q_cumulative_values[i - 1] + (q_vals[i] * ds))
 
     # generate midplane mapping functions
-    psin_to_q_func = interp1d(psin_vals, q_vals, fill_value="extrapolate")  # q(psi_n)
+    psin_to_q_func = interp1d(psin_vals, psi_q_vals, fill_value=0)  # q(psi_n)
 
     # generate interface surface mapping functions
     interface_vector = point_a.vector_to(point_b)
 
     powers_along_interface = []
+    interface_psin = []
     for i in range(num_samples):
         sample_point = point_a + interface_vector * i / num_samples
         psin = psin2d(sample_point.x, sample_point.y)
+        interface_psin.append(psin)
         q = psin_to_q_func(psin)
         powers_along_interface.append(q)
 
