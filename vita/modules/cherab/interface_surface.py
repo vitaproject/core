@@ -277,6 +277,21 @@ class InterfaceSurface:
         plt.figure()
         plt.plot(sample_distances, self._power_profile)
 
+    def histogram_plot(self):
+
+        num_samples = 10000
+        samples = []
+        for i in range(num_samples):
+            sample = self._generate_sample_point()
+            x = self._point_a.distance_to(sample)
+            samples.append(x)
+
+        fig, ax = plt.subplots()
+        n, bins, patches = ax.hist(samples, 50, density=1)
+        ax.set_xlabel('Interface distance (m)')
+        ax.set_ylabel('Sample density')
+        ax.set_title(r'Sample Histogram along interface surface')
+
     def poloidal_trajectory_plot(self, field_tracer, world, equilibrium,
                                  num_of_fieldlines=5, max_tracing_length=15):
 
