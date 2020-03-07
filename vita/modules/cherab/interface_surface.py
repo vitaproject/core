@@ -175,11 +175,11 @@ class InterfaceSurface:
 
         if debug_output:
             print("Meshes collided with:")
-            for mesh_name in mesh_powers.keys():
-                print(mesh_name)
-            print()
-            print("Number of null intersections - {}".format(null_intersections))
-            print("Amount of lost power - {} W".format(lost_power))
+            for mesh_name, mesh_values in mesh_powers.items():
+                power_fraction = mesh_values.sum() / total_power * 100
+                print('{} - {:.4G}%'.format(mesh_name, power_fraction))
+            print("Fraction of lost power - {:.4G}%".format(lost_power/total_power))
+
             print()
             print("execution time: {}".format(t_end - t_start))
             print()
