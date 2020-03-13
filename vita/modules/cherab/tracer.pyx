@@ -56,20 +56,25 @@ cdef class RK2(Method):
         elif direction=="negative":
             self._direction = -1
         else:
-            raise ValueError()
+            raise ValueError("Tracing direction must be either 'positive' or 'negative'.")
 
     cdef Point3D step(self, Point3D point, VectorFunction3D field):
 
         cdef:
-            Point3D p2
-            Vector3D v1, v2
+            Point3D p1, p2
+            Vector3D k1, k2
 
-        v1 = field.evaluate(point.x, point.y, point.z).normalise()
+        # point for evaluating k1 (= y_n)
+        p1 = point
+        # k1 = h f(x_n, y_n)
+        k1 = field.evaluate(p1.x, p1.y, p1.z).normalise().mul(self.step_size * self._direction)
 
-        p2 = point.add(v1.mul(self.step_size * self._direction))
-        v2 = field.evaluate(p2.x, p2.y, p2.z).normalise()
+        # point for evaluating k2
+        p2 = point.add(k1.mul(0.5))
+        # k2 = h f(x_n + h/2, y_n + k_1 / 2)
+        k2 = field.evaluate(p2.x, p2.y, p2.z).normalise().mul(self.step_size * self._direction)
 
-        return point.add(v1.add(v2).mul(0.5 * self.step_size * self._direction))
+        return point.add(k2)
 
 
 cdef class RK4(Method):
@@ -79,35 +84,52 @@ cdef class RK4(Method):
     :param float step_size: the spatial step size for the solver.
     """
 
-    cdef double step_size
+    cdef:
+        double step_size, _direction
+        str direction
 
-    def __init__(self, step_size=1E-6):
+    def __init__(self, step_size=1E-6, direction="positive"):
+
         self.step_size = step_size
+        self.direction = direction
+        if direction=="positive":
+            self._direction = 1
+        elif direction=="negative":
+            self._direction = -1
+        else:
+            raise ValueError("Tracing direction must be either 'positive' or 'negative'.")
 
     cdef Point3D step(self, Point3D point, VectorFunction3D field):
 
         cdef:
-            Point3D pk, pk2
-            Vector3D va, vb, vc, vd, v_temp
+            Point3D p1, p2, p3, p4, p_step
+            Vector3D k1, k2, k3, k4, k_step
 
-        pk = point
+        # point for evaluating k1 (= y_n)
+        p1 = point
+        # k1 = h f(x_n, y_n)
+        k1 = field.evaluate(p1.x, p1.y, p1.z).normalise().mul(self.step_size * self._direction)
 
-        va = field.evaluate(pk.x, pk.y, pk.z).normalise()
-        va = va.mul(2 * self.step_size)
+        # point for evaluating k2
+        p2 = p1.add(k1.mul(0.5))
+        # k2 = h f(x_n + h/2, y_n + k_1 / 2)
+        k2 = field.evaluate(p2.x, p2.y, p2.z).normalise().mul(self.step_size * self._direction)
 
-        vb = field.evaluate(pk.x + va.x/2, pk.y + va.y/2, pk.z + va.z/2)
-        vb = vb.mul(2 * self.step_size)
+        # point for evaluating k3
+        p3 = p1.add(k2.mul(0.5))
+        # k3 = h f(x_n + h/2, y_n + k_2 / 2)
+        k3 = field.evaluate(p3.x, p3.y, p3.z).normalise().mul(self.step_size * self._direction)
 
-        vc = field.evaluate(pk.x + vb.x/2, pk.y + vb.y/2, pk.z + vb.z/2)
-        vc = vc.mul(2 * self.step_size)
+        # point for evaluating k4
+        p4 = p1.add(k3)
+        # k4 = h f(x_n + h, y_n + k_3)
+        k4 = field.evaluate(p4.x, p4.y, p4.z).normalise().mul(self.step_size * self._direction)
 
-        vd = field.evaluate(pk.x + vc.x/2, pk.y + vc.y/2, pk.z + vc.z/2)
-        vd = vd.mul(2 * self.step_size)
+        # y_n+1 = y_n + 1/6 k1 + 1/3 k2 + 1/3 k3 + 1/6 k4
+        k_step = k1.add(k2.mul(2)).add(k3.mul(2)).add(k4).div(6)
+        p_step = p1.add(k_step)
 
-        v_temp = va.add(vb.mul(2)).add(vc.mul(2)).add(vd).div(6)
-        pk2 = pk.add(v_temp)
-
-        return pk2
+        return p_step
 
 
 cdef class FieldlineTracer:
