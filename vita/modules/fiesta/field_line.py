@@ -10,6 +10,7 @@ from scipy.integrate import solve_ivp
 from scipy.interpolate import interp2d
 from scipy.constants import mu_0 as mu0
 import matplotlib.pyplot as plt
+from vita.utility import get_resource
 from vita.modules.fiesta.fiesta_interface import Fiesta
 
 class FieldLine():
@@ -125,7 +126,8 @@ class FieldLine():
         return field_line
 
 if __name__ == '__main__':
-    FILEPATH = '/home/jmbols/Postdoc/ST40/Programme 1/Equilibrium/eq001_limited.mat'
+    FILEPATH = get_resource("ST40", "equilibrium", "eq002")
+    #FILEPATH = '/home/jmbols/Postdoc/ST40/Programme 1/Equilibrium/eq001_limited.mat'
     FIELD_LINE = FieldLine(FILEPATH)
     #print(FIELD_LINE.fiesta_equil.r_vec)
     LCFS_INDEX = [0.69, 0.7, 0.71, 0.72]
