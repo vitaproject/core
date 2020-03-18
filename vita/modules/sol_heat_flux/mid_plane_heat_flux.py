@@ -4,18 +4,19 @@ Created on Mon Oct 21 09:51:09 2019
 
 @author: Daniel.Iglesias@tokamakenergy.co.uk
 """
+import numpy as np
 import scipy.integrate as integrate
 from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
 
 
-class HeatLoad:
+class HeatLoad(object):
 
-    def __init__(self):
+    def __init__(self, r0_lfs=0., r0_hfs=0.):
         self.fx = 1.  # edge radius at outboard equatorial midplane
         self.fx_in_out = 1.  # edge radius at outboard equatorial midplane
-        self.r0_hfs = 0.  # edge radius at outboard equatorial midplane
-        self.r0_lfs = 0.  # edge radius at inboard equatorial midplane
+        self.r0_hfs = r0_hfs  # edge radius at outboard equatorial midplane
+        self.r0_lfs = r0_lfs  # edge radius at inboard equatorial midplane
         self.__s = []  # equatorial midplane coordinate array
         self.__q = []  # heat flux density profile
         self.__totalPower = 0.
@@ -46,13 +47,13 @@ class HeatLoad:
             return -1
 
     def set_edge_radius(self, radius_in):
-        self.ro_hfs = radius_in
+        self.r0_hfs = radius_in
 
     def get_local_coordinates(self):
         return self.__s
 
     def get_global_coordinates(self):
-        return self.__s + self.r0_hfs
+        return self.__s + self.r0_lfs
 
     def calculate_heat_power(self):
         self.__totalPower = integrate.simps(self.__q, self.__s)
@@ -62,4 +63,4 @@ class HeatLoad:
         plt.plot(self.__s, self.__q)
         plt.xlabel('$s$')
         plt.ylabel('$q(s)$')
-        plt.show(block=True)
+        plt.show()
