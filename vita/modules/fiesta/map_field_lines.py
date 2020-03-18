@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 from vita.modules.fiesta.field_line import FieldLine
 from vita.modules.utils import intersection
 from vita.modules.sol_heat_flux.hesel_parameters import HESELparams
+from vita.utility import get_resource
 
 def map_field_lines(x_vec_at_omp, file_path, configuration='diverted'):
     '''
@@ -39,10 +40,11 @@ def map_field_lines(x_vec_at_omp, file_path, configuration='diverted'):
 
         (i_intersect_func1, _),\
         (r_intersect, z_intersect) = intersection(func1, func2)
-
         if not np.any(np.isnan(r_intersect)):
-            i_first_intersect = np.argmin(field_lines["l"][i_intersect_func1])
+            i_int = int(np.floor(i_intersect_func1))
+            i_first_intersect = np.argmin(field_lines["l"][i_int])
             i_intersection = i_intersect_func1[i_first_intersect]
+            i_intersection = int(np.ceil(i_intersection))
             if configuration == 'limited':
                 i_min_intersect = np.argmin(field_lines["R"][i_intersection] - r_intersect)
                 i_intersection = np.where(field_lines["R"][:] < r_intersect[i_min_intersect])[0][0]
@@ -53,9 +55,9 @@ def map_field_lines(x_vec_at_omp, file_path, configuration='diverted'):
                 print("Error: unknown configuration. Please use either 'limited' or 'diverted'")
                 break
 
-            field_lines["l"] = field_lines["l"][:i_intersection + 1]
-            field_lines["R"] = field_lines["R"][:i_intersection + 1]
-            field_lines["Z"] = field_lines["Z"][:i_intersection + 1]
+            field_lines["l"] = field_lines["l"][:i_intersection+1]
+            field_lines["R"] = field_lines["R"][:i_intersection+1]
+            field_lines["Z"] = field_lines["Z"][:i_intersection+1]
 
             field_lines["Vessel_Intersect"] = (r_intersect[i_min_intersect],
                                                z_intersect[i_min_intersect])
@@ -83,20 +85,22 @@ def save_as_pickle(input_dictionary, save_name):
 
 if __name__ == "__main__":
     #FILEPATH = '/home/jmbols/Postdoc/ST40/Programme 1/Equilibrium/eq001_limited.mat'
-    FILEPATH = '/media/jmbols/Data/jmbols/ST40/Programme 3/Equilibrium/eq_0002.mat'
-
+    #FILEPATH = '/media/jmbols/Data/jmbols/ST40/Programme 3/Equilibrium/eq_0002.mat'
+    FILEPATH = get_resource("ST40-IVC1", "equilibrium", "eq_006_2T_export")
    #HESEL_FILE_PATH = '/media/jmbols/Data/jmbols/ST40/Programme 1/n_inner_bnd_scan/ST40.00001.03.h5'
-    HESEL_FILE_PATH = '/media/jmbols/Data/jmbols/ST40/Programme 3/Te(i)_grad_scan/ST40.00003.20.h5'
+    #HESEL_FILE_PATH = '/media/jmbols/Data/jmbols/ST40/Programme 3/Te(i)_grad_scan/ST40.00003.20.h5'
 
-    FILE = h5py.File(HESEL_FILE_PATH, 'r')
-    HESEL_PARAMS = HESELparams(FILE)
-    FILE.close()
+    #FILE = h5py.File(HESEL_FILE_PATH, 'r')
+    #HESEL_PARAMS = HESELparams(FILE)
+    #FILE.close()
 
     FIELD_LINE = FieldLine(FILEPATH)
-    MID_PLANE_LOC = FIELD_LINE.fiesta_equil.get_midplane_lcfs()[1]
+    MID_PLANE_LOC = FIELD_LINE.fiesta_equil.get_midplane_lcfs()[0]
 
-    I_AFTER_LCFS = np.where(HESEL_PARAMS.xaxis >= 0)[0]
-    X_AFTER_LCFS = HESEL_PARAMS.xaxis[I_AFTER_LCFS] + MID_PLANE_LOC
+    X_AFTER_LCFS = np.linspace(0, 10, 100)*1e-3 + MID_PLANE_LOC
+
+#    I_AFTER_LCFS = np.where(HESEL_PARAMS.xaxis >= 0)[0]
+#    X_AFTER_LCFS = HESEL_PARAMS.xaxis[I_AFTER_LCFS] + MID_PLANE_LOC
 
     FIELD_LINES = map_field_lines(X_AFTER_LCFS, FILEPATH)
     save_as_pickle(FIELD_LINES, 'eq_0002')
