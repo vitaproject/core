@@ -84,7 +84,7 @@ class Eich(HeatLoad):
 
         '''
         self._q = np.zeros(len(self._s))
-        self._s_disconnected_dn_inboard = self.fx_in_out*self.s_disconnected_dn_max
+        self._s_disconnected_dn_inboard = self.f_x_in_out*self.s_disconnected_dn_max
 
         if where == "lfs-mp":
             i_cut = np.where(self._s > 0)[0]
@@ -96,7 +96,8 @@ class Eich(HeatLoad):
                                             self._s < self._s_disconnected_dn_inboard))[0]
             profile = np.zeros(len(self._s))
             profile[i_cut] = self.q_0*np.exp(-self._s[i_cut]\
-                                             /(self.lambda_q))/self.f_x_in_out\
+                                             /(self.lambda_q*self.f_x_in_out))\
+                                             /self.f_x_in_out\
                                              *self.r0_lfs/self.r0_hfs
             self._q = profile
 
@@ -105,7 +106,8 @@ class Eich(HeatLoad):
                                             self._s < self._s_disconnected_dn_inboard))[0]
             profile = np.zeros(len(self._s))
             profile[i_cut] = self.q_0*np.exp(-self._s[i_cut]\
-                                             /(self.lambda_q))/self.f_x_in_out\
+                                             /(self.lambda_q*self.f_x_in_out))\
+                                             /self.f_x_in_out\
                                              *self.r0_lfs/self.r0_hfs
             self._q = profile
 
