@@ -9,10 +9,10 @@ Created on Mon Mar 16 10:21:15 2020
 import numpy as np
 import matplotlib.pyplot as plt
 from vita.utility import get_resource
-from vita.modules.projection2D.field_line_projection import project_heat_flux
-from vita.modules.fiesta.field_line import FieldLine
-from vita.modules.fiesta.fiesta_interface import Fiesta
-from vita.modules.sol_heat_flux.eich import Eich
+from vita.modules.projection.projection2D.field_line.field_line_projection import project_heat_flux
+from vita.modules.projection.projection2D.field_line.field_line import FieldLine
+from vita.modules.equilibrium.fiesta.fiesta_interface import Fiesta
+from vita.modules.sol_heat_flux.eich.eich import Eich
 from cherab.core.math import Interpolate2DCubic
 
 

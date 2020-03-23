@@ -8,8 +8,8 @@ Created on Fri Mar 20 10:42:34 2020
 import numpy as np
 import matplotlib.pyplot as plt
 from vita.utility import get_resource
-from vita.modules.fiesta.field_line import FieldLine
-from vita.modules.fiesta.map_field_lines import map_field_lines
+from vita.modules.projection.projection2D.field_line.field_line import FieldLine
+from vita.modules.projection.projection2D.field_line.map_field_lines import map_field_lines
 
 if __name__ == "__main__":
     #FILEPATH = '/home/jmbols/Postdoc/ST40/Programme 1/Equilibrium/eq001_limited.mat'
@@ -23,7 +23,7 @@ if __name__ == "__main__":
     #FILE.close()
 
     FIELD_LINE = FieldLine(FILEPATH)
-    MID_PLANE_LOC = FIELD_LINE.fiesta_equil.get_midplane_lcfs()[0]
+    MID_PLANE_LOC = FIELD_LINE.fiesta_equil.get_midplane_lcfs()[1]
 
     X_AFTER_LCFS = np.linspace(0, 10, 100)*1e-3 + MID_PLANE_LOC
 

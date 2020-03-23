@@ -7,10 +7,10 @@ Created on Mon Jan 20 16:37:33 2020
 """
 import numpy as np
 import matplotlib.pyplot as plt
-from vita.modules.fiesta.fiesta_interface import Fiesta
-from vita.modules.projection2D.map_psi import map_psi_omp_to_divertor
+from vita.modules.equilibrium.fiesta.fiesta_interface import Fiesta
+from vita.modules.projection.projection2D.map_psi import map_psi_omp_to_divertor
 from vita.utility import get_resource
-from vita.modules.sol_heat_flux.eich import Eich
+from vita.modules.sol_heat_flux.eich.eich import Eich
 
 if __name__ == '__main__':
     FILEPATH = get_resource("ST40", "equilibrium", "eq002")

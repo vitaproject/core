@@ -5,7 +5,7 @@ Created on Sun Oct 20 18:28:22 2019
 
 @author: Daniel.Ibanez
 """
-from vita.modules.sol_heat_flux.eich import Eich
+from vita.modules.sol_heat_flux.eich.eich import Eich
 import numpy as np
 
 footprint = Eich(lambda_q=2.5e-3, S=0.5e-3, r0_lfs=0.75, r0_hfs=0.2)# lambda_q=2.5, S=0.5

@@ -9,15 +9,15 @@ import numpy as np
 from matplotlib import pyplot as plt
 import math
 
-from vita.modules.fiesta import FieldLine
+from vita.modules.projection.projection2D.field_line.field_line import FieldLine
 from vita.modules.utils import intersection
 from vita.utility import get_resource
 
-R200 = get_resource("ST200", "equilibrium", "R200")
+R200 = get_resource("ST40-IVC1", "equilibrium", "eq_006_2T_export")
 field_line = FieldLine(R200)
-R = field_line.fiesta_equil.get_midplane_lcfs()
-r0 = 3.05
-rf = 3.1
+R = field_line.fiesta_equil.get_midplane_lcfs()[1]
+r0 = R + 0.001
+rf = R + 0.012
 midplane_range = np.linspace(r0,rf,3)
 points = []
 lengths = []
@@ -43,8 +43,8 @@ for fl in field_line_dict:
 divertor_points = 3
 #divertor_x = np.linspace( 1.9, 2.45,divertor_points)
 #divertor_y = np.linspace(-3,-3.6,divertor_points)
-divertor_x = np.array([2.15, 2.15, 2.27])
-divertor_y = np.array([-2.9, -3.25, -3.6])
+divertor_x = np.array([0.385, 0.425, 0.49])
+divertor_y = np.array([-0.9, -0.75, -0.6])
 divertor_xy = np.array([divertor_x, divertor_y])
 
 result = np.array([intersection(i, divertor_xy) for i in field_lines])
@@ -56,7 +56,8 @@ plt.plot(field_line.fiesta_equil.r_limiter, field_line.fiesta_equil.z_limiter)
 plt.plot(divertor_x,divertor_y,c='g')
 plt.plot(x_p,y_p,'*k')
 plt.gca().set_aspect('equal', adjustable='box')
-plt.gca().set_ylim([-4,-2.5])
+plt.gca().set_ylim([-1., -0.5])
+plt.gca().set_xlim([0.0, 0.5])
 plt.show()#block=True)
 
 print(midplane_range)
