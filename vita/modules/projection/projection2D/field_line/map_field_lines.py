@@ -6,7 +6,7 @@ Created on Fri Nov  8 11:55:48 2019
 @author: jmbols
 """
 import numpy as np
-from vita.modules.fiesta.field_line import FieldLine
+from vita.modules.projection.projection2D.field_line.field_line import FieldLine
 from vita.modules.utils import intersection
 
 def map_field_lines(x_vec_at_omp, file_path, configuration='diverted'):

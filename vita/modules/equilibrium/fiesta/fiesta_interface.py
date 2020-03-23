@@ -29,7 +29,7 @@ class Fiesta():
     @property
     def b_field(self):
         """
-        Function for getting the magnetic a 3D vector function of the magnetic 
+        Function for getting the magnetic a 3D vector function of the magnetic
         field
         """
 
@@ -93,8 +93,8 @@ class Fiesta():
         Function for getting the inner and outer radial position of the LCFS at the midplane
 
         input: self,  a reference to the object itself
-               psi_p, the flux surface of the LCFS, standard is psi_p = 1.005 (otherwise the field-line
-                      is located inside the LCFS)
+               psi_p, the flux surface of the LCFS, standard is psi_p = 1.005
+               (otherwise the field-line is located inside the LCFS)
 
         return: Rcross, a list with the outer and inner radial position of the mid-plane LCFS
         '''
@@ -105,12 +105,19 @@ class Fiesta():
         cont = cont.allsegs[0]
 
         # Loop over the contours
+        if len(cont) > 1:
+            r_lcfs = []
         for c_i in cont:
             is_core = any(c_i[:, 1] > 0)*any(c_i[:, 1] < 0)
             if is_core:
                 func1 = np.array((c_i[:, 0], c_i[:, 1]))
                 func2 = np.array((np.array([0., np.max(r_vec)]), np.array([0., 0.])))
-                (_, _), (r_lcfs, _) = intersection(func1, func2)
+                (_, _), (r_lcfs_int, _) = intersection(func1, func2)
+                if len(cont) > 1:
+                    r_lcfs.append(r_lcfs_int[0])
+                else:
+                    r_lcfs = r_lcfs_int
+        r_lcfs = np.array(r_lcfs)
 
         plt.close() # plt.contour opens a plot, close it
 
@@ -157,7 +164,8 @@ class Fiesta():
 
         time = 0.0
 
-        equilibrium = EFITEquilibrium(r_vec, z_vec, psi, psi_axis, psi_lcfs, magnetic_axis, x_points, strike_points,
+        equilibrium = EFITEquilibrium(r_vec, z_vec, psi, psi_axis, psi_lcfs,
+                                      magnetic_axis, x_points, strike_points,
                                       f_profile, q_profile, b_vacuum_radius, b_vacuum_magnitude,
                                       lcfs_polygon, limiter_polygon, time)
 
@@ -167,6 +175,7 @@ class Fiesta():
 if __name__ == '__main__':
     from vita.utility import get_resource
 
-    equil = get_resource("ST40", "equilibrium", "limited_eq001_export")
-    FIESTA_EQUIL = Fiesta(equil)
+    #EQUIL = get_resource("ST40-IVC1", "equilibrium", "eq_006_2T_export")
+    EQUIL = get_resource("ST40", "equilibrium", "limited_eq001_export")
+    FIESTA_EQUIL = Fiesta(EQUIL)
     print(FIESTA_EQUIL.get_midplane_lcfs())
