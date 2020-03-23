@@ -41,7 +41,7 @@ if __name__ == '__main__':
     FOOTPRINT.fx_in_out = 5.
     FOOTPRINT.calculate_heat_flux_density("lfs")
 
-    Q_PARALLEL = FOOTPRINT._HeatLoad__q
+    Q_PARALLEL = FOOTPRINT._q
     X_AFTER_LCFS = FOOTPRINT.get_global_coordinates()
     EQUILIBRIUM = {}
     plt.figure()
