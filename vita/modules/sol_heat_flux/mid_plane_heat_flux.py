@@ -58,8 +58,8 @@ class HeatLoad:
         self.__totalPower = integrate.simps(self.__q, self.__s)
         return self.__totalPower
 
-    def plot_heat_power_density(self):
+    def plot_heat_power_density(self, block=True):
         plt.plot(self.__s, self.__q)
         plt.xlabel('$s$')
         plt.ylabel('$q(s)$')
-        plt.show(block=True)
+        plt.show(block=block)
