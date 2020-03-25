@@ -7,4 +7,4 @@ Created on Mon Oct 21 09:51:09 2019
 
 from .fiesta_interface import Fiesta
 from .field_line import FieldLine
-from .map_field_lines import map_field_lines, save_as_pickle
+from .map_field_lines import map_field_lines

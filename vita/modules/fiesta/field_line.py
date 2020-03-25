@@ -10,6 +10,7 @@ from scipy.integrate import solve_ivp
 from scipy.interpolate import interp2d
 from scipy.constants import mu_0 as mu0
 import matplotlib.pyplot as plt
+from vita.utility import get_resource
 from vita.modules.fiesta.fiesta_interface import Fiesta
 
 class FieldLine():
@@ -125,11 +126,14 @@ class FieldLine():
         return field_line
 
 if __name__ == '__main__':
-    FILEPATH = '/home/jmbols/Postdoc/ST40/Programme 1/Equilibrium/eq001_limited.mat'
+    FILEPATH = get_resource("ST40-IVC1", "equilibrium", "eq_010_export")
+    #FILEPATH = '/home/jmbols/Postdoc/ST40/Programme 1/Equilibrium/eq001_limited.mat'
     FIELD_LINE = FieldLine(FILEPATH)
     #print(FIELD_LINE.fiesta_equil.r_vec)
-    LCFS_INDEX = [0.69, 0.7, 0.71, 0.72]
+    LCFS_INDEX = [0.77, 0.7772, 0.79]
+    FIELD_LINE_DICTS = {}
     for i in LCFS_INDEX:
         P_0 = [i, 0, 0]
-        FIELD_LINE_DICT = FIELD_LINE.follow_field_in_plane(p_0=P_0, max_length=15.0)
+        FIELD_LINE_DICT = FIELD_LINE.follow_field_in_plane(p_0=P_0, max_length=25.0)
+        FIELD_LINE_DICTS[i] = FIELD_LINE_DICT
         plt.plot(FIELD_LINE_DICT['R'], FIELD_LINE_DICT['Z'])
