@@ -48,4 +48,4 @@ if __name__ == '__main__':
     plt.plot(R_DIV, Z_DIV)
 
     plt.figure()
-    plt.plot(R_DIV, Q_PARALLEL*X_AFTER_LCFS/(R_DIV*F_X/np.sin(ANGLES)))
+    plt.plot(R_DIV, Q_PARALLEL*X_AFTER_LCFS/(R_DIV*F_X/np.cos(ANGLES)))
