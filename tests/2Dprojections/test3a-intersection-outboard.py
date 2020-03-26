@@ -10,11 +10,13 @@ from matplotlib import pyplot as plt
 import math
 
 from vita.modules.projection.projection2D.field_line.field_line import FieldLine
+from vita.modules.equilibrium.fiesta import Fiesta
 from vita.modules.utils import intersection
 from vita.utility import get_resource
 
 R200 = get_resource("ST40-IVC1", "equilibrium", "eq_006_2T_export")
-field_line = FieldLine(R200)
+FIESTA = Fiesta(R200)
+field_line = FieldLine(FIESTA)
 R = field_line.fiesta_equil.get_midplane_lcfs()[1]
 r0 = R + 0.001
 rf = R + 0.012

@@ -8,12 +8,14 @@ Created on Sun Oct 20 18:28:22 2019
 import numpy as np
 from matplotlib import pyplot as plt
 
+from vita.modules.equilibrium.fiesta import Fiesta
 from vita.modules.projection.projection2D.field_line.field_line import FieldLine
 from vita.utility import get_resource
 
 R200 = get_resource("ST40-IVC1", "equilibrium", "eq_006_2T_export")
-field_line =  FieldLine(R200)
-R = field_line.fiesta_equil.get_midplane_lcfs()[0]
+FIESTA = Fiesta(R200)
+field_line =  FieldLine(FIESTA)
+R = FIESTA.get_midplane_lcfs()[0]
 print(R)
 r0 = 0.45
 rf = R-0.1

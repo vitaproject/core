@@ -8,6 +8,7 @@ Created on Fri Mar 20 10:42:34 2020
 import numpy as np
 import matplotlib.pyplot as plt
 from vita.utility import get_resource
+from vita.modules.equilibrium.fiesta import Fiesta
 from vita.modules.projection.projection2D.field_line.field_line import FieldLine
 from vita.modules.projection.projection2D.field_line.map_field_lines import map_field_lines
 
@@ -21,16 +22,17 @@ if __name__ == "__main__":
     #FILE = h5py.File(HESEL_FILE_PATH, 'r')
     #HESEL_PARAMS = HESELparams(FILE)
     #FILE.close()
+    FIESTA = Fiesta(FILEPATH)
 
-    FIELD_LINE = FieldLine(FILEPATH)
-    MID_PLANE_LOC = FIELD_LINE.fiesta_equil.get_midplane_lcfs()[1]
+    FIELD_LINE = FieldLine(FIESTA)
+    MID_PLANE_LOC = FIESTA.get_midplane_lcfs()[1]
 
     X_AFTER_LCFS = np.linspace(0, 10, 100)*1e-3 + MID_PLANE_LOC
 
 #    I_AFTER_LCFS = np.where(HESEL_PARAMS.xaxis >= 0)[0]
 #    X_AFTER_LCFS = HESEL_PARAMS.xaxis[I_AFTER_LCFS] + MID_PLANE_LOC
 
-    FIELD_LINES = map_field_lines(X_AFTER_LCFS, FILEPATH)
+    FIELD_LINES = map_field_lines(X_AFTER_LCFS, FIESTA)
 #    save_as_pickle(FIELD_LINES, 'eq_0002')
 
     plt.plot(FIELD_LINE.fiesta_equil.r_limiter, FIELD_LINE.fiesta_equil.z_limiter)

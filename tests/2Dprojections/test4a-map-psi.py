@@ -8,7 +8,7 @@ Created on Mon Jan 20 16:37:33 2020
 import numpy as np
 import matplotlib.pyplot as plt
 from vita.modules.equilibrium.fiesta.fiesta_interface import Fiesta
-from vita.modules.projection.projection2D.map_psi import map_psi_omp_to_divertor
+from vita.modules.projection.projection2D.psi_map_projection import map_psi_omp_to_divertor
 from vita.utility import get_resource
 from vita.modules.sol_heat_flux.eich.eich import Eich
 
@@ -33,11 +33,11 @@ if __name__ == '__main__':
     DIVERTOR_COORDS_X = np.array([0.375, 0.675])
     DIVERTOR_COORDS_Y = np.array([-0.78, -0.885])
     DIVERTOR_COORDS = np.array([DIVERTOR_COORDS_X, DIVERTOR_COORDS_Y])
-    DIVERTOR_MAP = map_psi_omp_to_divertor(X_AFTER_LCFS, FIESTA, DIVERTOR_COORDS)
-    R_DIV = DIVERTOR_MAP["R_div"]
-    Z_DIV = DIVERTOR_MAP["Z_div"]
-    ANGLES = DIVERTOR_MAP["Angles"]
-    F_X = DIVERTOR_MAP["Flux_expansion"]
+    DIVERTOR_MAP = map_psi_omp_to_divertor(X_AFTER_LCFS, DIVERTOR_COORDS, FIESTA)
+    R_DIV = np.array([DIVERTOR_MAP[key]["R_pos"] for key in DIVERTOR_MAP])
+    Z_DIV = np.array([DIVERTOR_MAP[key]["Z_pos"] for key in DIVERTOR_MAP])
+    ANGLES = np.array([DIVERTOR_MAP[key]["alpha"] for key in DIVERTOR_MAP])
+    F_X = np.array([DIVERTOR_MAP[key]["f_x"] for key in DIVERTOR_MAP])
     plt.figure()
     plt.plot(R_DIV, ANGLES)
 
