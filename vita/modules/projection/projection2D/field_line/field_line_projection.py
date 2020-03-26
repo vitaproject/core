@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Mon Nov 11 15:37:52 2019
+Created on Wed Mar 25 09:13:19 2020
 
 @author: jmbols
 """
+import os
 import numpy as np
-from vita.modules.utils import intersection, calculate_angle
+from vita.modules.projection.projection2D.field_line.field_line import FieldLine
+from vita.modules.utils import intersection, calculate_angle, load_pickle
+from cherab.core.math import Interpolate2DCubic
 
 def _flux_expansion(b_pol, points_omp, points_div):
     '''
@@ -38,56 +41,63 @@ def _flux_expansion(b_pol, points_omp, points_div):
     return points_omp[0]*b_pol(points_omp[0], points_omp[1])\
             /(points_div[0]*b_pol(points_div[0], points_div[1]))
 
-def project_heat_flux(heat_flux_profile_omp, surface_position, equilibrium, b_pol):
+def project_field_lines(x_axis_omp, surface_coords, fiesta):
     '''
-    Function for projecting a heat flux from the OMP to a given surface (without taking diffusion
-    into account), defined as:
-
-        q_{parallel, div} = x_omp/x_div * q_{parallel, omp}/(f_x/sin(theta)),
-
-    where q_{parallel, div} is the parallel (to magnetic field lines) heat flux
-    at the divertor, q_{parallel, omp} is the parallel heat flux at the OMP,
-    x_omp is the radial coordinates at the OMP, x_div is the radial coordinates
-    at the divertor, f_x is the flux expansion and theta is the incidence angle
+    Function mapping the field-lines from the specified coordinates at the
+    OMP to the specified coordinates at a given surface. Currently the surface
+    is assumed to be represented by a 1D polynomial function, y = ax + b.
 
     Parameters
     ----------
-    heat_flux_profile_omp : 2-by-n numpy array
-        Here heat_flux_profile_omp[0] is the radial coordinates
-        of each point at the OMP and heat_flux_profile_omp[1]
-        is the parallel heat flux at the corresponding radial points
-    surface_position : 2-by-m numpy array
-        Here surface_position[0] is the radial coordinates
-        and surface_position[1] is the poloidal positions
-    equilibrium : python dictionary
-        Here the radial points at the omp are the keys
-        and a dictionary with the R-Z coordinates of the individual
-        field lines as values.
-    b_pol : cherab.core.math.Interpolate2DCubic
-        Function for interpolating the poloidal magnetic field from
-        a fiesta equilibrium, given an (r, z)-point
+    x_axis_omp : n-x-1 np.array
+        Numpy array with the radial coordinates we wish to map at the OMP
+    fiesta : Fiesta
+        A Fiesta object with the 2D equilibrium we wish to map
+    divertor_coords : 2-x-2 np.array
+        A 2-x-2 numpy array containg the corner points of the divertor in the
+        2D projection
 
     Returns
     -------
-    heat_flux_at_intersection : 3-by-n numpy array
-        Here heat_flux_at_intersection[0] is the radial coordinates of each
-        point at the target, heat_flux_at_intersection[1] is the vertical coordinates
-        of each point at the target, and heat_flux_profile_omp[2]
-        is the parallel heat flux at the corresponding positions
-    '''
-    x_after_lcfs = heat_flux_profile_omp[0]
-    field_lines = equilibrium
+    divertor_map : dictionary
+        A dictionary containing:
+            "R_div" : an n-x-1 array
+                with the R-coordinates at the divertor tile
+                corresponding to the same psi_n as at the OMP
+            "Z_div" : an n-x-1 array
+                with the Z-coordinates at the divertor tile
+                corresponding to the same psi_n as at the OMP
+            "Angles" : an n-x-1 array
+                with the angles between the field lines and the divertor tile
+                corresponding to the same psi_n as at the OMP
+            "Flux_expansion" : an n-x-1 array
+                with the flux expasion at the divertor tile
+                corresponding to the same psi_n as at the OMP
 
-    f_x = []
-    angle = []
-    intersection_x = []
-    intersection_y = []
-    _v_2 = np.array([surface_position[0, 1] - surface_position[0, 0],
-                     surface_position[1, 1] - surface_position[1, 0]])
+    '''
+    # Interpolate b_pol (to be used when evaluating the flux expansion)
+    b_pol = np.sqrt(fiesta.b_r**2 + fiesta.b_theta**2 + fiesta.b_z**2).T
+    b_pol_interp = Interpolate2DCubic(fiesta.r_vec, fiesta.z_vec, b_pol)
+
+    field_lines = {}
+    
+    if os.path.exists("Random_filename"):
+        field_lines = load_pickle("Random_filename")
+    else:
+        field_line = FieldLine(fiesta)
+        for i in x_axis_omp:
+            p_0 = [i, 0, 0]
+            field_line_dict = field_line.follow_field_in_plane(p_0=p_0, max_length=15.0)
+            field_lines[i] = field_line_dict
+
+    _v_2 = np.array([surface_coords[0, 1] - surface_coords[0, 0],
+                     surface_coords[1, 1] - surface_coords[1, 0]])
+
+    divertor_map = {}
     for i in field_lines:
         func1 = np.array((field_lines[i]['R'], field_lines[i]['Z']))
         (i_func1, _), (x_at_surface, y_at_surface) = intersection(func1,
-                                                                  (surface_position))
+                                                                  (surface_coords))
         if np.isnan(x_at_surface):
             break
 
@@ -95,20 +105,13 @@ def project_heat_flux(heat_flux_profile_omp, surface_position, equilibrium, b_po
         _y_component = field_lines[i]['Z'][int(i_func1)]-field_lines[i]['Z'][int(i_func1)+1]
         _v_1 = [_x_component, _y_component]
 
-        f_x.append(_flux_expansion(b_pol,
-                                   (i, 0),
-                                   (x_at_surface[0], y_at_surface[0])))
-        angle.append(calculate_angle(_v_1, _v_2))
+        temp_dict = {}
+        temp_dict["R_pos"] = x_at_surface[0]
+        temp_dict["Z_pos"] = y_at_surface[0]
+        temp_dict["alpha"] = calculate_angle(_v_1, _v_2)
+        temp_dict["f_x"] = _flux_expansion(b_pol_interp,
+                                           (i, 0),
+                                           (x_at_surface[0], y_at_surface[0]))
+        divertor_map[i] = temp_dict
 
-        intersection_x.append(x_at_surface[0])
-        intersection_y.append(y_at_surface[0])
-
-    intersection_x = np.array(intersection_x)
-    intersection_y = np.array(intersection_y)
-
-    q_div = x_after_lcfs/intersection_x * \
-          heat_flux_profile_omp[1, :len(intersection_x)]/(f_x/np.sin(angle))
-
-    heat_flux_at_intersection = np.array([intersection_x, intersection_y, q_div])
-
-    return heat_flux_at_intersection
+    return divertor_map
