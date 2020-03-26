@@ -1,7 +1,7 @@
 
 import vtk
 import time
-from math import atan2, sqrt
+from math import atan2, sqrt, fabs
 import numpy as np
 from numpy.random import random
 import matplotlib.pyplot as plt
@@ -13,6 +13,7 @@ from scipy.optimize import brentq
 from raysect.core import Point2D, Point3D, rotate_z
 from raysect.primitive import export_vtk
 from cherab.tools.equilibrium import EFITEquilibrium, plot_equilibrium
+from cherab.core.math import Interpolate1DCubic
 
 from vita.modules.sol_heat_flux.mid_plane_heat_flux import HeatLoad
 
@@ -53,6 +54,7 @@ class InterfaceSurface:
         self._point_a = point_a
         self._point_b = point_b
         self._interface_vector = point_a.vector_to(point_b)
+        self._interface_distance = point_a.distance_to(point_b)
 
         num_samples = power_profile.shape[0]
 
@@ -75,7 +77,8 @@ class InterfaceSurface:
         self._q_to_x_func = interp1d(q_cumulative_values, x_samples, fill_value="extrapolate")
 
     def map_power(self, power, angle_period, field_tracer, world,
-                  num_of_fieldlines=50000, max_tracing_length=15, phi_offset=0, debug_output=False):
+                  num_of_fieldlines=50000, max_tracing_length=15, phi_offset=0, debug_output=False,
+                  debug_count=10000, write_output=True):
         """
         Map the power from this surface onto the wall tiles.
 
@@ -116,6 +119,7 @@ class InterfaceSurface:
         meshes = {}
         mesh_powers = {}
         mesh_hitpoints = {}
+        mesh_seedpoints = {}
         null_intersections = 0
         lost_power = 0
 
@@ -157,6 +161,13 @@ class InterfaceSurface:
                     hitpoints = []
                     mesh_hitpoints[intersection.primitive.name] = hitpoints
 
+                # save seed points for separate analysis
+                try:
+                    seedpoints = mesh_seedpoints[intersection.primitive.name]
+                except KeyError:
+                    seedpoints = []
+                    mesh_seedpoints[intersection.primitive.name] = seedpoints
+
                 # map the hit point back to the starting sector (angular period)
                 hit_point = intersection.hit_point.transform(intersection.primitive_to_world)
                 phi = np.rad2deg(atan2(hit_point.y, hit_point.x)) - phi_offset
@@ -164,11 +175,13 @@ class InterfaceSurface:
                 mapped_point = hit_point.transform(rotate_z(-phase_phi))
                 hitpoints.append((mapped_point.x, mapped_point.y, mapped_point.z))
 
+                seedpoints.append(seed_point)
+
             else:
                 null_intersections += 1
                 lost_power += power_per_fieldline
 
-            if not i % 10000 and debug_output:
+            if not i % debug_count and debug_output:
                 print("Tracing fieldline {}.".format(i))
 
         t_end = time.time()
@@ -184,17 +197,21 @@ class InterfaceSurface:
             print("execution time: {}".format(t_end - t_start))
             print()
 
-        for mesh_name in mesh_powers.keys():
+        if write_output:
 
-            mesh_primitive = meshes[mesh_name]
-            powers = mesh_powers[mesh_name]
-            hitpoints = np.array(mesh_hitpoints[mesh_name])
+            for mesh_name in mesh_powers.keys():
 
-            output_filename = mesh_name + ".vtk"
-            self._write_mesh_power_vtk(output_filename, powers, mesh_primitive)
+                mesh_primitive = meshes[mesh_name]
+                powers = mesh_powers[mesh_name]
+                hitpoints = np.array(mesh_hitpoints[mesh_name])
 
-            point_filename = mesh_name + ".vtp"
-            self._write_mesh_points_vtk(point_filename, hitpoints, power_per_fieldline)
+                output_filename = mesh_name + ".vtk"
+                self._write_mesh_power_vtk(output_filename, powers, mesh_primitive)
+
+                point_filename = mesh_name + ".vtp"
+                self._write_mesh_points_vtk(point_filename, hitpoints, power_per_fieldline)
+
+        return mesh_powers, mesh_hitpoints, mesh_seedpoints
 
     def _generate_sample_point(self):
 
@@ -287,7 +304,7 @@ class InterfaceSurface:
             samples.append(x)
 
         fig, ax = plt.subplots()
-        n, bins, patches = ax.hist(samples, 50, density=1)
+        n, bins, patches = ax.hist(samples, 50, range=[0, self._interface_distance], density=1)
         ax.set_xlabel('Interface distance (m)')
         ax.set_ylabel('Sample density')
         ax.set_title(r'Sample Histogram along interface surface')
@@ -297,8 +314,6 @@ class InterfaceSurface:
 
         if not (isinstance(num_of_fieldlines, int) and num_of_fieldlines > 0):
             raise TypeError("The number of fieldlines to trace must be an integer > 0.")
-
-        null_intersections = 0
 
         point_a = Point3D(self._point_a.x, 0, self._point_a.y)
         point_b = Point3D(self._point_b.x, 0, self._point_b.y)
@@ -378,8 +393,14 @@ def sample_power_at_surface(point_a, point_b, equilibrium, heat_load,
 
     # sampling power function outside LCFS
     s_vals = np.linspace(s_min, s_max, num_samples)
-    s_vals_cm = s_vals * 100  # convert array to cm for HeatLoad units
-    q_vals = np.array([heat_load(s) for s in s_vals_cm])
+    s_vals_mm = s_vals * 1000  # convert array to mm for HeatLoad units
+    q_vals = []
+    for s in s_vals_mm:
+        try:
+            q_vals.append(heat_load(s))
+        except ValueError:
+            q_vals.append(0)
+
     if side == "LFS":
         r_vals = lcfs_radius + s_vals
     else:
@@ -400,6 +421,7 @@ def sample_power_at_surface(point_a, point_b, equilibrium, heat_load,
             break
     psi_q_vals = q_vals[:len(psin_vals)]
     psin_vals = np.array(psin_vals)
+    psin_to_r = Interpolate1DCubic(psin_vals, r_vals[:len(psin_vals)])
 
     integral = integrate.simps(q_vals, s_vals)
     q_vals /= integral
@@ -414,6 +436,7 @@ def sample_power_at_surface(point_a, point_b, equilibrium, heat_load,
 
     # generate midplane mapping functions
     psin_to_q_func = interp1d(psin_vals, psi_q_vals, fill_value=0)  # q(psi_n)
+    # psin_to_q_func = Interpolate1DCubic(psin_vals, psi_q_vals)  # q(psi_n)
 
     # generate interface surface mapping functions
     interface_vector = point_a.vector_to(point_b)
@@ -421,10 +444,26 @@ def sample_power_at_surface(point_a, point_b, equilibrium, heat_load,
     powers_along_interface = []
     interface_psin = []
     for i in range(num_samples):
+
+        p_before = point_a + interface_vector * (i - 0.5) / num_samples
+        psin_before = psin2d(p_before.x, p_before.y)
+        p_after = point_a + interface_vector * (i + 0.5) / num_samples
+        psin_after = psin2d(p_after.x, p_after.y)
+        dx_interface = p_before.distance_to(p_after)
+
+        midplane_r_before = psin_to_r(psin_before)
+        midplane_r_after = psin_to_r(psin_after)
+        ds_midplane = fabs(midplane_r_after - midplane_r_before)
+
         sample_point = point_a + interface_vector * i / num_samples
         psin = psin2d(sample_point.x, sample_point.y)
+
+        radius_at_interface = sample_point.x
+        radius_at_midplane = psin_to_r(psin)
+        flux_expansion_factor = (ds_midplane / dx_interface) * (radius_at_midplane / radius_at_interface)
+
         interface_psin.append(psin)
-        q = psin_to_q_func(psin)
+        q = psin_to_q_func(psin) * flux_expansion_factor
         powers_along_interface.append(q)
 
     return np.array(powers_along_interface)
