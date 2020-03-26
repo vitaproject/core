@@ -12,7 +12,7 @@ def project_heat_flux(x_pos_omp, heat_flux_profile, map_dict):
     Function for mapping the heat flux from the OMP to the divertor. The heat
     flux at a different position is given by:
 
-        q_parallel_surf = R_omp/R_surf*q_parallel_omp/(f_x/sin(alpha)),
+        q_parallel_surf = R_omp/R_surf*q_parallel_omp/(f_x/cos(alpha)),
 
     where R_omp, is the radial coordinate at the OMP, R_surf is the radial coordinates
     at the surface, q_parallel_omp is the parallel heat flux at the OMP, alpha
@@ -54,6 +54,6 @@ def project_heat_flux(x_pos_omp, heat_flux_profile, map_dict):
     for i in range(len(x_pos_omp)):
         q_surf[i] = x_pos_omp[i]/map_dict[x_pos_omp[i]]["R_pos"] * \
                     heat_flux_profile[i]/(map_dict[x_pos_omp[i]]["f_x"]\
-                                          /np.sin(map_dict[x_pos_omp[i]]["alpha"]))
+                                          /np.cos(map_dict[x_pos_omp[i]]["alpha"]))
 
     return q_surf
