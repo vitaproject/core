@@ -20,8 +20,8 @@ class FieldLine():
     Member functions:
         follow_field_in_plane(p_0, max_length, max_points, rtol)
     '''
-    def __init__(self, filename):
-        self.fiesta_equil = Fiesta(filename)
+    def __init__(self, fiesta):
+        self.fiesta_equil = fiesta
 
     def follow_field_in_plane(self, p_0, max_length=10.0, max_points=2000, rtol=2e-10,
                               break_at_limiter=True):
@@ -127,8 +127,9 @@ class FieldLine():
 
 if __name__ == '__main__':
     FILEPATH = get_resource("ST40-IVC1", "equilibrium", "eq_006_2T_export")
-    #FILEPATH = '/home/jmbols/Postdoc/ST40/Programme 1/Equilibrium/eq001_limited.mat'
-    FIELD_LINE = FieldLine(FILEPATH)
+    #FILEPATH = '/home/jmbols/Postdoc/ST40/Programme 1/Equilibrium/eq001_limited.mat
+    FIESTA = Fiesta(FILEPATH)
+    FIELD_LINE = FieldLine(FIESTA)
     #print(FIELD_LINE.fiesta_equil.r_vec)
     LCFS_INDEX = [0.18, 0.75, 0.79]
     FIELD_LINE_DICTS = {}
