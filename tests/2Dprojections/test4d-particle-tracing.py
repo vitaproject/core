@@ -10,8 +10,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.constants import m_p, m_n, e
 from vita.utility import get_resource
-from vita.modules.projection2D.particle_path_projection import ParticlePath
-from vita.modules.fiesta.fiesta_interface import Fiesta
+from vita.modules.projection.projection2D.particle_path_projection import ParticlePath
+from vita.modules.equilibrium.fiesta.fiesta_interface import Fiesta
 
 if __name__ == '__main__':
     FILEPATH = get_resource("ST40-IVC1", "equilibrium", "eq_006_2T_export")

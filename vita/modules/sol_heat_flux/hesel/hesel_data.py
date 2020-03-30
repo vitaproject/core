@@ -9,7 +9,7 @@ import h5py
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation
-from vita.modules.sol_heat_flux.hesel_parameters import HESELparams
+from vita.modules.sol_heat_flux.hesel.hesel_parameters import HESELparams
 from vita.modules.utils.physics_constants import get_physics_constants
 
 class HESELdata():

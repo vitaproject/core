@@ -153,7 +153,7 @@ def _calculate_angles(v_1_vectors, v_2):
 
     return angles
 
-def map_psi_omp_to_divertor(x_axis_omp, fiesta, divertor_coords):
+def map_psi_omp_to_divertor(x_axis_omp, divertor_coords, fiesta):
     '''
     Function mapping the normalised psi from the specified coordinates at the
     OMP to the specified coordinates at the divertor. Currently the divertor is
@@ -260,9 +260,12 @@ def map_psi_omp_to_divertor(x_axis_omp, fiesta, divertor_coords):
     angles = _calculate_angles(v_1_vecs, v_2)
 
     divertor_map = {}
-    divertor_map["R_div"] = r_div
-    divertor_map["Z_div"] = divertor_polyfit(r_div)
-    divertor_map["Angles"] = angles
-    divertor_map["Flux_expansion"] = flux_expansion
+    for i in range(len(r_div)):
+        temp_dict = {}
+        temp_dict["R_pos"] = r_div[i]
+        temp_dict["Z_pos"] = divertor_polyfit(r_div[i])
+        temp_dict["alpha"] = angles[i]
+        temp_dict["f_x"] = flux_expansion[i]
+        divertor_map[x_axis_omp[i]] = temp_dict
 
     return divertor_map

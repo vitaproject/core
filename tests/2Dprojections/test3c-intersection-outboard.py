@@ -9,13 +9,15 @@ import numpy as np
 from matplotlib import pyplot as plt
 import math
 
-from vita.modules.fiesta import FieldLine
+from vita.modules.projection.projection2D.field_line.field_line import FieldLine
+from vita.modules.equilibrium.fiesta import Fiesta
 from vita.modules.utils import intersection
 from vita.utility import get_resource
 
-R200 = get_resource("ST200", "equilibrium", "R200")
-field_line = FieldLine(R200)
-R = field_line.fiesta_equil.get_midplane_lcfs()
+R200 = get_resource("ST40-IVC1", "equilibrium", "eq_006_2T_export")
+FIESTA = Fiesta(R200)
+field_line = FieldLine(FIESTA)
+R = FIESTA.get_midplane_lcfs()[1]
 r0 = 1.696
 rf = 1.74
 midplane_range = np.linspace(r0,rf,3)
@@ -44,20 +46,20 @@ for fl in field_line_dict:
 divertor_points = 3
 #divertor_x = np.linspace( 1.9, 2.45,divertor_points)
 #divertor_y = np.linspace(-3,-3.6,divertor_points)
-divertor_x = np.array([1.2, 1.2, 1.15])
-divertor_y = np.array([-1.5, -1.7, -2.05])
+divertor_x = np.array([2.2, 2.2, 2.15])
+divertor_y = np.array([-0.5, -0.7, -1.05])
 divertor_xy = np.array([divertor_x, divertor_y])
 
-result = [intersection(i, divertor_xy) for i in field_lines]
-x_p,y_p = zip (*result)
+result = np.array([intersection(i, divertor_xy) for i in field_lines])
+(x_p, y_p) = zip (*result[:, 1])
 
 for i in field_line_dict:
     plt.plot(i['R'],i['Z'],c='r')
 plt.plot(divertor_x,divertor_y,c='g')
-#plt.plot(x_p,y_p,'*k')
+plt.plot(x_p,y_p,'*k')
 plt.gca().set_aspect('equal', adjustable='box')
 #plt.gca().set_ylim([-4,-2.5])
-plt.show(block=True)
+plt.show()
 
 print(midplane_range)
 fx = []

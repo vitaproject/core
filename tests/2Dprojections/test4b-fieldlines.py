@@ -9,11 +9,10 @@ Created on Mon Mar 16 10:21:15 2020
 import numpy as np
 import matplotlib.pyplot as plt
 from vita.utility import get_resource
-from vita.modules.projection2D.field_line_projection import project_heat_flux
-from vita.modules.fiesta.field_line import FieldLine
-from vita.modules.fiesta.fiesta_interface import Fiesta
-from vita.modules.sol_heat_flux.eich import Eich
-from cherab.core.math import Interpolate2DCubic
+from vita.modules.projection.projection2D.field_line.field_line_projection import project_field_lines
+from vita.modules.projection.projection2D.field_line.field_line import FieldLine
+from vita.modules.equilibrium.fiesta.fiesta_interface import Fiesta
+from vita.modules.sol_heat_flux.eich.eich import Eich
 
 
 if __name__ == '__main__':
@@ -24,11 +23,9 @@ if __name__ == '__main__':
     FILEPATH = get_resource("ST40", "equilibrium", "eq002")
 
     FIESTA = Fiesta(FILEPATH)
-    B_POL = np.sqrt(FIESTA.b_r**2 + FIESTA.b_theta**2 + FIESTA.b_z**2).T
-    B_POL_INTERP = Interpolate2DCubic(FIESTA.r_vec, FIESTA.z_vec, B_POL)
 
-    FIELD_LINE = FieldLine(FILEPATH)
-    MID_PLANE_LOC = FIELD_LINE.fiesta_equil.get_midplane_lcfs()[1]
+    FIELD_LINE = FieldLine(FIESTA)
+    MID_PLANE_LOC = FIESTA.get_midplane_lcfs()[1]
 
     #I_AFTER_LCFS = np.linspace(-1, 10, 100)*1e-3
     #I_AFTER_LCFS = np.where(HESELDATA.hesel_params.xaxis >= 0)[0]
@@ -41,8 +38,8 @@ if __name__ == '__main__':
     FOOTPRINT.fx_in_out = 5.
     FOOTPRINT.calculate_heat_flux_density("lfs")
 
-    Q_PARALLEL = FOOTPRINT._q
-    X_AFTER_LCFS = FOOTPRINT.get_global_coordinates()
+    Q_PARALLEL = np.array(FOOTPRINT._q)
+    X_AFTER_LCFS = np.array(FOOTPRINT.get_global_coordinates())
     EQUILIBRIUM = {}
     plt.figure()
     for i in X_AFTER_LCFS:
@@ -54,6 +51,12 @@ if __name__ == '__main__':
     DIVERTOR_COORDS = np.array((np.array([0.375, 0.675]), np.array([-0.78, -0.885])))
     # EQUILIBRIUM = 'eq_0002'
     HEAT_FLUX_AT_OMP = np.array((X_AFTER_LCFS, Q_PARALLEL))
-    COORDS = project_heat_flux(HEAT_FLUX_AT_OMP, DIVERTOR_COORDS, EQUILIBRIUM, B_POL_INTERP)
+    MAP_DICT = project_field_lines(X_AFTER_LCFS, DIVERTOR_COORDS, FIESTA)
+    R_DIV = np.array([MAP_DICT[i]["R_pos"] for i in X_AFTER_LCFS])
+    F_X = np.array([MAP_DICT[i]["f_x"] for i in X_AFTER_LCFS])
+    ANGLES = np.array([MAP_DICT[i]["alpha"] for i in X_AFTER_LCFS])
     FIG = plt.figure()
-    plt.plot(COORDS[0], COORDS[2])
+    plt.plot(X_AFTER_LCFS, )
+
+    plt.figure()
+    plt.plot(R_DIV, Q_PARALLEL*X_AFTER_LCFS/(R_DIV*F_X/np.sin(ANGLES)))
