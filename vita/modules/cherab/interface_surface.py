@@ -393,9 +393,8 @@ def sample_power_at_surface(point_a, point_b, equilibrium, heat_load,
 
     # sampling power function outside LCFS
     s_vals = np.linspace(s_min, s_max, num_samples)
-    s_vals_mm = s_vals * 1000  # convert array to mm for HeatLoad units
     q_vals = []
-    for s in s_vals_mm:
+    for s in s_vals:
         try:
             q_vals.append(heat_load(s))
         except ValueError:

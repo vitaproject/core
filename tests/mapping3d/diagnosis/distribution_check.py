@@ -1,4 +1,5 @@
 
+import operator
 import numpy as np
 from math import sqrt
 import matplotlib.pyplot as plt
@@ -10,7 +11,7 @@ from cherab.tools.equilibrium import plot_equilibrium
 from vita.modules.sol_heat_flux.eich import Eich
 from vita.modules.cherab import FieldlineTracer, RK2, InterfaceSurface, sample_power_at_surface
 from vita.modules.cherab import load_wall_configuration
-from vita.modules.fiesta import Fiesta
+from vita.modules.equilibrium import Fiesta
 from vita.utility import get_resource
 
 
@@ -31,9 +32,9 @@ psin2d = equilibrium.psi_normalised
 # setup the heatflux profile #
 
 # specify and load heatflux profile
-footprint = Eich(1, 0.0001)  # lambda_q=2.5, S=0.5
+footprint = Eich(1.0e-3, 0.0001e-3)
 
-x = np.linspace(-1, 10, 100)
+x = np.linspace(-0.001, 0.01, 100)
 footprint.set_coordinates(x)
 footprint.s_disconnected_dn_max = 2.1
 footprint.fx_in_out = 5.
@@ -113,6 +114,21 @@ plt.title('PSI along divertor interface')
 
 plot_equilibrium(equilibrium, detail=False)
 plt.plot([interface_point_a.x, interface_point_b.x], [interface_point_a.y, interface_point_b.y], 'k')
+
+
+# TODO - Jeppe could insert his calculation method here, allowing comparison within the same script.
+
+
+# find and plot the peak of the histogram
+index, value = max(enumerate(n), key=operator.itemgetter(1))
+peak_position = (bins[index] + bins[index+1])/2
+peak_point2d = interface_point_a + interface_vector.normalise() * peak_position
+plt.plot([peak_point2d.x], [peak_point2d.y], 'r.')
+
+# # add jeppes peak position
+# jeppes_peak_position = 0.02  JEPPE - add your peak position here for the plots
+# peak_point2d = interface_point_a + interface_vector.normalise() * peak_position
+# plt.plot([peak_point2d.x], [peak_point2d.y], 'g.')
 
 
 # for saving output distributions
