@@ -1,0 +1,73 @@
+<html>
+<meta charset="utf-8"/>
+<style>
+.def {color: red}
+tr:nth-child(even) {background-color: #fff6ff}
+tr:nth-child(odd)  {background-color: #fffff6}
+</style>
+<body>
+<h1>Class: Eich(HeatLoad)</h1> <p>
+    Class for evaluating and storing the heat load at the up-stream and down-stream
+    positions using an Eich-like single exponential fit.
+
+    Member functions:
+
+        calculate_heat_flux_density: Function for calculating the heat-flux given
+        a set of input parameters.
+
+<p><table cellpadding=10>
+<tr><th>Method<th>Description<th>Example
+<tr><td><h3>__init__</h3><p>(self, lambda_q=1.5e-3, S=0., r0_lfs=0., r0_hfs=0.) <td><p>
+        Inputs for the class are
+
+        <p><b>Parameters</b>:
+        lambda_q : float, optional
+            The scrape-off layer power fall-off length. The default is 0.0015 m.
+        S : float, optional
+            Spreading factor. The default is 0.
+        r0_lfs : float, optional
+            The position of the low field side LCFS. The default is 0.
+        r0_hfs : float, optional
+            The position of the high field side LCFS. The default is 0.
+
+        <p><b>Returns</b>:
+        None.
+
+ <tr><td><h3>calculate_heat_flux_density</h3><p>(self, where="lfs-mp") <td><p>
+        Function for evaluating the heat flux density using an Eich-like
+        exponential at the mid-plane and an Eich function at the divertor.
+
+        The heat flux for the different positions is given by:
+
+            lfs-mp:
+                lambda_q = q_0*exp[-s/lambda_q] for s > 0
+
+            hfs-mp:
+                lambda_q = q_0*exp[-s/lambda_q]/f_x_in_out*r0_lfs/r0_hfs
+                                                for s > 0 and s < d_rsep
+                lambda_q = 0                    for s > d_rsep
+
+            lfs:
+                lambda_q = q_0/2*exp[S^2/(2*lambda_q*f_x)^2 - s/(lambda_q*f_x)]
+                                *erfc(S/(2*lambda_q*f_x) - s/S)
+            hfs:
+                So far, this has not been implemented properly, so it simply
+                gives the same output as hfs-mp
+
+        <p><b>Parameters</b>:
+        where : string, optional
+            A string with the position to evaluate.
+            The options are:
+                "lfs-mp"
+                "hfs-mp"
+                "lfs"
+                "hfs"
+            The default is "lfs-mp".
+
+        <p><b>Returns</b>:
+        None.
+
+
+</table>
+</body>
+</html>

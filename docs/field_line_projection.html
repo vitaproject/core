@@ -1,0 +1,68 @@
+<html>
+<meta charset="utf-8"/>
+<style>
+.def {color: red}
+tr:nth-child(even) {background-color: #fff6ff}
+tr:nth-child(odd)  {background-color: #fffff6}
+</style>
+<body>
+
+<p><table cellpadding=10>
+<tr><th>Method<th>Description<th>Example
+<tr><td><h3>_flux_expansion</h3><p>(b_pol, points_omp, points_div) <td><p>
+    Function for evaluating the flux expansion, defined as:
+
+        f_x = x_omp*b_pol(x_omp, y_omp)/(x_div*b_pol(x_div, y_div)),
+
+    where x_omp is the radial coordinate at the OMP, y_omp is the vertical
+    coordinate at the OMP (usually 0) and x_div and y_div are the corresponding
+    coordinates at the divertor.
+
+    <p><b>Parameters</b>:
+    b_pol : cherab.core.math.Interpolate2DCubic
+        Function for interpolating the poloidal magnetic field from a fiesta
+        equilibrium, given an (r, z)-point
+    points_omp : 2-x-1 list
+        List containing a point at the outboard mid-plane
+    points_div : 2-x-1 list
+        List containing the point at the corresponding flux surface at the
+        divertor.
+
+    <p><b>Returns</b>:
+    f_x : float
+        The flux expansion at the divertor point specified
+
+ <tr><td><h3>project_field_lines</h3><p>(x_axis_omp, surface_coords, fiesta) <td><p>
+    Function mapping the field-lines from the specified coordinates at the
+    OMP to the specified coordinates at a given surface. Currently the surface
+    is assumed to be represented by a 1D polynomial function, y = ax + b.
+
+    <p><b>Parameters</b>:
+    x_axis_omp : n-x-1 np.array
+        Numpy array with the radial coordinates we wish to map at the OMP
+    fiesta : Fiesta
+        A Fiesta object with the 2D equilibrium we wish to map
+    divertor_coords : 2-x-2 np.array
+        A 2-x-2 numpy array containg the corner points of the divertor in the
+        2D projection
+
+    <p><b>Returns</b>:
+    divertor_map : dictionary
+        A dictionary containing:
+            "R_div" : an n-x-1 array
+                with the R-coordinates at the divertor tile
+                corresponding to the same psi_n as at the OMP
+            "Z_div" : an n-x-1 array
+                with the Z-coordinates at the divertor tile
+                corresponding to the same psi_n as at the OMP
+            "Angles" : an n-x-1 array
+                with the angles between the field lines and the divertor tile
+                corresponding to the same psi_n as at the OMP
+            "Flux_expansion" : an n-x-1 array
+                with the flux expasion at the divertor tile
+                corresponding to the same psi_n as at the OMP
+
+
+</table>
+</body>
+</html>

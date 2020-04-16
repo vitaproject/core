@@ -9,7 +9,7 @@ use Carp;
 use Data::Dump qw(dump);
 use Data::Table::Text qw(:all);
 
-my $home    = q(/home/phil/vita/vitaCore/);                                     # Home folder
+my $home    = q(/home/phil/vita/core/);                                         # Home folder
 my $modules = fpd($home, qw(vita modules));                                     # Modules folder
 my $docs    = fpd($home, q(docs));                                              # Output documentation
 
