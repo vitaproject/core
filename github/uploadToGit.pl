@@ -33,7 +33,7 @@ if (1)                                                                          
 lll qx(perl $docx);                                                             # Extract documentation
 
 my @h = qw(.html .css);                                                         # File types we want to upload to web page
-my @t = qw(.py .pl .perl .yml);                                                 # File types we want to upload to vita
+my @t = qw(.py .pl .perl .svg .yml);                                            # File types we want to upload to vita
 
 if (1)                                                                          # Commit to vita repository
  {lll qx(pp -I /home/phil/perl/cpan/GitHubCrud/lib $p1; mv $pa $p2);            # Package uploader
