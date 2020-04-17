@@ -3,8 +3,12 @@ import re
 import os
 from shutil import copy
 
-
 _RESOURCE_ROOT = os.path.expanduser("~/.vita")
+if not os.path.isdir(_RESOURCE_ROOT) :
+    _RESOURCE_ROOT = os.environ['VITADATA']
+
+    if not os.path.isdir(_RESOURCE_ROOT) :
+        raise ValueError("Set environment variable VITADATA to the location of the vita data folder containing machine configurations")
 
 
 def _test_allowed_characters(string):

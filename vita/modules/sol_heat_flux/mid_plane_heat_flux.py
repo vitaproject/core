@@ -7,6 +7,7 @@ Created on Mon Oct 21 09:51:09 2019
 import scipy.integrate as integrate
 from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
+from vita.modules.utils.getOption import getOption
 
 
 class HeatLoad():
@@ -158,4 +159,10 @@ class HeatLoad():
         plt.plot(self._s, self._q)
         plt.xlabel('$s$')
         plt.ylabel('$q(s)$')
-        plt.show()
+
+        imageFile = getOption('imageFile')
+        if imageFile :
+          plt.savefig(imageFile)
+        else :
+          plt.show()
+

@@ -1,0 +1,51 @@
+<html>
+<meta charset="utf-8"/>
+<style>
+.def {color: red}
+tr:nth-child(even) {background-color: #fff6ff}
+tr:nth-child(odd)  {background-color: #fffff6}
+</style>
+<body>
+<h1>Class: Fiesta()</h1> <p>
+    Class for tracing the magnetic field lines given a FIESTA equlibrium.
+    This uses a limited set of FIESTA data, making it backward compatible with older FIESTA files,
+    but does not have CHERAB functionallity
+
+    :param str filename: the path to the FIESTA MATLAB save file.
+
+    :ivar VectorFunction3D b_field: A 3D vector function of the magnetic field.
+
+    member functions:
+
+<p><table cellpadding=10>
+<tr><th>Method<th>Description<th>Example
+<tr><td><h3>__init__</h3><p>(self, filename) <tr><td><h3>b_field</h3><p>(self) <td><p>
+        Function for getting the magnetic a 3D vector function of the magnetic 
+        field
+ <tr><td><h3>get_midplane_lcfs</h3><p>(self, psi_p=1.005) <td><p>
+        Function for getting the inner and outer radial position of the LCFS at the midplane
+
+        <p><b>Input</b>: self,  a reference to the object itself
+               psi_p, the flux surface of the LCFS, standard is psi_p = 1.005 (otherwise the field-line
+                      is located inside the LCFS)
+
+        <p><b>Return</b>: Rcross, a list with the outer and inner radial position of the mid-plane LCFS
+ <tr><td><h3>read_fiesta_model</h3><p>(self) <td><p>
+        Function for reading the FIESTA equilibrium data from a .mat file
+
+        <p><b>Input</b>: self, a reference the object itself
+
+        <p><b>Output</b>: self.r_limiter, a numpy array with the radial coordinates of the vessel limits
+                self.z_limiter, a numpy array with the vertical coordinates of the vessel limits
+                self.r_vec,     a numpy array with the radial grid coordinates
+                self.z_vec,     a numpy array with the vertical grid coordinates
+                self.psi_n,
+                self.b_r,       a numpy array with the radial magnetic field component
+                self.b_z        a numpy array with the vertical field component
+                self.b_phi,     a numpy array with the toroidal field component
+                self.b_theta,   a numpy array with the poloidal magnetic field component
+                self.i_rod      a float with the current in the rod
+
+</table>
+</body>
+</html>

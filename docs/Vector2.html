@@ -1,0 +1,102 @@
+<html>
+<meta charset="utf-8"/>
+<style>
+.def {color: red}
+tr:nth-child(even) {background-color: #fff6ff}
+tr:nth-child(odd)  {background-color: #fffff6}
+</style>
+<body>
+<h1>Class: Vector2(object)</h1> <p>Vectors in 2 dimensional euclidean space
+<p><table cellpadding=10>
+<tr><th>Method<th>Description<th>Example
+<tr><td><h3>Normalize</h3><p>(this) <td><p>Normalize a copy of vector. <td><pre>     assert((x * 3 + y * 4).<span class="def">Normalize</span>()         == x * 0.6 + y * 0.8)
+ </pre> <tr><td><h3>R180</h3><p>(this) <td><p>Rotate  a copy of a vector by 180 degrees. <td><pre>     assert(x.<span class="def">R180</span>() ==  -x)
+ </pre> <tr><td><h3>R270</h3><p>(this) <td><p>Rotate a vector by 270 degrees anticlockwise. <td><pre>     assert(x.<span class="def">R270</span>() ==  -y)
+ </pre> <tr><td><h3>R90</h3><p>(this) <td><p>Rotate a copy of a vector by 90 degrees anticlockwise. <td><pre>     assert(x.<span class="def">R90</span>()  ==   y)
+ </pre> <tr><td><h3>Swap</h3><p>(this) <td><p>Swap the components of a copy of a vector <td><pre>     z = x + y * 2
+
+    Z = z.<span class="def">Swap</span>()
+
+    assert(z != Z)
+ </pre> <tr><td><h3>__abs__</h3><p>(this) <td><p>Length of a vector <td><pre>     assert(abs(x * 3 + y * 4)        ==   5)
+ </pre> <tr><td><h3>__add__</h3><p>(this, other) <td><p>Add the second vector to a copy of the first vector <td><pre>     assert(x + y               ==  Vector2(1,  1))
+ </pre> <tr><td><h3>__eq__</h3><p>(this, other) <td><p>Whether two vectors are equal within a radius of floating point epsilon <td><pre>     assert(x * 2 + y - x - y   ==  x)
+ </pre> <tr><td><h3>__iadd__</h3><p>(this, other) <td><p>Add the second vector to the first vector <td><pre>     X = x
+
+    X = X + x
+
+    assert(x == Vector2(1, 0) and X == Vector2(2, 0))
+ </pre> <tr><td><h3>__imul__</h3><p>(this, scalar) <td><p>Multiply a vector by a scalar <td><pre>     X = x
+
+    X = X * 2
+
+    assert(x == Vector2(1, 0) and X == Vector2(2, 0))
+ </pre> <tr><td><h3>__init__</h3><p>(this, x = 0, y = 0) <td><p>Create a vector <td><pre>     assert(x + y               ==  Vector2(1,  1))
+ </pre> <tr><td><h3>__isub__</h3><p>(this, other) <td><p>Subtract the second vector from the first vector <td><pre>     X = x
+
+    X = X - x
+
+    assert(x == Vector2(1, 0) and X == Vector2(0, 0))
+ </pre> <tr><td><h3>__itruediv__</h3><p>(this, scalar) <td><p>Divide a vector by a scalar <td><pre>     X = x * 4
+
+    X = X / 2
+
+    assert(x == Vector2(1, 0) and X == Vector2(2, 0))
+ </pre> <tr><td><h3>__mul__</h3><p>(this, scalar) <td><p>Multiply a copy of vector by a scalar <td><pre>     assert(x * 2 + y * 3       ==  Vector2(2, 3))
+ </pre> <tr><td><h3>__neg__</h3><p>(this) <td><p>Rotate a copy of a vector by 180 degrees <td><pre>     assert(- y                 ==  Vector2(0, -1))
+ </pre> <tr><td><h3>__repr__</h3><p>(this) <td><p>String representation of a vector <td><pre>     assert(repr(x + y * 2)     == 'Vector2(1, 2)')
+ </pre> <tr><td><h3>__sub__</h3><p>(this, other) <td><p>Subtract the second vector from a copy of the first vector <td><pre>     assert(x - y               ==  Vector2(1, -1))
+ </pre> <tr><td><h3>__truediv__</h3><p>(this, scalar) <td><p>Divide a copy of a vector by a scalar <td><pre>     assert((x * 4 + y * 2) / 2 ==  x * 2 + y)
+ </pre> <tr><td><h3>angle</h3><p>(o, p) <td><p>Angle in radians anticlockwise that the first vector must be rotated to point along the second vector normalized to the range: -pi to +pi. <td><pre>     for i in range(-179, +179):                                                 # Anticlockwise <span class="def">angle</span> from x
+
+      assert(Vector2.close
+
+        (x.<span class="def">angle</span>(x * math.cos(dr(i)) + y * math.sin(dr(i))), dr(i)))
+ </pre> <tr><td><h3>area</h3><p>(this, other) <td><p>Signed area of the parallelogram defined by the two vectors. The area is negative if the second vector appears to the right of the first if they are both placed at the origin and the observer stands against the z-axis in a left handed coordinate system. <td><pre>     assert((x + y).<span class="def">area</span>(-x + y)  == 2)
+ </pre> <tr><td><h3>clone</h3><p>(this) <td><p>Clone a vector to allow it to be modified by other operations <td><pre>     z = x + y * 2
+
+    Z = z.<span class="def">clone</span>()
+
+    assert(z == Z)
+ </pre> <tr><td><h3>close</h3><p>(a, b) <td><p>Whether two numbers are close <td><pre>     assert(Vector2.<span class="def">close</span>(0, Vector2.<span class="def">close</span>Radius() / 2))
+ </pre> <tr><td><h3>closeRadius</h3><p>() <td><p>Two numbers are equal if they are less than this far apart <td><pre>     assert(Vector2.<span class="def">closeRadius</span>() < 1)
+ </pre> <tr><td><h3>cos</h3><p>(this, other) <td><p>cos(angle between two vectors). <td><pre>     assert(Vector2.close((x + y).<span class="def">cos</span>(y),  1 / r2))
+
+    assert(Vector2.close( x.<span class="def">cos</span>(x + yr3), 0.5))
+ </pre> <tr><td><h3>distance</h3><p>(this, other) <td><p>Distance between the points identified by two vectors when placed on the same point. <td><pre>     assert((x * 3 + y * 4).<span class="def">distance</span> (-(x * 3 + y * 4)) ==  10)
+ </pre> <tr><td><h3>distance2</h3><p>(this, other) <td><p>Distance squared between the points identified
+       by two vectors when placed on the same point. <td><pre>     assert((x * 3 + y * 4).<span class="def">distance2</span>(-(x * 3 + y * 4)) == 100)
+ </pre> <tr><td><h3>dot</h3><p>(this, other) <td><p>Dot product of two vectors. <td><pre>     assert((x * 2 + y).<span class="def">dot</span>(x + y * 3) == 5)
+ </pre> <tr><td><h3>length</h3><p>(this) <td><p>Length of a vector. <td><pre>     assert((x * 3 + y * 4).<span class="def">length</span>()  ==   5)
+ </pre> <tr><td><h3>length2</h3><p>(this) <td><p>Length squared of a vector. <td><pre>     assert((x * 3 + y * 4).<span class="def">length2</span>() ==  25)
+ </pre> <tr><td><h3>nonZero</h3><p>(n) <td><p>Whether a number is non zero <td><pre>     assert(Vector2.<span class="def">nonZero</span>(Vector2.closeRadius()))
+ </pre> <tr><td><h3>normalize</h3><p>(this) <td><p>Normalize a vector. <td><pre>     assert((x * 3 + y * 4).clone().<span class="def">normalize</span>() == x * 0.6 + y * 0.8)
+ </pre> <tr><td><h3>r180</h3><p>(this) <td><p>Rotate a vector by 180 degrees. <td><pre>     assert(x.clone().<span class="def">r180</span>() ==  -x)
+ </pre> <tr><td><h3>r270</h3><p>(this) <td><p>Rotate a copy of a vector by 270 degrees anticlockwise. <td><pre>     assert(x.clone().<span class="def">r270</span>() ==  -y)
+ </pre> <tr><td><h3>r90</h3><p>(this) <td><p>Rotate a vector by 90 degrees anticlockwise. <td><pre>     assert(x.clone().<span class="def">r90</span>()  ==   y)
+ </pre> <tr><td><h3>sin</h3><p>(this, other) <td><p>sin(angle between two vectors). <td><pre>     assert(Vector2.close((x + y).<span class="def">sin</span>(y),  1  / r2))
+
+    assert(Vector2.close( x.<span class="def">sin</span>(x + yr3), r3 / 2))
+ </pre> <tr><td><h3>smallestAngleToNormalPlane</h3><p>(a, b) <td><p>The smallest angle between the second vector and a plane normal to the first vector <td><pre>     assert(Vector2.close(dr(  0), y.<span class="def">smallestAngleToNormalPlane</span>( x)))            # First vector is y, second vector is 0 degrees anti-clockwise from x axis
+
+    assert(Vector2.close(dr(+45), y.<span class="def">smallestAngleToNormalPlane</span>( x +  y)))       #   +45
+
+    assert(Vector2.close(dr(+90), y.<span class="def">smallestAngleToNormalPlane</span>(      y)))       #   +90
+
+    assert(Vector2.close(dr(+45), y.<span class="def">smallestAngleToNormalPlane</span>(-x + -y)))       #  +135
+
+    assert(Vector2.close(dr(  0), y.<span class="def">smallestAngleToNormalPlane</span>(-x)))            #  +180
+
+    assert(Vector2.close(dr(+45), y.<span class="def">smallestAngleToNormalPlane</span>(-x + -y)))       #  +225
+
+    assert(Vector2.close(dr(+90), y.<span class="def">smallestAngleToNormalPlane</span>(     -y)))       #  +270
+
+    assert(Vector2.close(dr(+45), y.<span class="def">smallestAngleToNormalPlane</span>(-x + -y)))       #  +315
+
+    assert(Vector2.close(dr(  0), y.<span class="def">smallestAngleToNormalPlane</span>( x)))            #  +360
+ </pre> <tr><td><h3>swap</h3><p>(this) <td><p>Swap the components of a vector <td><pre>     assert((x + y * 2).<span class="def">swap</span>() ==  y + x * 2)
+ </pre> <tr><td><h3>zeroAndUnits</h3><p>() <td><p>Create the useful vectors: zero=(0,0), x=(1,0), y=(0,1) <td><pre>     assert(zero != x and zero != y and x != y)
+ </pre>
+</table>
+</body>
+</html>
