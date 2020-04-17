@@ -12,8 +12,8 @@ import math
 from vita.modules.projection.projection2D.field_line.field_line import FieldLine
 from vita.modules.equilibrium.fiesta import Fiesta
 from vita.modules.utils import intersection
-
 from vita.utility import get_resource
+from vita.modules.utils.getOption import getOption
 
 R200 = get_resource("ST40-IVC1", "equilibrium", "eq_006_2T_export")
 FIESTA = Fiesta(R200)
@@ -54,12 +54,17 @@ plt.plot(x_p,y_p,'*k')
 plt.gca().set_aspect('equal', adjustable='box')
 plt.gca().set_ylim([0.2,1])
 plt.gca().set_xlim([0, 0.8])
-plt.show()
+
+imageFile = getOption('imageFile')
+if imageFile :
+  plt.savefig(imageFile)
+else :
+  plt.show()
 
 print(midplane_range)
 fx = []
 for i in range(len(midplane_range)-1):
-    fx.append( math.hypot(x_p[i+1] - x_p[i], y_p[i+1] - y_p[i]) / 
+    fx.append( math.hypot(x_p[i+1] - x_p[i], y_p[i+1] - y_p[i]) /
               ( midplane_range[i+1] - midplane_range[i] ) *
               ( x_p[i] / midplane_range[i] )
              )
