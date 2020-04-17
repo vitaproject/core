@@ -1,0 +1,78 @@
+\chapter{Description}
+
+\section{Introduction and functionality}
+Vitaproject is part of a comprehensive tool-set for divertor modeling. The function and objectives of each tool, as shown in Figure \ref{fig:scheme}, vary depending on the operating phase. Vitaproject aims to deliver the following functionality:
+\begin{description}
+	\item [Design, assessment and preparation for operations:] The objective of the modeling in this stage is to have a good estimate of the plasma loading effect, in order to assess compliance to the Design Criteria and to define the Operating Limits. The uncertainty at this stage is large so a large number of sensitivity analysis shall be required in order to establish the range of acceptable plasma parameters, as well as the risk of non-compliance.
+%	\item [Pulse monitoring:] validated 2D nonlinear diffusion models are used for real-time temperature estimation. This synthetic diagnostic complements other protection measures such as thermography and thermocouple measurements.
+	\item [Post-pulse processing:] A Virtual Thermal Map (VTM) may be used based on processing protection IR camera data. A backup for recreating the surface and bulk temperatures shall be provided through quick analysis of hidden components, cross checking the VTM in case of dubious hotspots, and overall analysis in the case of IR camera malfunctioning.
+	\item [Sensitivity, condition and change request assessment:] any change on divertor components may be checked to actual experimental conditions, in order to evaluate the impact of any deviation from nominal geometry and properties as well as to assess major design modifications. This stage differs from the first one in that the model will have been already validated under nominal conditions and the workflow uses experimental data.
+\end{description}
+
+The workflow implemented bridges the Physics design, operational database and the engineering design and assessment.
+
+\begin{figure*}[htbp]
+	\centering
+	%  \vspace{-15mm}
+	\includegraphics[width=0.90\linewidth]{images/scheme_software}
+	\caption{Overall workflow scheme}
+	\label{fig:scheme}
+\end{figure*}
+
+
+\section{Description}
+\textit{Virtual Thermal Assessments} is a forward simulation code featuring a GUI
+%---shown in Figure \ref{fig:vita}---
+for ease of use. Its main goal is to allow both quick and accurate analysis of divertor tiles to users by setting global machine parameters, recreating previous stored pulses, or a mix of both. The time varying boundary conditions and integration parameters are automatically set, therefore not requiring the user to deal with numerical details.
+
+It is designed for design, pulse preparation activities, post-pulse checks, and integrity assessments of in-vessel components. It may also be used to test alternative divertor configurations under experimental conditions. It includes the following capabilities:
+\begin{itemize}
+	\item Several ways for defining pulse parameters and automatically setting the simulation model and its boundary conditions.
+	\item Connection to the experimental database for the readout of diagnostic measurements, typically temperatures.
+	\item Selection of the wall segment or divertor tile with different accuracy on the thermal model.
+	\item Direct plotting of diagnostic synthetic signals.
+	\item Tabulated output of maximum temperature at the surface and thermocouple measurement locations, along with energy values.
+\end{itemize}
+
+The parameters that define the pulse can be grouped as follows:
+\begin{description}
+	\item [Input power parameters:] The total power input to the plasma arrives from either resistive heating, NBI or RF sources. Each of the three signals can be defined as a constant value or a table from a file allowing complex manual load inputs. In the case where an experimental pulse is to be recreated, each of these values can be read from their corresponding signal in the JET database.
+	\item [Plasma parameters:] The total power arriving to the divertor at any moment in time corresponds to the total minus the radiated power. This is taken into account as a factor in the range $[0-1]$ called the radiated fraction. The outboard-inboard power ratio is typically estimated in single null configurations as $1/3$ inboard, $2/3$ outboard, and $1/10$ inboard, $9/10$ outboard in double null configurations. The footprint can be defined using different functions:
+	\begin{itemize}
+		\item A pure exponential function is the simplest way of defining the shape of the SOL power density around the plasma. When information about the far-SOL is known, a double exponential function may be used. Only the falloff length is needed for defining the footprint, allowing for a rough estimation of the power footprint at any PFC surface.
+		\item A square distribution may be used for fast transients simplified modeling of limited plasmas. 
+		\item The convolution of an exponential with a Gaussian has been proven in \cite{Eich2013} to be the best fit to the experimental observations for diverted plasma configurations. This function defines the profile of the scrape-off layer (SOL) at the equatorial plane. The parameters defining this function correspond to the power fall-off width, $\lambda$, and the spreading factor, $S$. Their values can be manually fixed or estimated---as defined in \cite{Riccardo2016}---as a function of the plasma current, $I_p$, toroidal field, $B_t$, integrated density, $n_e$, SOL power, $P_{SOL}$, ELM frequency, $f_{ELM}$, and the standard deviation of the radial field current, $\sigma_{RF}$.
+	\end{itemize}
+	
+	\item[Magnetic parameters:] In the latter case, the power density needs to be projected from the equatorial to the divertor plane. By default the flux expansion is used, but an option is available for performing a 3D magnetic projection using the magnetic field components and the equilibrium reconstruction provided by the Flush code \cite{Pamella2015} at each calculation time step. A second option allows the magnetic shadowing of the surrounding tiles to be taken into account.
+	
+	The strike point position can be defined manually as a fixed location, or a regular sweep across it. It is also possible to input its evolution as a table or read it directly from an stored signal in the experimental database.
+	
+	\item[Analysis parameters:] Once the physical quantities which define the loading conditions have been set, the Diritchlet boundary conditions are automatically defined in the model. The power density footprint is combined with the strike point time evolution, defining the power at each boundary point. The use of analytical functions for the heat flux profile allows calculating the exact power density at every surface node in an energy consistent manner (i.e. eliminating interpolation errors). In addition, the application of meshfree $C^{\infty}$ shape functions greatly increases the accuracy of surface temperature simulation. In the case where the loading parameters have been manually specified, the duration of the heating stage can be defined by the pulse time. Finally, the total simulation time is input using the analysis duration parameter.
+	
+\end{description}
+
+The accuracy of VITA has been tested to experimental data with satisfactory results. Figure \ref{fig:Pulses-Comparison} compares the response of two H-mode medium and high power pulses with the IR camera signal used for experiment data analysis, which is much more accurate than the ones used for the protection of the JET-ILW \cite{Jouve2011}. Due to the large number of signals used for recreating the loading conditions, there is of course an overall associated uncertainty. The total error has been bounded to 10\% of the measured temperatures, being comparable to the mismatch observed between the machine protection and experimental camera systems. The differences in amplitude during the sweeping of the strike point position is mostly due to the IR being measured in a tile extension instead of the full length tile. This short extension has a local shadow which amplifies the temperature oscillations. During the upcoming campaign, a normal length tile will be diagnosed. This will allow the specific testing of VITA against the alarms of the protection system. As the oscillation of the IR will be reduced, and the alarms are set to trigger when 200ms overheating events are detected \cite{Arnoux2012}---in line with the response time of VITA models---, lower errors are expected.
+
+\begin{figure}[!tb]
+	\centering
+	%	\includegraphics[width=0.8\linewidth,trim={3.1cm 4.4cm 15cm 9cm},clip]{../images/89162-QMSO}
+	\resizebox{1.0\linewidth}{!}{
+		\input{images/fig-comparison}
+	}
+	\caption{VITA synthetic reconstruction of maximum temperature IR signal compared to experiment IR camera measurement for two H-mode pulses with medium (90271), and high power (92025) input power.}
+	\label{fig:Pulses-Comparison}
+\end{figure}
+
+\section{Input data}
+
+\subsection{Equilibrium}
+	\begin{description}
+	\item [Static equilibrium] reading them from equilibrium files in FIESTA or EQDSK formats.
+	\item [Sweeping] applies a displacement to the heat load along the divertor target.
+	\item [Multiple equilibria] uses several input files for defining a transient plasma load.
+\end{description}
+
+\subsection{plasma parameters}
+
+
