@@ -1,0 +1,52 @@
+name: Vita
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Download repository
+      uses: actions/checkout@v2
+
+    - name: Install software packages
+      run: |
+        sudo apt update  -qq
+        sudo apt install -qq python-configobj tree
+        mkdir -p out
+        tree
+        python3 -m pip install --upgrade pip --user vtk scipy numpy matplotlib cherab h5py
+
+    - name: Run unit tests
+      run: |
+        python3 vita/modules/utils/Vector2.py
+        python3 vita/modules/utils/getOption.py
+
+    - name: Run plots
+      run: |
+        export PYTHONPATH=.                                                     # Location of python modules
+        export VITADATA=data                                                    # Location of machine configurations
+
+        python3 tests/2Dprojections/test1a-LFS-midplane.py             --imageFile out/test1a-LFS-midplane.svg
+        python3 tests/2Dprojections/test1b-HFS-midplane.py             --imageFile out/test1b-HFS-midplane.svg
+        python3 tests/2Dprojections/test2a-projection-outboard.py      --imageFile out/test2a-projection-outboard.svg
+        python3 tests/2Dprojections/test2b-projection-inboard.py       --imageFile out/test2b-projection-inboard.svg
+        python3 tests/2Dprojections/test3a-intersection-outboard.py    --imageFile out/test3a-intersection-outboard.svg
+        python3 tests/2Dprojections/test3b-intersection-inboard.py     --imageFile out/test3b-intersection-inboard.svg
+        python3 tests/2Dprojections/test3c-intersection-outboard.py    --imageFile out/test3c-intersection-outboard.svg
+       #python3 tests/2Dprojections/test4a-map-psi.py                  --imageFile out/test4a-map-psi.svg
+       #python3 tests/2Dprojections/test4b-fieldlines.py               --imageFile out/test4b-fieldlines.svg
+       #python3 tests/2Dprojections/test4c-map-fieldlines.py           --imageFile out/test4c-map-fieldlines.svg
+       #python3 tests/2Dprojections/test4d-particle-tracing.py         --imageFile out/test4d-particle-tracing.svg
+       #python3 tests/2Dprojections/test4e-psi-fieldline-compare.py    --imageFile out/test4e-psi-fieldline-compare.svg
+       #python3 tests/2Dprojections/test5a-compare-to-3D-map.py        --imageFile out/test5a-compare-to-3D-map.svg
+
+    - name: Upload results
+      env:
+         token: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        tree
+        github/uploadOut.perl $GITHUB_REPOSITORY out/ out/  "$token"
