@@ -50,7 +50,6 @@ if (1)                                                                          
  {lll qx(git pull -q --no-edit origin master);                                     # Retrieve latest version from repo
 
   my @f = searchDirectoryTreesForMatchingFiles($home, @html, @code);            # Files we want to upload
-  lll "Files:\n", dump([@f]);
   for my $f(@f)
    {lll qx(git add $f);
    }
