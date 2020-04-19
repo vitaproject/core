@@ -17,7 +17,7 @@ jobs:
 
     - name: Install software packages
       run: |
-        sudo cpanm -qn Data::Table::Text GitHub::Crud Data::Dump
+        sudo cpan install Data::Table::Text GitHub::Crud Data::Dump
 
     - name: Deleted and refresh generated files
       env:
