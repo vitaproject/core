@@ -57,9 +57,12 @@ if (1)                                                                          
   lll qx(git push -u origin master);                                            # Push to GitHub via SSH
  }
 
-if (1)                                                                          # Upload documentation
- {my @f = searchDirectoryTreesForMatchingFiles($docs, @html);                   # Files we want to upload
-  for my $s(@f)
+if (1)                                                                          # Generate and upload documentation
+ {say STDERR qx(perl ${perl}generateDocumentation.pl);                          # Generate
+
+  my @f = searchDirectoryTreesForMatchingFiles($docs, @html);                   # Files we want to upload
+
+  for my $s(@f)                                                                 # Upload
    {my $t = swapFilePrefix($s, $docs, $docg);
     lll $t;
     GitHub::Crud::writeFileFromFileUsingSavedToken($user, $repo, $t, $s);
