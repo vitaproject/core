@@ -57,4 +57,5 @@ jobs:
          token: ${{ secrets.GITHUB_TOKEN }}
       run: |
         tree
-        perl github/uploadOut.pl $GITHUB_REPOSITORY out/ out/  "$token"
+        perl github/uploadOut.pl $GITHUB_REPOSITORY docs/ docs/  $token
+        perl github/uploadOut.pl $GITHUB_REPOSITORY out/   out/  $token
