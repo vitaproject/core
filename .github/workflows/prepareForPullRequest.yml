@@ -18,11 +18,10 @@ jobs:
     - name: Install software packages
       run: |
         export PERL_MM_USE_DEFAULT=1
-        sudo cpan install Data::Table::Text GitHub::Crud Data::Dump
+        sudo cpan install Data::Table::Text GitHub::Crud Data::Dump 1>/dev/null
 
 
     - name: Deleted and refresh
-     generated files
       env:
          token: ${{ secrets.GITHUB_TOKEN }}
       run: |
