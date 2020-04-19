@@ -18,7 +18,7 @@ jobs:
     - name: Install software packages
       run: |
         export PERL_MM_USE_DEFAULT=1
-        sudo cpan install Data::Table::Text GitHub::Crud Data::Dump 1>/dev/null
+        sudo cpan install Data::Table::Text GitHub::Crud Data::Dump
 
 
     - name: Deleted and refresh
