@@ -32,7 +32,7 @@ if (1)                                                                          
    }
  }
 
-if (0)                                                                          # Package Perl files
+if (1)                                                                          # Package Perl files
  {for my $pp(@pp)
    {my $p1 = fpe($perl, $pp, q(pl));
     -e $p1 or confess "No such file: $p1";
