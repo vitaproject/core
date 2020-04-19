@@ -49,8 +49,11 @@ if (0)                                                                          
 if (1)                                                                          # Commit to vita repository
  {lll qx(git pull -q --no-edit origin master);                                  # Retrieve latest version from repo
 
+<<<<<<< HEAD
   owf(fpe($home, qw(.github control prepareForPullRequest txt)), q(AAA));       # Request preparation for pull request
 
+=======
+>>>>>>> eddc12ab7b1956f1acce8434850d46d3482cb8db
   my @f = searchDirectoryTreesForMatchingFiles($home, @html, @code);            # Files we want to upload
   for my $f(@f)
    {lll qx(git add $f);
