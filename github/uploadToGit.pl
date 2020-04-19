@@ -38,7 +38,7 @@ if (1)                                                                          
      }
    }
 
-  lll qx(git pull --no-edit origin master);                                     # Retrieve latest version from repo
+  lll qx(git pull origin master);                                     # Retrieve latest version from repo
 
   if (1)
    {owf(fpe($home, qw(.github control prepareForPullRequest txt)), q(AAA));     # Request preparation for pull request
