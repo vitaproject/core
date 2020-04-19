@@ -51,6 +51,16 @@ $h
 END
  }
 
+if ($local)                                                                     # Upload documentation to philiprbrenan.github.io/vita/index.html
+ {my @f = searchDirectoryTreesForMatchingFiles($docs, @html);                   # Files we want to upload
+  for my $s(@f)
+   {my $t = swapFilePrefix($s, $docs, $docg);
+    lll $t;
+    GitHub::Crud::writeFileFromFileUsingSavedToken($user, $repo, $t, $s);
+   }
+ }
+
+
 =pod
 
 cd /home/phil/vita/core/github/; pp -I /home/phil/perl/cpan/DataTableText/lib -I /home/phil/perl/cpan/GitHubCrud/lib generateDocumentation.pl; mv a.out generateDocumentation.perl

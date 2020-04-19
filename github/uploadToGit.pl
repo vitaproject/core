@@ -13,7 +13,7 @@ use GitHub::Crud;
 my $home = q(/home/phil/vita/core);                                             # Home folder
 my $docs = fpd($home, qw(docs));                                                # Documentation
 my $perl = fpd($home, qw(github));                                              # Perl to perform upload to github
-my @pp   = qw(uploadOut deleteGenerateFiles generateDocumentation);             # Package these files so they can be used immediately on GitHub
+my @pp   = qw(uploadOut deleteGeneratedFiles generateDocumentation);            # Package these files so they can be used immediately on GitHub
 my @ppi  = (q(-I /home/phil/perl/cpan/DataTableText/lib/),                      # Perl modules used by packaged perl files
             q(-I /home/phil/perl/cpan/GitHubCrud/lib));
 
@@ -35,12 +35,15 @@ if (1)                                                                          
 if (1)                                                                          # Package Perl files
  {for my $pp(@pp)
    {my $p1 = fpe($perl, $pp, q(pl));
+    -e $p1 or confess "No such file: $p1";
     my $pa = fpe($perl, qw(a out));
     my $p2 = fpe($perl, $pp, q(perl));
+    unlink $p2;
     my $pi = join ' ', @ppi;
     my $c  = qq(pp $pi $p1; mv $pa $p2);
     lll qq($c);
     lll qx($c);
+    -e $p2 or confess "No such file: $p2";
    }
  }
 
