@@ -1,0 +1,28 @@
+<html>
+<meta charset="utf-8"/>
+<style>
+.def {color: red}
+tr:nth-child(even) {background-color: #fff6ff}
+tr:nth-child(odd)  {background-color: #fffff6}
+</style>
+<body>
+
+<p><table cellpadding=10>
+<tr><th>Method<th>Description<th>Example
+<tr><td><h3>map_field_lines</h3><p>(x_vec_at_omp, file_path, configuration='diverted') <td><p>
+    Function for mapping each field-line to the intersection with the vessel walls
+
+    <p><b>Input</b>: x_vec_at_omp,  a numpy array with the radial points at the OMP where
+                          we want the mapping to start
+           file_path,     a string with the path to the FIESTA equilibrium .mat file
+           configuration, a string with either 'limited' or 'diverted', where 'diverted'
+                          is the defualt configuration
+
+    <p><b>Return</b>: field_line_dict, a python dictionary with the radial position from the OMP in m
+                             as the key and the field-line dictionary with the R, phi
+                             and Z components along the field line as well as the length, l,
+                             from the LCFS to the current point along the field-line
+
+</table>
+</body>
+</html>
