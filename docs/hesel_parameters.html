@@ -1,0 +1,170 @@
+<html>
+<meta charset="utf-8"/>
+<style>
+.def {color: red}
+tr:nth-child(even) {background-color: #fff6ff}
+tr:nth-child(odd)  {background-color: #fffff6}
+</style>
+<body>
+<h1>Class: HESELparams()</h1> <p>
+    Class for loading parameters from the HESEL .hdf5 file
+    All parameters are in SI units unless otherwise specified.
+
+    Member functions:
+        read_hesel_output(self, file)
+        calculate_sound_speed(self)
+        calculate_ion_gyrofrequency()
+        calculate_ion_gyroradius()
+        calculate_debye_length()
+        calculate_coulomb_logarithm()
+        get_x_axis_rhos()
+        get_y_axis_rhos()
+        get_lcfs_index()
+        get_wall_index()
+        get_x_axis_probes()
+
+<p><table cellpadding=10>
+<tr><th>Method<th>Description<th>Example
+<tr><td><h3>__init__</h3><p>(self, file) <tr><td><h3>calculate_coulomb_logarithm</h3><p>(self) <td><p>
+        Function for calculating the Coulomb logarithm:
+
+            log(Lambda_coulomb) = log(12 pi n_0 lambda_debye^3/Z),
+
+        n0 is the reference plasma density, lambda_debye is the plasma debye length and
+        Z is the plasma charge number
+
+        <p><b>Input</b>: self,
+
+        <p><b>Return</b>: log(Lambda_coulomb), the plasma coulomb logarithm
+ <tr><td><h3>calculate_debye_length</h3><p>(self) <td><p>
+        Function for calculating the plasma debye length:
+
+            lambda_debye = sqrt(epsilon Te0/(n_0 e)),
+
+        where epsilon is the vacuum permittivity, Te is the reference electron temperature in eV,
+        n0 is the reference plasma density and e is the elementary charge
+
+        <p><b>Input</b>: self,
+
+        <p><b>Return</b>: lambda_debye, the plasma debye length
+ <tr><td><h3>calculate_ion_gyrofrequency</h3><p>(self) <td><p>
+        Function for calculating the ion gyrofrequency at electron temperature:
+
+            omega_ci = Z e B_0/m_i,
+
+        where Z is the charge number, e is the elementary charge,
+        B_0 is the magnetic field strength at the outer midplane and
+        m_i is the ion mass.
+
+        <p><b>Input</b>: self,
+
+        <p><b>Return</b>: omega_ci, the ion sound speed at electron temperature
+ <tr><td><h3>calculate_ion_gyroradius</h3><p>(self) <td><p>
+        Function for calculating the ion gyrofrequency at electron temperature:
+
+            rho_s = c_s/omega_ci,
+
+        where c_s is the ion sound speed at electron temperature and
+        omega_ci is the ion gyrofrequency at electron temperature
+
+        <p><b>Input</b>: self,
+
+        <p><b>Return</b>: rho_s, the ion gyroradius at electron temperature
+ <tr><td><h3>calculate_sound_speed</h3><p>(self) <td><p>
+        Function for calculating the ion sound speed at electron temperature:
+
+            c_s = sqrt(e Te/m_i),
+
+        where e is the elementary charge, Te is the reference electron temperature in eV and
+        m_i is the ion mass.
+
+        <p><b>Input</b>: self,
+
+        <p><b>Return</b>: c_s, the ion sound speed at electron temperature
+ <tr><td><h3>get_lcfs_index</h3><p>(self) <td><p>
+        Function for calculating the index of the LCFS position in the HESEL output
+
+        <p><b>Input</b>: self,
+
+        <p><b>Return</b>: lcfs_index, an integer with the index of the LCFS
+ <tr><td><h3>get_wall_index</h3><p>(self) <td><p>
+        Function for calculating the index where the wall region starts
+
+        <p><b>Input</b>: self,
+
+        <p><b>Return</b>: wall_index, an integer with the index of where the wall region starts
+ <tr><td><h3>get_x_axis_probes</h3><p>(self) <td><p>
+        Function for getting the x-axis for the synthetic probes in HESEL, normalised
+        so the LCFS is at 0
+
+        <p><b>Input</b>: self,
+
+        <p><b>Return</b>: x_axis_probes_rhos, a numpy array with the synthetic probe positions
+ <tr><td><h3>get_x_axis_rhos</h3><p>(self) <td><p>
+        Function for getting the x-axis of the HESEL output, normalised so 0 is at the LCFS
+
+        <p><b>Input</b>: self,
+
+        <p><b>Return</b>: x_axis, a numpy array with the radial positions of the grid points [rho_s]
+ <tr><td><h3>get_y_axis_rhos</h3><p>(self) <td><p>
+        Function for getting the y-axis of the HESEL output
+
+        <p><b>Input</b>: self,
+
+        <p><b>Return</b>: y_axis, a numpy array with the poloidal positions of the grid points [rho_s]
+ <tr><td><h3>read_hesel_output</h3><p>(self, file) <td><p>
+        Function for reading the output from the HESEL .hdf5 file.
+        All data is in SI units unless otherwise specified.
+
+        <p><b>Input</b>: self,
+               file, the loaded HESEL .hdf5 file
+
+        <p><b>Output</b>: self.n_x,              an integer with the number of radial grid points
+                self.n_y,              an integer with the number of poloidal grid points
+                self.n_t,              an integer with the number of temporal points
+                self.outmult,          an integer with the number of timesteps per output
+                self.xmin_rhos,        a float with the minimum radial position
+                                       of the domain in [rho_s]
+                self.xmax_rhos,        a float with the maximum radial position
+                                       of the domain in [rho_s]
+                self.n_0,              a float with reference plasma density [m^{-3}]
+                self.te0_eV,           a float with reference plasma electron temperature [eV]
+                self.ti0_eV,           a float with reference plasma ion temperature [eV]
+                self.background_n,     a float with the background density [m^{-3}]
+                self.background_t,     a float with the background temperatures
+                                       (both ele and ion) [eV]
+                self.plasma_z,         an integer with the plasma charge number
+                self.b0_omp,           a float with the magnitude of the magnetic
+                                       field at the OMP [T]
+                self.ion_mass_number,  an integer with the ion mass number
+                self.minor_radius,     a float with the device minor radius [m]
+                self.major_radius,     a float with the device major radius [m]
+                self.plasma_q,         a float with the plasma safety factor
+                self.parallel_conn_length,      a float with the parallel connection length [m]
+                self.parallel_conn_length_wall, a float with the parallel connection length
+                                                of the wall region [m]
+                self.mach_number,      a float with the parallel mach number at the OMP
+                self.edge_width_rhos,  a float with the width of the edge region [rho_s]
+                self.sol_width_rhos,   a float with the width of the SOL region [rho_s]
+                self.wall_region_width_rhos,    a float with the width of the
+                                                wall region [rho_s]
+                self.time1d_omega_ci,  a float with the time-step used in HESEL [1/omega_ci]
+                self.time2d_omega_ci,  a float with the output time-step used for 2D fields in HESEL
+                self.probes_nt,        an integer with the number of output times
+                                       for the 1D probe arrays
+                self.probes_nx,        an integer with the radial number of probes
+                                       in the 1D probe arrays
+                self.dx_rhos,          a float with the radial resolution of the domain [rho_s]
+                self.dy_rhos,          a float with the poloidal resolution of the domain [rho_s]
+                self.adv_p_e_omega_ci, a float with 9/2*1/(omega_ci*tau_s), i.e. the normalised
+                                       constant part of the parallel advection term
+                self.adv_p_i_omega_ci, a float with 9/2*1/(omega_ci*tau_s), i.e. the normalised
+                                       constant part of the parallel advection term
+                self.con_p_e_omega_ci, a float with 1/(omega_ci*tau_{SH,e}), i.e. the normalised
+                                       const. part of the parallel electron Spitzer-Härm conduction
+                self.con_p_i_omega_ci, a float with 1/(omega_ci*tau_{SH,i}), i.e. the const.
+                                       normalised part of the parallel ion Spitzer-Härm conduction
+
+</table>
+</body>
+</html>

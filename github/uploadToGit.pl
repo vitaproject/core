@@ -38,7 +38,9 @@ if (1)                                                                          
     my $pa = fpe($perl, qw(a out));
     my $p2 = fpe($perl, $pp, q(perl));
     my $pi = join ' ', @ppi;
-    lll qx(pp $pi $p1; mv $pa $p2; rm $pa);
+    my $c  = qq(pp $pi $p1; mv $pa $p2);
+    lll qq($c);
+    lll qx($c);
    }
  }
 

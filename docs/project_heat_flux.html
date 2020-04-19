@@ -1,0 +1,54 @@
+<html>
+<meta charset="utf-8"/>
+<style>
+.def {color: red}
+tr:nth-child(even) {background-color: #fff6ff}
+tr:nth-child(odd)  {background-color: #fffff6}
+</style>
+<body>
+
+<p><table cellpadding=10>
+<tr><th>Method<th>Description<th>Example
+<tr><td><h3>project_heat_flux</h3><p>(x_pos_omp, heat_flux_profile, map_dict) <td><p>
+    Function for mapping the heat flux from the OMP to the divertor. The heat
+    flux at a different position is given by:
+
+        q_parallel_surf = R_omp/R_surf*q_parallel_omp/(f_x/cos(alpha)),
+
+    where R_omp, is the radial coordinate at the OMP, R_surf is the radial coordinates
+    at the surface, q_parallel_omp is the parallel heat flux at the OMP, alpha
+    is the incidence angle of the field-lines with respect to the normal of the
+    surface, and f_x is the flux expansion:
+        
+        f_x = R_omp*B_pol(R_omp, Z_omp)/(R_surf*B_pol(R_surf, Z_surf)),
+
+    where Z_omp is the vertical position of the OMP (usually 0), Z_surf is
+    the vertical position of the surface, and B_pol is the poloidal magnetic
+    field and the given coordinates.
+
+    <p><b>Parameters</b>:
+    x_pos_omp : n-by-1 np.array
+        Radial coordinates at the OMP
+    heat_flux_profile : n-by-1 np.array
+        Parallel heat flux at the given coordinates
+    map_dict : dictionary
+        Python dictionary with:
+            keys: float
+                x_pos_omp[i], each position at the omp has a corresponding mapped position
+            values: dictionary
+                dictionary with keys:
+                    "R_pos" : float, radial position of the surface
+                    "Z_pos" : float, vertical position of the surface
+                    "f_x"   : float, flux expansion at the given R, Z position
+                    "alpha" : float, incidence angle with respect to the normal
+                                     of the surface
+                
+
+    <p><b>Returns</b>:
+    q_surf : n-by-1 np.array
+        parallel heat flux at the surface position
+
+
+</table>
+</body>
+</html>

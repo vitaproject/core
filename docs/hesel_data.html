@@ -1,0 +1,294 @@
+<html>
+<meta charset="utf-8"/>
+<style>
+.def {color: red}
+tr:nth-child(even) {background-color: #fff6ff}
+tr:nth-child(odd)  {background-color: #fffff6}
+</style>
+<body>
+<h1>Class: HESELdata()</h1> <p>
+    Class for loading and storing the data output from HESEL stored in an hdf5 file.
+    All fields are in SI units unless otherwise specified.
+
+    Member functions:
+        _load_file()
+        _close_file()
+        _evaluate_electron_advection_field()
+        _evaluate_ion_advection_field()
+        _evaluate_electron_conduction_field()
+        _evaluate_ion_conduction_field()
+        evaluate_parallel_heat_fluxes()
+        get_lcfs_values()
+        calculate_lambda_q(case='')
+        get_probe_positions()
+        _load_probe_data(field_name)
+        get_profiles_from_probes()
+        load_2d_animation_fields()
+        animate_2d_field(fieldname='', show_animation=False, save_movie=True)
+        animate_1d_field(fieldname='', show_animation=False, save_movie=True)
+
+<p><table cellpadding=10>
+<tr><th>Method<th>Description<th>Example
+<tr><td><h3>__del__</h3><p>(self) <tr><td><h3>__init__</h3><p>(self, filename, ratio=0.25) <td><p>
+        Initialise the HESEL data object as None-types
+
+        <p><b>Input</b>: filename, the name of the file to be loaded
+               ratio,    the ratio of timesteps to be filtered out to make sure
+                         a turbulent steady-state has been reached,
+                         e.g., ratio = 0.25 means the first 25% of the data
+                         is discarded
+ <tr><td><h3>_close_file</h3><p>(self) <td><p>
+        If the file is open, close the file
+ <tr><td><h3>_evaluate_electron_advection_field</h3><p>(self) <td><p>
+        Function for evaluating the electron advection for each point in time and
+        space:
+
+            pe_adv = 3/2*1/tau_d*sqrt((T_i + T_e)/(T_i0 + T_e0))*p_e,
+
+        where the sqrt((T_i + T_e)/(T_i0 + T_e0))*p_e is to take local variations
+        into account and 3/2 is from the normalisation used in HESEL.
+
+        <p><b>Input</b>: self,
+
+        <p><b>Return</b>: electron_advecton_mw, a numpy array with the ion advection term for
+                each point in space and time [MW]
+ <tr><td><h3>_evaluate_electron_conduction_field</h3><p>(self) <td><p>
+        Function for evaluating the electron conduction for each point in time and
+        space:
+
+            pe_cond = 3/2*1/tau_{SH,e}*(T_e/T_e0)^(5/2)*p_e,
+
+        where the (T_e/T_e0)^(5/2)*p_e is to take local variations into account
+        and 3/2 is from the normalisation used in HESEL.
+
+        <p><b>Input</b>: self,
+
+        <p><b>Return</b>: electron_conduction_mw, a numpy array with the electron conduction
+                term for each point in space and time [MW]
+ <tr><td><h3>_evaluate_ion_advection_field</h3><p>(self) <td><p>
+        Function for evaluating the ion advection for each point in time and
+        space:
+
+            pi_adv = 3/2*1/tau_d*sqrt((T_i + T_e)/(T_i0 + T_e0))*p_i,
+
+        where the sqrt((T_i + T_e)/(T_i0 + T_e0))*p_i is to take local variations
+        into account and 3/2 is from the normalisation used in HESEL.
+
+        <p><b>Input</b>: self,
+
+        <p><b>Return</b>: ion_advecton_mw, a numpy array with the ion advection term for
+                each point in space and time [MW]
+ <tr><td><h3>_evaluate_ion_conduction_field</h3><p>(self) <td><p>
+        Function for evaluating the electron conduction for each point in time and
+        space:
+
+            pi_cond = 3/2*1/tau_{SH,i}*(T_i/T_e0)^(5/2)*p_i,
+
+        where the (T_i/T_e0)^(5/2)*p_i is to take local variations into account
+        (T_i is normalised to T_e0 in HESEL) and 3/2 is from the normalisation used in HESEL.
+
+        <p><b>Input</b>: self,
+
+        <p><b>Return</b>: electron_conduction_mw, a numpy array with the electron conduction
+                term for each point in space and time [MW]
+ <tr><td><h3>_evaluate_parallel_heat_flux_electron_advection</h3><p>(self) <td><p>
+        Function for evaluate the contribution to the parallel heat flux from
+        the ion advection:
+
+            q_parallel_e_adv = a*<p_e/tau_d>_t,
+
+        where a is the device minor radius, tau_d is the parallel advection loss term
+        and <>_t denotes a temporal average. There are fewer probe radial points than
+        1D radial points in HESEL, so the heat flux is interpolated after it is evaluated.
+
+        <p><b>Input</b>: self,
+
+        <p><b>Return</b>: q_parallel_e_adv_mw, a numpy array with the electron advection part
+                                     of the parallel heat flux
+ <tr><td><h3>_evaluate_parallel_heat_flux_electron_conduction</h3><p>(self) <td><p>
+        Function for evaluate the contribution to the parallel heat flux from
+        the ion advection:
+
+            q_parallel_e_cond = a*<p_e/tau_{SH,e}>_t,
+
+        where a is the device minor radius, tau_{SH,e} is the parallel conduction loss term
+        and <>_t denotes a temporal average. There are fewer probe radial points than
+        1D radial points in HESEL, so the heat flux is interpolated after it is evaluated.
+
+        <p><b>Input</b>: self,
+
+        <p><b>Return</b>: q_parallel_e_cond_mw, a numpy array with the electron conduction part
+                                      of the parallel heat flux
+ <tr><td><h3>_evaluate_parallel_heat_flux_ion_advection</h3><p>(self) <td><p>
+        Function for evaluate the contribution to the parallel heat flux from
+        the ion advection:
+
+            q_parallel_i_adv = a*<p_i/tau_d>_t,
+
+        where a is the device minor radius, tau_d is the parallel advection loss term
+        and <>_t denotes a temporal average. There are fewer probe radial points than
+        1D radial points in HESEL, so the heat flux is interpolated after it is evaluated.
+
+        <p><b>Input</b>: self,
+
+        <p><b>Return</b>: q_parallel_i_adv_mw, a numpy array with the ion advection part
+                                     of the parallel heat flux
+ <tr><td><h3>_evaluate_parallel_heat_flux_ion_conduction</h3><p>(self) <td><p>
+        Function for evaluate the contribution to the parallel heat flux from
+        the ion advection:
+
+            q_parallel_i_cond = a*<p_i/tau_{SH,i}>_t,
+
+        where a is the device minor radius, tau_{SH,i} is the parallel conduction loss term
+        and <>_t denotes a temporal average. There are fewer probe radial points than
+        1D radial points in HESEL, so the heat flux is interpolated after it is evaluated.
+
+        <p><b>Input</b>: self,
+
+        <p><b>Return</b>: q_parallel_i_cond_mw, a numpy array with the ion conduction part
+                                      of the parallel heat flux
+ <tr><td><h3>_load_file</h3><p>(self) <td><p>
+        Load the file and the HESEL parameters from HESELparameters.py
+ <tr><td><h3>_load_probe_data</h3><p>(self, field_name) <td><p>
+        Function for loading the probe synthetic HESEL probe data at the radial position
+        radial_probe_position = 0.0 and at poloidal positions that are in increments of
+        5 rho_s from poloidal_probe_position = 0.0, which is where we assume that the
+        synthetic data is mutually independent.
+
+        The data is sliced so the first self.ratio*n_t time-points are filtered away from the
+        signals of each synthetic probe. The output numpy array then consists of the
+        concatenated synthetic data from the probes at different poloidal positions as
+        specified above.
+
+        <p><b>Input</b>: self,
+               field_name,  a string with the name of the field to load. The options are
+                            'temperature' for the electron temperature,
+                            'temperature_i' for the ion temperature, and
+                            'density' for the plasma density (the plasma is assumed quasi-
+                            neutral)
+
+        <p><b>Return</b>: field_data, a numpy array with the specified field in SI units
+ <tr><td><h3>animate_1d_field</h3><p>(self, fieldname='', show_animation=False, save_movie=True) <td><p>
+        Function for creating videos of the 1D fields
+
+        <p><b>Input</b>: self
+               fieldname, a string with the name of the field to make the video of
+                          the options are: 'n', 'Te', 'Ti', 'Pe', 'Pi'
+                          default is '', which returns an error
+               show_animation, a boolean determining whether or not to show the
+                               animation as it is being created
+                               default is False
+               save_movie, a boolean for whether or not the movie should be saved,
+                           default is True
+
+        <p><b>Output</b>: An animation with the specified field,
+                saved in the working directory if save_movie == True
+ <tr><td><h3>animate_2d_field</h3><p>(self, fieldname='', show_animation=False, save_movie=True) <td><p>
+        Function for creating videos of the 2D fields
+
+        <p><b>Input</b>: self,
+               fieldname, a string with the name of the field to make the video of
+                          the options are: 'n', 'Te', 'Ti', 'Pe', 'Pi', 'phi', 'omega'
+                          default is '', which returns an error
+               show_animation, a boolean determining whether or not to show the
+                               animation as it is being created
+                               default is False
+               save_movie, a boolean for whether or not the movie should be saved,
+                           default is True
+
+        <p><b>Output</b>: An animation with the specified field,
+                saved in the working directory if save_movie == True
+ <tr><td><h3>calculate_lambda_q</h3><p>(self, case='') <td><p>
+        Function for calculating lambda_q as the weighted average position:
+
+            lambda_q = (int_0^l_x x*q_parallel(x) dx)/(int_0^l_x q_parallel(x) dx),
+
+        where l_x is the length of the domain, x is the radial coordinates and
+        q_parallel(x) is the parallel heat flux profile
+
+        <p><b>Input</b>: self,
+               case, a string with which lambda_q to evaluate. Can be:
+                     'q_tot', only evaluate lambda_q on q_parallel_tot
+                     'q_adv_e', only evaluate lambda_q on q_parallel_e_adv
+                     'q_con_e', only evaluate lambda_q on q_parallel_e_con
+                     'q_adv_i', only evaluate lambda_q on q_parallel_i_adv
+                     'q_con_i', only evaluate lambda_q on q_parallel_i_con
+                     If nothing is stated, all of them are evaluated
+
+        <p><b>Output</b>: self.lambda_q_tot,   a float with lambda_q_tot if 'q_tot' is specified
+                self.lambda_q_e_adv, a float with lambda_q_e_adv if 'q_adv_e' is specified
+                self.lambda_q_e_con, a float with lambda_q_e_con if 'q_con_e' is specified
+                self.lambda_q_i_adv, a float with lambda_q_i_adv if 'q_adv_i' is specified
+                self.lambda_q_i_con, a float with lambda_q_i_con if 'q_con_i' is specified
+
+                All of the above are output if anything else or nothing is specified
+ <tr><td><h3>evaluate_parallel_heat_fluxes</h3><p>(self) <td><p>
+        Function for evaluating the parallel heat fluxes
+
+        <p><b>Input</b>: self
+        <p><b>Output</b>: self.q_parallel_tot,   the total parallel heat flux profile in MW/m^2
+                self.q_parallel_e_con, the parallel heat flux profile from the
+                                       electron conduction in MW/m^2
+                self.q_parallel_e_adv, the parallel heat flux profile from the
+                                       electron advection in MW/m^2
+                self.q_parallel_i_con, the parallel heat flux profile from the
+                                       ion conduction in MW/m^2
+                self.q_parallel_i_adv, the parallel heat flux profile from the
+                                       ion advection in MW/m^2
+ <tr><td><h3>get_lcfs_values</h3><p>(self) <td><p>
+        Function for getting calculating the average LCFS values of the plasma parameters.
+        The 1D fields in HESEL have better spatial resolution than the synthetic probes,
+        so we use those to evaluate the values at the LCFS
+
+        <p><b>Input</b>:  self,
+
+        <p><b>Output</b>: self.n_lcfs,       a float with the average density at the LCFS
+                self.te_lcfs_ev,   a float with the the electron temperature at the LCFS in eV
+                self.ti_lcfs_ev,   a float with the the ion temperature at the LCFS in eV
+                self.grad_pe_lcfs, a float with the the gradient of the electron pressure
+                                   at the LCFS
+                self.grad_pi_lcfs, a float with the  the gradient of the ion pressure at the LCFS
+ <tr><td><h3>get_probe_positions</h3><p>(self) <td><p>
+        Function for getting the positions of the synthetic probes used in the simulation.
+        The information is stored in the file called myprobe.dat, which is converted to
+        a string when loading it into python.
+
+        Probe names are specified with @TIP followed by a space '\t', then the radial
+        position, a space '\t' and then the poloidal position.
+        The end of the segment containing positions ends with a space '\t' and 'hdf5'.
+
+        <p><b>Input</b>:  self,
+
+        <p><b>Output</b>: self.probe_position,  a dictionary with the probename as the key and a list
+                                      with the radial and poloidal position of the synthetic probes
+                                      [radial_position, poloidal_position]
+ <tr><td><h3>get_profiles_from_probes</h3><p>(self) <td><p>
+        Function for getting n, t_e and t_i profiles from the synthetic probe
+        diagnostic in the HESEL hdf5-file. The synthetic probes have lower spatial
+        resolution than the 1D fields, but have a higher temporal resolution.
+
+        <p><b>Input</b>:  self,
+
+        <p><b>Output</b>: self.n_probes, a numpy array with the probe profile data
+                               for the density
+                self.te_probes, a numpy array with the probe profile data
+                                for the electron temperature
+                self.ti_probes, a numpy array with the probe profile data
+                                for the ion temperature
+ <tr><td><h3>load_2d_animation_fields</h3><p>(self) <td><p>
+        Load the 2D fields from the HESEL code from xanimation (the spatial resolution
+        is 1/4 that of the full 2D profiles)
+
+        <p><b>Input</b>:  self
+        <p><b>Output</b>: self.n_2d, the 2D field of the density in SI units
+                self.pe_2d, the 2D field of the electron pressure in SI units
+                self.te_2d, the 2D field of the electron temperature in SI units,
+                            calculated as P_e/n
+                self.pi_2d, the 2D field of the ion pressure in SI units
+                self.ti_2d, the 2D field of the ion temperature in SI units,
+                            calculated as P_i/n
+                self.phi_2d, the 2D field of the potential in SI units
+
+</table>
+</body>
+</html>
