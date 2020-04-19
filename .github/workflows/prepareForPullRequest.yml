@@ -1,0 +1,22 @@
+name: Vita Prepare for Pull Request
+
+on:
+  push:
+    paths:
+    - '.github/control/prepareForPullRequest.txt'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Download repository
+      uses: actions/checkout@v2
+
+    - name: Deleted generated files
+      env:
+         token: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        github/deleteGeneratedFiles.perl $GITHUB_REPOSITORY $token
