@@ -49,7 +49,7 @@ if (0)                                                                          
 if (1)                                                                          # Commit to vita repository
  {lll qx(git pull --no-edit origin master);                                     # Retrieve latest version from repo
 
-  if (0)
+  if (1)
    {owf(fpe($home, qw(.github control prepareForPullRequest txt)), q(AAA));     # Request preparation for pull request
    }
 
