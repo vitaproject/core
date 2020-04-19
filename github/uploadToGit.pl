@@ -18,7 +18,7 @@ my @ppi  = (q(-I /home/phil/perl/cpan/DataTableText/lib/),                      
             q(-I /home/phil/perl/cpan/GitHubCrud/lib));
 
 my @html = qw(.html .css);                                                      # File types we want to upload to web page
-my @code = qw(.gitignore .md .py .pl .perl .yml);                               # File types we want to upload to vita
+my @code = qw(.gitignore .md .py .pl .perl .txt .yml);                          # File types we want to upload to vita
 
 my $user =  q(philiprbrenan);                                                   # Owner of web page repository
 my $repo = qq($user.github.io);                                                 # Web page repository
@@ -47,7 +47,11 @@ if (0)                                                                          
  }
 
 if (1)                                                                          # Commit to vita repository
- {lll qx(git pull -q --no-edit origin master);                                  # Retrieve latest version from repo
+ {lll qx(git pull --no-edit origin master);                                     # Retrieve latest version from repo
+
+  if (0)
+   {owf(fpe($home, qw(.github control prepareForPullRequest txt)), q(AAA));     # Request preparation for pull request
+   }
 
   my @f = searchDirectoryTreesForMatchingFiles($home, @html, @code);            # Files we want to upload
   for my $f(@f)
