@@ -47,7 +47,7 @@ if (1)                                                                          
  }
 
 if (1)                                                                          # Commit to vita repository
- {lll qx(git pull --no-edit origin master);                                     # Retrieve latest version from repo
+ {lll qx(git pull -q --no-edit origin master);                                     # Retrieve latest version from repo
 
   my @f = searchDirectoryTreesForMatchingFiles($home, @html, @code);            # Files we want to upload
   lll "Files:\n", dump([@f]);
@@ -57,7 +57,7 @@ if (1)                                                                          
 
   my $title = q(Vita).dateTimeStampName;                                        # Name for commit
 
-  lll qx(git commit -m "$title");
+  lll qx(git commit -q -m "$title");
   lll qx(git push -u origin master);                                            # Push to GitHub via SSH
  }
 
