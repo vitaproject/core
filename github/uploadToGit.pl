@@ -39,7 +39,7 @@ if (1)                                                                          
     my $p2 = fpe($perl, $pp, q(perl));
     unlink $p2;
     my $pi = join ' ', @ppi;
-    my $c  = qq(pp $pi -o $p2 -P -d $p1);
+    my $c  = qq(pp $pi -o $p2 $p1);
     lll qq($c);
     lll qx($c);
     -e $p2 or confess "No such file: $p2";
