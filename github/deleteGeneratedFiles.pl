@@ -30,8 +30,16 @@ my $g = GitHub::Crud::new                                                       
 
 my @files = $g->list;                                                           # Get the names of all the files in the repository
 
-for my $file(@files)                                                            # Delete generated files and the control file so that nomal operations resume on the next user push
- {if ($file =~ m((docs/.*html|out/.*svg)\Z)i or index($file, $controlFile) >=0)
+for my $file(@files)                                                            # Delete generated files
+ {if ($file =~ m((docs/.*html|github/.*perl|out/.*svg)\Z)i)                     # Generated files
+   {lll "Delete $file";
+    $g->gitFile = $file;
+    $g->delete;
+   }
+ }
+
+for my $file(@files)                                                            # Delete the control file so that normal operations resume on the next user push
+ {if (index($file, $controlFile) >= 0)                                          # Control file
    {lll "Delete $file";
     $g->gitFile = $file;
     $g->delete;
