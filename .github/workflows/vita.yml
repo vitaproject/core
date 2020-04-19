@@ -2,8 +2,8 @@ name: Vita Regeneration
 
 on:
   push:
-    paths:
-    - '!.github/control/prepareForPullRequest.txt'
+    paths-ignore:
+    - ".github/control/prepareForPullRequest.txt"
 
 jobs:
   build:

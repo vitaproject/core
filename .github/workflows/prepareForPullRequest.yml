@@ -3,7 +3,7 @@ name: Vita Prepare for Pull Request
 on:
   push:
     paths:
-    - '.github/control/prepareForPullRequest.txt'
+    - ".github/control/prepareForPullRequest.txt"
 
 jobs:
   build:

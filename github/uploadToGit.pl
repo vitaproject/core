@@ -62,7 +62,7 @@ if (1)                                                                          
   lll qx(git push -u origin master);                                            # Push to GitHub via SSH
  }
 
-if (1)                                                                          # Generate and upload documentation
+if (0)                                                                          # Generate and upload documentation
  {say STDERR qx(perl ${perl}generateDocumentation.pl);                          # Generate
 
   my @f = searchDirectoryTreesForMatchingFiles($docs, @html);                   # Files we want to upload

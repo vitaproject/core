@@ -1,6 +1,6 @@
-#!/usr/bin/perl -I/home/phil/perl/cpan/DataTableText/lib/
+#!/usr/bin/perl -I/home/phil/perl/cpan/DataTableText/lib/ -I/home/phil/perl/cpan/GitHubCrud/lib/
 #-------------------------------------------------------------------------------
-# Use pycco to create some documentation
+# Generate documentation from Python modules
 # Philip R Brenan at gmail dot com, Appa Apps Ltd Inc., 2020
 #-------------------------------------------------------------------------------
 use warnings FATAL => qw(all);
@@ -8,11 +8,16 @@ use strict;
 use Carp;
 use Data::Dump qw(dump);
 use Data::Table::Text qw(:all);
+use GitHub::Crud;
 
 my $local   = !$ENV{CI};                                                        # Local run not on GitHub
 my $home    = $local ? q(/home/phil/vita/core/) : q(.);                         # Home folder
 my $modules = fpd($home, qw(vita modules));                                     # Modules folder
 my $docs    = fpd($home, q(docs));                                              # Output documentation
+
+my $user =  q(philiprbrenan);                                                   # Owner of web page repository
+my $repo = qq($user.github.io);                                                 # Web page repository
+my $docg = fpd(qw(vita));                                                       # Documentation folder in web page repository
 
 my @errors;                                                                     # Record missing documentation and tests
 
@@ -52,7 +57,7 @@ END
  }
 
 if ($local)                                                                     # Upload documentation to philiprbrenan.github.io/vita/index.html
- {my @f = searchDirectoryTreesForMatchingFiles($docs, @html);                   # Files we want to upload
+ {my @f = searchDirectoryTreesForMatchingFiles($docs, q(.html));                # Files we want to upload
   for my $s(@f)
    {my $t = swapFilePrefix($s, $docs, $docg);
     lll $t;
