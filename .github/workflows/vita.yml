@@ -50,11 +50,11 @@ jobs:
 
     - name: Generate documentation
       run: |
-        perl github/generateDocumentation.perl
+        perl github/generateDocumentation.pl
 
     - name: Upload results
       env:
          token: ${{ secrets.GITHUB_TOKEN }}
       run: |
         tree
-        perl github/uploadOut.perl $GITHUB_REPOSITORY out/ out/  "$token"
+        perl github/uploadOut.pl $GITHUB_REPOSITORY out/ out/  "$token"
