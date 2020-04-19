@@ -48,7 +48,7 @@ if (1)                                                                          
  }
 
 if (1)                                                                          # Commit to vita repository
- {lll qx(git pull origin master);                                               # Retrieve latest status
+ {lll qx(git pull --no-edit origin master);                                     # Retrieve latest version from repo
 
   my @f = searchDirectoryTreesForMatchingFiles($home, @html, @code);            # Files we want to upload
   lll "Files:\n", dump([@f]);
