@@ -31,7 +31,7 @@ my $g = GitHub::Crud::new                                                       
 my @files = $g->list;                                                           # Get the names of all the files in the repository
 
 for my $file(@files)                                                            # Delete generated files
- {if ($file =~ m((docs/.*html|github/.*perl|out/.*svg)\Z)i)                     # Generated files
+ {if ($file =~ m((docs/.*html|out/.*svg)\Z)i)                                   # Generated files
    {lll "Delete $file";
     $g->gitFile = $file;
     $g->delete;
