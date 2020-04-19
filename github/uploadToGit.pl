@@ -32,7 +32,7 @@ if (1)                                                                          
    }
  }
 
-if (1)                                                                          # Package Perl files
+if (0)                                                                          # Package Perl files
  {for my $pp(@pp)
    {my $p1 = fpe($perl, $pp, q(pl));
     -e $p1 or confess "No such file: $p1";
@@ -47,7 +47,9 @@ if (1)                                                                          
  }
 
 if (1)                                                                          # Commit to vita repository
- {lll qx(git pull -q --no-edit origin master);                                     # Retrieve latest version from repo
+ {lll qx(git pull -q --no-edit origin master);                                  # Retrieve latest version from repo
+
+  owf(fpe($home, qw(.github control prepareForPullRequest txt)), q(AAA));       # Request preparation for pull request
 
   my @f = searchDirectoryTreesForMatchingFiles($home, @html, @code);            # Files we want to upload
   for my $f(@f)
