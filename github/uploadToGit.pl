@@ -36,11 +36,10 @@ if (1)                                                                          
  {for my $pp(@pp)
    {my $p1 = fpe($perl, $pp, q(pl));
     -e $p1 or confess "No such file: $p1";
-    my $pa = fpe($perl, qw(a out));
     my $p2 = fpe($perl, $pp, q(perl));
     unlink $p2;
     my $pi = join ' ', @ppi;
-    my $c  = qq(pp $pi $p1; mv $pa $p2);
+    my $c  = qq(pp $pi -o $p2 -P -d $p1);
     lll qq($c);
     lll qx($c);
     -e $p2 or confess "No such file: $p2";
