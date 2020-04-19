@@ -10,6 +10,9 @@ use Data::Dump qw(dump);
 use Data::Table::Text qw(:all);
 use GitHub::Crud;
 
+my $prepareForPullRequest = 1;                                                  # Prepare for pull request if true
+my $generateDocumentation = 0;                                                  # Generate and upload documentation from local computer if true
+
 my $home = q(/home/phil/vita/core);                                             # Home folder
 my $out  = fpd $home, qw(out);                                                  # Documentation
 my $docs = fpd $home, qw(docs);                                                 # Documentation
@@ -38,9 +41,9 @@ if (1)                                                                          
      }
    }
 
-  lll qx(git pull origin master);                                     # Retrieve latest version from repo
+  lll qx(git pull origin master);                                               # Retrieve latest version from repo
 
-  if (1)
+  if ($prepareForPullRequest)
    {owf(fpe($home, qw(.github control prepareForPullRequest txt)), q(AAA));     # Request preparation for pull request
    }
 
@@ -55,7 +58,7 @@ if (1)                                                                          
   lll qx(git push -u origin master);                                            # Push to GitHub via SSH
  }
 
-if (0)                                                                          # Generate and upload documentation
+if ($generateDocumentation)                                                     # Generate and upload documentation from local computer
  {say STDERR qx(perl ${perl}generateDocumentation.pl);                          # Generate
 
   my @f = searchDirectoryTreesForMatchingFiles($docs, @html);                   # Files we want to upload
