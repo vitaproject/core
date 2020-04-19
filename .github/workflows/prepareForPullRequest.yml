@@ -19,4 +19,5 @@ jobs:
       env:
          token: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        github/deleteGeneratedFiles.perl $GITHUB_REPOSITORY $token
+        sudo cpan install Data::Table::Text GitHub::Crud Data::Dump
+        perl github/deleteGeneratedFiles.perl $GITHUB_REPOSITORY $token

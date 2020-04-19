@@ -17,6 +17,7 @@ jobs:
 
     - name: Install software packages
       run: |
+        sudo cpan install Data::Table::Text GitHub::Crud Data::Dump
         sudo apt update  -qq
         sudo apt install -qq python-configobj tree
         mkdir -p out
@@ -49,11 +50,11 @@ jobs:
 
     - name: Generate documentation
       run: |
-        github/generateDocumentation.perl
+        perl github/generateDocumentation.perl
 
     - name: Upload results
       env:
          token: ${{ secrets.GITHUB_TOKEN }}
       run: |
         tree
-        github/uploadOut.perl $GITHUB_REPOSITORY out/ out/  "$token"
+        perl github/uploadOut.perl $GITHUB_REPOSITORY out/ out/  "$token"

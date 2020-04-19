@@ -34,7 +34,7 @@ my $g = GitHub::Crud::new                                                       
 my $G = GitHub::Crud::new                                                       # The original github repo
  (userid=>$sourceUser, repository=>$sourceRepo, personalAccessToken=>$token);
 
-if (1)                                                                          # Delete generated files
+if (0)                                                                          # Delete generated files
  {for my $file($g->list)
    {if ($file =~ m($fileRe))
      {lll "Delete $file";
