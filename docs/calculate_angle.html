@@ -1,0 +1,46 @@
+<html>
+<meta charset="utf-8"/>
+<style>
+.def {color: red}
+tr:nth-child(even) {background-color: #fff6ff}
+tr:nth-child(odd)  {background-color: #fffff6}
+</style>
+<body>
+
+<p><table cellpadding=10>
+<tr><th>Method<th>Description<th>Example
+<tr><td><h3>_angle</h3><p>(v_1, v_2) <td><p>
+        Calculate the angle between two vectors defined as:
+
+            cos(angle) = (v_1 dot v_2)/(||v_1|| * ||v_2||),
+
+        where ||v|| is the length of the vector.
+
+        <p><b>Parameters</b>:
+        v_1 : 2-x-1 np.array
+            Array with x and y of the first vector
+        v_2 : 2-x-1 np.array
+            Array with x and y of the second vector
+
+        <p><b>Returns</b>:
+        angle : float
+            A float with the angle between the two vectors
+
+ <tr><td><h3>calculate_angle</h3><p>(v_1, v_2) <td><p>
+    Function for calculating the angle with respect to the normal of v_1
+    between two vectors.
+
+    <p><b>Parameters</b>:
+    v_1_vectors : 2-x-1 np.array
+        2D vector of the form (x, y)
+    v_2 : 2-x-1 np.array
+        2D vector of the form (x, y)
+
+    <p><b>Returns</b>:
+    angle : float
+        The angle between the two vectors
+
+
+</table>
+</body>
+</html>

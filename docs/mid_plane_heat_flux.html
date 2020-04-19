@@ -1,0 +1,91 @@
+<html>
+<meta charset="utf-8"/>
+<style>
+.def {color: red}
+tr:nth-child(even) {background-color: #fff6ff}
+tr:nth-child(odd)  {background-color: #fffff6}
+</style>
+<body>
+<h1>Class: HeatLoad()</h1> <p>
+    Base function for storing heat flux profiles.
+
+    Member functions:
+        __call__(s) : integrate the heat-flux over s
+
+        calculate_heat_flux_density
+        set_coordinates(s_in)
+        set_edge_radius(radius_in)
+        get_local_coordinates()
+        get_global_coordinates()
+        calculate_heat_power()
+        plot_heat_power_density()
+
+<p><table cellpadding=10>
+<tr><th>Method<th>Description<th>Example
+<tr><td><h3>__call__</h3><p>(self, s) <tr><td><h3>__init__</h3><p>(self, r0_lfs=0., r0_hfs=0.) <tr><td><h3>calculate_heat_flux_density</h3><p>(self) <td><p>
+        Function for calculating the heat flux profile. Needs to be implemented
+        by the inhering class.
+
+        Raises
+        ------
+        NotImplementedError
+
+        <p><b>Returns</b>:
+        None.
+
+ <tr><td><h3>calculate_heat_power</h3><p>(self) <td><p>
+        Function for calculating the integral of the power profile as a function
+        of s
+
+            heat_power = p_tot/(2*pi*(R_0+a)) = int_0^L_perp q(s) ds
+
+        <p><b>Returns</b>:
+        heat_power : float
+            The integral of the heat flux profile with respect to s
+
+ <tr><td><h3>get_global_coordinates</h3><p>(self, location='lfs') <td><p>
+        Function for getting the global coordinates, i.e. the local coordinates
+        plus the position of the LCFS for the LFS and the position of the LCFS
+        minus the local position on the HFS
+
+        <p><b>Returns</b>:
+        _s_global : list or 1-by-n numpy array
+            An array with the global coordinates.
+
+ <tr><td><h3>get_local_coordinates</h3><p>(self) <td><p>
+        Function for getting the local coordinates
+
+        <p><b>Returns</b>:
+        _s : list or 1-by-n numpy array
+            An array with the local coordinates.
+
+ <tr><td><h3>plot_heat_power_density</h3><p>(self) <td><p>
+        Function for plotting the heat flux profile
+
+        <p><b>Returns</b>:
+        None.
+
+ <tr><td><h3>set_coordinates</h3><p>(self, s_in) <td><p>
+        Function for setting the local coordinates.
+
+        <p><b>Parameters</b>:
+        s_in : list or 1-by-n numpy array
+            array of local coordinates.
+
+        <p><b>Returns</b>:
+        None.
+
+ <tr><td><h3>set_edge_radius</h3><p>(self, radius_in) <td><p>
+        Function for setting the position of the high field side LCFS
+
+        <p><b>Parameters</b>:
+        radius_in : float
+            position of the high field side LCFS.
+
+        <p><b>Returns</b>:
+        None.
+
+
+</table>
+</body>
+</html>

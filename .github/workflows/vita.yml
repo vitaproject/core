@@ -17,7 +17,8 @@ jobs:
 
     - name: Install software packages
       run: |
-        sudo cpan install Data::Table::Text GitHub::Crud Data::Dump
+        export PERL_MM_USE_DEFAULT=1
+        sudo cpan install Data::Table::Text GitHub::Crud Data::Dump 1>/dev/null
         sudo apt update  -qq
         sudo apt install -qq python-configobj tree
         mkdir -p out
@@ -57,4 +58,5 @@ jobs:
          token: ${{ secrets.GITHUB_TOKEN }}
       run: |
         tree
-        perl github/uploadOut.pl $GITHUB_REPOSITORY out/ out/  "$token"
+        perl github/uploadOut.pl $GITHUB_REPOSITORY docs/ docs/  $token
+        perl github/uploadOut.pl $GITHUB_REPOSITORY out/   out/  $token

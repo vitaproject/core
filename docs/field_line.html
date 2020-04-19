@@ -1,0 +1,37 @@
+<html>
+<meta charset="utf-8"/>
+<style>
+.def {color: red}
+tr:nth-child(even) {background-color: #fff6ff}
+tr:nth-child(odd)  {background-color: #fffff6}
+</style>
+<body>
+<h1>Class: FieldLine()</h1> <p>
+    Class for following a magnetic field line given a Fiesta equilibrium.
+
+    Member functions:
+        follow_field_in_plane(p_0, max_length, max_points, rtol)
+
+<p><table cellpadding=10>
+<tr><th>Method<th>Description<th>Example
+<tr><td><h3>__init__</h3><p>(self, fiesta) <tr><td><h3>dx_dl</h3><p>(_l_dist, x_vec) <td><p>
+            The function describing the ode to solve in order to track the magnetic field lines
+
+            <p><b>Input</b>: l_dist, np.array with the distance along the magnetic field-line
+                   x_vec,  vector with the R, phi and Z initial positions
+
+            <p><b>Return</b>: dx_dl_rhs, the right-hand side of the ode to solve
+ <tr><td><h3>event</h3><p>(_l_dist, x_vec) <td><p>
+            Function for determining whether the solution to the ODE passes a wall,
+            which terminates the ODE solver
+
+            <p><b>Input</b>: l_dist, np.array with the distance along the magnetic field-line
+                   x_vec,  vector with the R, phi and Z initial positions
+
+            <p><b>Return</b>: intersect_wall, returns 0 if any wall surface is intersected,
+                                    otherwise returns a float (the event function of
+                                    solve_ivp only looks for events = 0)
+
+</table>
+</body>
+</html>
