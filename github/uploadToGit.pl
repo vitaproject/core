@@ -18,7 +18,7 @@ my @ppi  = (q(-I /home/phil/perl/cpan/DataTableText/lib/),                      
             q(-I /home/phil/perl/cpan/GitHubCrud/lib));
 
 my @html = qw(.html .css);                                                      # File types we want to upload to web page
-my @code = qw(.gitignore .py .pl .perl .yml);                                   # File types we want to upload to vita
+my @code = qw(.gitignore .md .py .pl .perl .yml);                               # File types we want to upload to vita
 
 my $user =  q(philiprbrenan);                                                   # Owner of web page repository
 my $repo = qq($user.github.io);                                                 # Web page repository
