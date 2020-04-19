@@ -15,9 +15,12 @@ jobs:
     - name: Download repository
       uses: actions/checkout@v2
 
-    - name: Deleted generated files
+    - name: Install software packages
+      run: |
+        sudo cpan install Data::Table::Text GitHub::Crud Data::Dump
+
+    - name: Deleted and refresh generated files
       env:
          token: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        sudo cpan install Data::Table::Text GitHub::Crud Data::Dump
         perl github/deleteGeneratedFiles.pl $GITHUB_REPOSITORY $token
