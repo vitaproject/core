@@ -1,6 +1,9 @@
-name: Vita
+name: Vita Regeneration
 
-on: [push]
+on:
+  push:
+    paths-ignore:
+    - ".github/control/prepareForPullRequest.txt"
 
 jobs:
   build:
@@ -43,6 +46,10 @@ jobs:
        #python3 tests/2Dprojections/test4d-particle-tracing.py         --imageFile out/test4d-particle-tracing.svg
        #python3 tests/2Dprojections/test4e-psi-fieldline-compare.py    --imageFile out/test4e-psi-fieldline-compare.svg
        #python3 tests/2Dprojections/test5a-compare-to-3D-map.py        --imageFile out/test5a-compare-to-3D-map.svg
+
+    - name: Generate documentation
+      run: |
+        github/generateDocumentation.perl
 
     - name: Upload results
       env:
