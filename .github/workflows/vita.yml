@@ -27,8 +27,7 @@ jobs:
 
     - name: Run unit tests
       run: |
-        python3 vita/modules/utils/Vector2.py
-        python3 vita/modules/utils/getOption.py
+        python3 -m unittest
 
     - name: Run plots
       run: |
