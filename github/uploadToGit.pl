@@ -55,7 +55,7 @@ if (1)                                                                          
   my $title = q(Vita).dateTimeStampName;                                        # Name for commit
 
   lll qx(git commit -q -m "$title");
-  lll qx(git push -u origin master);                                            # Push to GitHub via SSH
+  lll qx(git push -u origin actions);                                            # Push to GitHub via SSH
  }
 
 if ($generateDocumentation)                                                     # Generate and upload documentation from local computer
