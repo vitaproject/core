@@ -48,7 +48,7 @@ jobs:
       run: |
         export PYTHONPATH=.                                                     # Location of python modules
         export VITADATA=data                                                    # Location of machine configurations
-        python3 -m unittest discover -s vita.modules.utils
+        python3 -m unittest
 
     - name: Run plots
       run: |
