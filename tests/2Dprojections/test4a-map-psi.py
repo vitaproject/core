@@ -39,7 +39,7 @@ if __name__ == '__main__':
     ANGLES = np.array([DIVERTOR_MAP[key]["alpha"] for key in DIVERTOR_MAP])
     F_X = np.array([DIVERTOR_MAP[key]["f_x"] for key in DIVERTOR_MAP])
     plt.figure()
-    plt.plot(R_DIV, ANGLES)
+    plt.plot(R_DIV, ANGLES*180/np.pi)
 
     plt.figure()
     plt.plot(R_DIV, F_X)

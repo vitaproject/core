@@ -22,7 +22,7 @@ load_wall_configuration(config_file, world)
 
 ########################
 # load the equilibrium #
-eq007 = get_resource("ST40-IVC1", "equilibrium", "div_007")
+eq007 = get_resource("ST40-IVC1", "equilibrium", "eq_006_2T_export")
 fiesta = Fiesta(eq007)
 b_field = fiesta.b_field
 field_tracer = FieldlineTracer(b_field, method=RK2(step_size=0.0001))
@@ -41,16 +41,16 @@ footprint.set_coordinates(x)
 footprint.s_disconnected_dn_max = 2.1
 footprint.fx_in_out = 5.
 footprint.calculate_heat_flux_density("lfs")
-footprint.plot_heat_power_density()
 
-POINT_A = Point2D(0.345941, -0.593439)
-POINT_B = Point2D(0.51091, -0.757166)
+POINT_A = Point2D(0.340, -0.600)
+POINT_B = Point2D(0.500, -0.810)
 power_profile = sample_power_at_surface(POINT_A, POINT_B, equilibrium, footprint)
 interface_power = 1e6  # 1MW
 angle_period = 45
 
 interface_surface = InterfaceSurface(POINT_A, POINT_B, power_profile, interface_power)
+# new function
 interface_surface.histogram_plot()
 
 interface_surface.map_power(interface_power, angle_period, field_tracer, world,
-                            num_of_fieldlines=5000, phi_offset=-angle_period/2, debug_output=True)
+                            num_of_fieldlines=5000, phi_offset=-angle_period/2-5, debug_output=True)
