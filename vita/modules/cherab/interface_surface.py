@@ -308,6 +308,9 @@ class InterfaceSurface:
         ax.set_xlabel('Interface distance (m)')
         ax.set_ylabel('Sample density')
         ax.set_title(r'Sample Histogram along interface surface')
+        # Save file and figure:
+        np.savetxt("interface-histogram.txt", samples)
+        fig.savefig('interface-histogram.png')
 
     def poloidal_trajectory_plot(self, field_tracer, world, equilibrium,
                                  num_of_fieldlines=5, max_tracing_length=15):

@@ -22,7 +22,7 @@ load_wall_configuration(config_file, world)
 
 ########################
 # load the equilibrium #
-eq007 = get_resource("ST40-IVC1", "equilibrium", "div_007")
+eq007 = get_resource("ST40-IVC1", "equilibrium", "eq_006_3T_export")
 fiesta = Fiesta(eq007)
 b_field = fiesta.b_field
 field_tracer = FieldlineTracer(b_field, method=RK2(step_size=0.0001))
@@ -67,7 +67,7 @@ field_tracer = FieldlineTracer(b_field, method=RK2(step_size=0.0001, direction="
 
 # HFS interface
 POINT_A = Point2D(0.25, -0.5)
-POINT_B = Point2D(0.3304, -0.5833)
+POINT_B = Point2D(0.340, -0.600)
 power_profile = sample_power_at_surface(POINT_A, POINT_B, equilibrium, footprint,
                                         lcfs_radii_min=0.15, lcfs_radii_max=0.25, side="HFS")
 
@@ -75,5 +75,8 @@ interface_power = 5e5  # 0.5MW
 angle_period = 45
 
 interface_surface = InterfaceSurface(POINT_A, POINT_B, power_profile, interface_power)
+# new function
+interface_surface.histogram_plot()
+
 interface_surface.map_power(interface_power, angle_period, field_tracer, world,
                             num_of_fieldlines=5000, phi_offset=-angle_period/2, debug_output=True)

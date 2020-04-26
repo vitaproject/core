@@ -15,8 +15,8 @@ from vita.modules.utils import intersection
 from vita.utility import get_resource
 from vita.modules.utils.getOption import getOption
 
-R200 = get_resource("ST40-IVC1", "equilibrium", "eq_006_2T_export")
-FIESTA = Fiesta(R200)
+EQUIL = get_resource("ST40-IVC1", "equilibrium", "eq_006_2T_export")
+FIESTA = Fiesta(EQUIL)
 field_line = FieldLine(FIESTA)
 R = field_line.fiesta_equil.get_midplane_lcfs()[1]
 r0 = R + 0.001
