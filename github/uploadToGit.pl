@@ -41,9 +41,9 @@ if (1)                                                                          
      }
    }
 
-  lll qx(git pull origin master);                                               # Retrieve latest version from repo
+  lll qx(git pull origin deve;p[);                                               # Retrieve latest version from repo
   lll qx(git checkout actions);                                                 # Move to actions branch
-  lll qx(git merge master);                                                     # Update actions with latest master version 
+  lll qx(git merge develop);                                                     # Update actions with latest master version 
 
   if ($prepareForPullRequest)
    {owf(fpe($home, qw(.github control prepareForPullRequest txt)), q(AAA));     # Request preparation for pull request
