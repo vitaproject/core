@@ -31,7 +31,7 @@ jobs:
       with:
           type: now
           target_branch: 'actions'
-        env:
+      env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
     - name: Install software packages
