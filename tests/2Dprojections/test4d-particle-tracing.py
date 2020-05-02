@@ -12,6 +12,7 @@ from scipy.constants import m_p, m_n, e
 from vita.utility import get_resource
 from vita.modules.projection.projection2D.particle_path_projection import ParticlePath
 from vita.modules.equilibrium.fiesta.fiesta_interface import Fiesta
+from vita.modules.utils.getOption import getOption
 
 if __name__ == '__main__':
     FILEPATH = get_resource("ST40-IVC1", "equilibrium", "eq_006_2T_export")
@@ -75,3 +76,9 @@ if __name__ == '__main__':
     # plt.figure()
     # plt.plot(OUT['r_lorentz'], OUT['z_lorentz'])
     # plt.show()
+        
+    imageFile = getOption('imageFile')
+    if imageFile :
+        plt.savefig(imageFile)
+    else :
+        plt.show()
