@@ -46,8 +46,9 @@ jobs:
 
     - name: Run unit tests
       run: |
-        python3 vita/modules/utils/Vector2.py
-        python3 vita/modules/utils/getOption.py
+        export PYTHONPATH=.                                                     # Location of python modules
+        export VITADATA=data                                                    # Location of machine configurations
+        python3 -m unittest
 
     - name: Run plots
       run: |
