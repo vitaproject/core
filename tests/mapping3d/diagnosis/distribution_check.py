@@ -9,8 +9,8 @@ from cherab.tools.primitives import axisymmetric_mesh_from_polygon
 from cherab.tools.equilibrium import plot_equilibrium
 
 from vita.modules.sol_heat_flux.eich import Eich
-from vita.modules.cherab import FieldlineTracer, RK2, InterfaceSurface, sample_power_at_surface
-from vita.modules.cherab import load_wall_configuration
+from vita.modules.projection.cherab import FieldlineTracer, RK2, InterfaceSurface, sample_power_at_surface
+from vita.modules.projection.cherab import load_wall_configuration
 from vita.modules.equilibrium import Fiesta
 from vita.utility import get_resource
 
@@ -20,7 +20,7 @@ world = World()
 
 ########################
 # load the equilibrium #
-eq006 = get_resource("ST40-IVC1", "equilibrium", "eq_006_2T")
+eq006 = get_resource("ST40-IVC1", "equilibrium", "eq_006_2T_export")
 fiesta = Fiesta(eq006)
 b_field = fiesta.b_field
 field_tracer = FieldlineTracer(b_field, method=RK2(step_size=0.0001))

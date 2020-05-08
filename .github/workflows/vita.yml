@@ -2,7 +2,7 @@ name: Vita Regeneration
 
 on:
   # Trigger the workflow on push or pull request,
-  # but only for the master branch
+  # but only for the develop and master branches
   push:
     branches:
       - develop
@@ -22,17 +22,22 @@ jobs:
     steps:
 
     - name: Download repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v1
       with:
         ref: develop
 
-    - name: Merge to actions branch
+    - name: Merge into actions branch
       uses: devmasx/merge-branch@v1.1.0
       with:
           type: now
           target_branch: 'actions'
       env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+    - name: Switch to actions branch
+      uses: actions/checkout@v1
+      with:
+        ref: actions
 
     - name: Install software packages
       run: |

@@ -9,8 +9,8 @@ import json
 import numpy as np
 import matplotlib.pyplot as plt
 from vita.controller.midplane_power import run_midplane_power
-from vita.modules.fiesta.fiesta_interface import Fiesta
-from vita.modules.fiesta.map_psi import map_psi
+from vita.modules.equilibrium.fiesta.fiesta_interface import Fiesta
+from vita.modules.equilibrium.fiesta.map_psi import map_psi
 
 def run_midplane_to_div_power(midplane_model, plasma, equilibrium, divertor_coord):
     '''
