@@ -5,7 +5,6 @@ Created on Fri May 24 08:37:37 2019
 @author: Daniel.Iglesias@tokamakenergy.co.uk
 """
 from vita.modules.utils.getOption import getOption
-
 from os.path import join as pjoin
 import os
 import numpy as np
@@ -14,7 +13,7 @@ import vtk
 #from vtk.util.misc import vtkGetDataRoot
 
 class PsiRepresentation():
-        '''
+    '''
     Class for creating the mapping of Fiesta equilibrium Psi field, including VTK representations.
 
     Member functions:
@@ -25,14 +24,8 @@ class PsiRepresentation():
         self.fiesta_equil = fiesta
 
 
-    def PsiVTK(mat_contents, path, machine, eq_name) :
-        path_out = pjoin('/home/daniel.iglesias/Projects/divertor-physics-interface/Plasma_scenarios/', machine)
-    #    path_out = pjoin('C://Users//Daniel.Ibanez//Projects//divertor_physics_interface//', machine)
-        if not os.path.exists(path_out):
-            os.makedirs(path_out)
-        mat_fname = pjoin(path, machine, 'python_responses', eq_name + '.mat')
-        print("Processing file: " + mat_fname)
-        mat_contents = sio.loadmat(mat_fname)
+    def PsiVTK(self, path_out, eq_name) :
+        mat_contents = sio.loadmat(self.fiesta_equil)
         sorted(mat_contents.keys())
         
         ###########################################################
@@ -132,24 +125,24 @@ class PsiRepresentation():
             x[2] = -1.0 + k*deltaZ
             kOffset = k * dims[0] * dims[1]
             for j in range(dims[1]) : #(j=0; j<dims[1]; j++)
-            radius = xmin + j*deltaRad
-            jOffset = j * dims[0]
-            for i in range(dims[0]) : #(i=0; i<dims[0]; i++)
-                dataIndex = j + k * dims[1]
-                theta = i * vtk.vtkMath.RadiansFromDegrees(delta_phi)
-                x[0] = radius * np.cos(theta)
-                x[1] = radius * np.sin(theta)
-                offset = i + jOffset + kOffset
-                points.InsertPoint(offset,x[0],x[1],x[2])
-                scalars2.InsertNextTuple1( z[dataIndex] )
-                scalarBtheta.InsertNextTuple1( Btheta[dataIndex] )
-                Bx = Br[dataIndex]*np.cos(theta) - Bphi[dataIndex]*np.sin(theta)
-                By = Br[dataIndex]*np.sin(theta) + Bphi[dataIndex]*np.cos(theta)
-                B.SetTuple3(offset, Bx, By, Bz[dataIndex])
-        #        array.SetValue(offset, z[j + k * dims[1] ])
+                radius = xmin + j*deltaRad
+                jOffset = j * dims[0]
+                for i in range(dims[0]) : #(i=0; i<dims[0]; i++)
+                    dataIndex = j + k * dims[1]
+                    theta = i * vtk.vtkMath.RadiansFromDegrees(delta_phi)
+                    x[0] = radius * np.cos(theta)
+                    x[1] = radius * np.sin(theta)
+                    offset = i + jOffset + kOffset
+                    points.InsertPoint(offset,x[0],x[1],x[2])
+                    scalars2.InsertNextTuple1( z[dataIndex] )
+                    scalarBtheta.InsertNextTuple1( Btheta[dataIndex] )
+                    Bx = Br[dataIndex]*np.cos(theta) - Bphi[dataIndex]*np.sin(theta)
+                    By = Br[dataIndex]*np.sin(theta) + Bphi[dataIndex]*np.cos(theta)
+                    B.SetTuple3(offset, Bx, By, Bz[dataIndex])
+            #        array.SetValue(offset, z[j + k * dims[1] ])
         structuredGrid.SetPoints(points)
         structuredGrid.GetPointData().SetScalars( scalars2 )
-    #    structuredGrid.GetPointData().SetScalars( scalarBtheta )
+        #    structuredGrid.GetPointData().SetScalars( scalarBtheta )
         structuredGrid.GetPointData().SetVectors( B )
         
         ###########################################################

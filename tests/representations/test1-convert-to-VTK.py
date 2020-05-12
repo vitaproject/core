@@ -7,17 +7,27 @@ Created on Sun Oct 20 18:28:22 2019
 """
 import numpy as np
 from matplotlib import pyplot as plt
-
+from os.path import join as pjoin
+import os
 from vita.modules.equilibrium.fiesta import Fiesta
-from vita.modules.projection.projection2D.field_line.field_line import FieldLine
-from vita.utility import get_resource
+from vita.modules.representations.psi_map import PsiRepresentation
+from vita.utility import get_resource, add_resource
 from vita.modules.utils.getOption import getOption
 
 ########################
 # load the equilibrium #
-R200 = get_resource("ST40-IVC1", "equilibrium", "eq_006_2T_export")
-FIESTA = Fiesta(R200)
-field_line =  FieldLine(FIESTA)
+#EQ_NAME = "eq_006_2T_export"
+EQ_NAME = "eq_002_export"
+FIESTA_FILE = get_resource("ST40-IVC1", "equilibrium", EQ_NAME)
+print("Processing file: " + FIESTA_FILE)
 
-# TBC
+PSI_REPRESENTATION =  PsiRepresentation(FIESTA_FILE)
 
+machine = "ST40_IVC2"
+path_out = pjoin('/home/daniel/Simulations/vitaproject/representation', machine)
+if not os.path.exists(path_out):
+    os.makedirs(path_out)
+    
+print (path_out)
+
+PSI_REPRESENTATION.PsiVTK(path_out, EQ_NAME)
