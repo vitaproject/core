@@ -22,9 +22,5 @@ print("Processing file: " + FIESTA_FILE)
 
 PSI_REPRESENTATION = PsiRepresentation(FIESTA_FILE)
 PSI_REPRESENTATION.psiVTK()
-
-machine = "ST40_IVC2"
-path_out = pjoin('/home/daniel/Simulations/vitaproject/representation', machine)
-if not os.path.exists(path_out):
-    os.makedirs(path_out)
-PSI_REPRESENTATION.write_files(path_out, EQ_NAME)
+PSI_REPRESENTATION.visualize2D()
+PSI_REPRESENTATION.visualize3D()

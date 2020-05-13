@@ -20,11 +20,7 @@ EQ_NAME = "eq_006_2T_export"
 FIESTA_FILE = get_resource("ST40-IVC1", "equilibrium", EQ_NAME)
 print("Processing file: " + FIESTA_FILE)
 
-PSI_REPRESENTATION = PsiRepresentation(FIESTA_FILE)
+PSI_REPRESENTATION =  PsiRepresentation(FIESTA_FILE)
 PSI_REPRESENTATION.psiVTK()
-
-machine = "ST40_IVC2"
-path_out = pjoin('/home/daniel/Simulations/vitaproject/representation', machine)
-if not os.path.exists(path_out):
-    os.makedirs(path_out)
-PSI_REPRESENTATION.write_files(path_out, EQ_NAME)
+PSI_REPRESENTATION.visualize2D(1)
+PSI_REPRESENTATION.visualize3D(1)
