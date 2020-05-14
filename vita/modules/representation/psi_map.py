@@ -30,7 +30,7 @@ class PsiRepresentation():
         self.map3D = vtk.vtkStructuredGrid()
         self.map2D = vtk.vtkPlaneSource()
 
-    def psiVTK(self):
+    def psiVTK(self, scale=1.):
         mat_contents = sio.loadmat(self.fiesta_equil)
         sorted(mat_contents.keys())
 
@@ -41,10 +41,10 @@ class PsiRepresentation():
         n = mat_contents['r'].size
         m = mat_contents['z'].size
         l = 13  # Toroidal resolution
-        xmin = np.min(mat_contents['r'])
-        xmax = np.max(mat_contents['r'])
-        ymin = np.min(mat_contents['z'])
-        ymax = np.max(mat_contents['z'])
+        xmin = np.min(mat_contents['r']) * scale
+        xmax = np.max(mat_contents['r']) * scale
+        ymin = np.min(mat_contents['z']) * scale
+        ymax = np.max(mat_contents['z']) * scale
         phimax = 180.0
         x = np.linspace(xmin, xmax, n)  # x is the radius
         y = np.linspace(ymin, ymax, m)  # y is vertical axis
