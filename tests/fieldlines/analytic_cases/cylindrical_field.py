@@ -5,7 +5,7 @@ from mayavi import mlab
 from raysect.core import Point3D, Vector3D, rotate_z, World
 from cherab.core.math import PythonVectorFunction3D
 
-from vita.modules.cherab import FieldlineTracer, RK2, RK4
+from vita.modules.projection.cherab import FieldlineTracer, RK2, RK4
 
 
 def vectorfunction3d(x, y, z):
