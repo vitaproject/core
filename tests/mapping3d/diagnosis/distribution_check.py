@@ -20,7 +20,7 @@ world = World()
 
 ########################
 # load the equilibrium #
-eq006 = get_resource("ST40-IVC1", "equilibrium", "eq_006_2T")
+eq006 = get_resource("ST40-IVC1", "equilibrium", "eq_006_2T_export")
 fiesta = Fiesta(eq006)
 b_field = fiesta.b_field
 field_tracer = FieldlineTracer(b_field, method=RK2(step_size=0.0001))
