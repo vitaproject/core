@@ -56,7 +56,6 @@ if __name__ == '__main__':
     F_X = np.array([MAP_DICT[i]["f_x"] for i in X_AFTER_LCFS])
     ANGLES = np.array([MAP_DICT[i]["alpha"] for i in X_AFTER_LCFS])
     FIG = plt.figure()
-    plt.plot(X_AFTER_LCFS, )
 
     plt.figure()
-    plt.plot(R_DIV, Q_PARALLEL*X_AFTER_LCFS/(R_DIV*F_X/np.sin(ANGLES)))
+    plt.plot(R_DIV, Q_PARALLEL*X_AFTER_LCFS/(R_DIV*F_X/np.cos(ANGLES)))

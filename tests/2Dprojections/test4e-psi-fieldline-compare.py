@@ -20,7 +20,7 @@ if __name__ == "__main__":
     FILEPATH = get_resource("ST40", "equilibrium", "eq002")
 
     FIESTA = Fiesta(FILEPATH)
-    B_POL = np.sqrt(FIESTA.b_r**2 + FIESTA.b_theta**2 + FIESTA.b_z**2).T
+    B_POL = FIESTA.b_theta.T
     B_POL_INTERP = Interpolate2DCubic(FIESTA.r_vec, FIESTA.z_vec, B_POL)
 
     FIELD_LINE = FieldLine(FILEPATH)
