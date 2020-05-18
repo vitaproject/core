@@ -74,9 +74,9 @@ jobs:
        #python3 tests/2Dprojections/test4e-psi-fieldline-compare.py    --imageFile out/test4e-psi-fieldline-compare.svg
        #python3 tests/2Dprojections/test5a-compare-to-3D-map.py        --imageFile out/test5a-compare-to-3D-map.svg
 
-    - name: Generate documentation
-      run: |
-        perl github/generateDocumentation.pl
+    # - name: Generate documentation
+    #   run: |
+    #     perl github/generateDocumentation.pl
 
     - name: Upload results
       env:
