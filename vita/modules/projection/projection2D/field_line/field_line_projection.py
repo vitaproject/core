@@ -76,7 +76,7 @@ def project_field_lines(x_axis_omp, surface_coords, fiesta):
 
     '''
     # Interpolate b_pol (to be used when evaluating the flux expansion)
-    b_pol = np.sqrt(fiesta.b_r**2 + fiesta.b_theta**2 + fiesta.b_z**2).T
+    b_pol = fiesta.b_theta.T
     b_pol_interp = Interpolate2DCubic(fiesta.r_vec, fiesta.z_vec, b_pol)
 
     field_lines = {}
