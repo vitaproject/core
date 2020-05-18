@@ -4,8 +4,8 @@ from mayavi import mlab
 from raysect.core import Point3D, World, rotate_z
 from raysect.primitive import import_ply
 
-from vita.modules.cherab import FieldlineTracer, RK2, RK4, load_wall_configuration
-from vita.modules.fiesta import Fiesta
+from vita.modules.cherab import FieldlineTracer, RK2, load_wall_configuration
+from vita.modules.equilibrium.fiesta import Fiesta
 from vita.utility import get_resource
 
 
@@ -15,27 +15,28 @@ world = World()
 ##########################
 # add machine components #
 
-config_file = get_resource("ST40-IVC2", "configuration", 'st40_ivc2_config')
+config_file = get_resource("ST40-IVC1", "configuration", 'st40_ivc1_config')
 load_wall_configuration(config_file, world)
 
 
-eq002 = get_resource("ST40", "equilibrium", "eq002")
+eq002 = get_resource("ST40-IVC1", "equilibrium", "eq_006_2T_export")
 fiesta = Fiesta(eq002)
 b_field = fiesta.b_field
+lcfs = fiesta.get_midplane_lcfs()[1]
 
 
 seed_points = [
-    Point3D(0.507, 0, 0),
-    Point3D(0.6, 0, 0),
-    Point3D(0.7, 0, 0),
-    Point3D(0.733, 0, -0.01)
+    Point3D(0.75, 0, 0),
+    Point3D(lcfs + 0.001, 0, 0),
+    Point3D(lcfs + 0.01, 0, 0),
+    Point3D(lcfs + 0.02, 0, -0.01)
 ]
 
 
-field_tracer = FieldlineTracer(b_field, method=RK4(step_size=0.0001))
+field_tracer = FieldlineTracer(b_field, method=RK2(step_size=0.0001))
 
-end_point, _, trajectory1 = field_tracer.trace(world, seed_points[0], save_trajectory=True, max_length=3)
-end_point, _, trajectory2 = field_tracer.trace(world, seed_points[1], save_trajectory=True, max_length=5)
+end_point, _, trajectory1 = field_tracer.trace(world, seed_points[0], save_trajectory=True, max_length=15)
+end_point, _, trajectory2 = field_tracer.trace(world, seed_points[1], save_trajectory=True, max_length=15)
 end_point, _, trajectory3 = field_tracer.trace(world, seed_points[2], save_trajectory=True, max_length=15)
 end_point, _, trajectory4 = field_tracer.trace(world, seed_points[3], save_trajectory=True, max_length=15)
 
