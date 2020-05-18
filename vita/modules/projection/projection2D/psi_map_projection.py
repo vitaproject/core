@@ -209,7 +209,7 @@ def map_psi_omp_to_divertor(x_axis_omp, divertor_coords, fiesta):
     psi_n_interp = Interpolate2DCubic(fiesta.r_vec, fiesta.z_vec, fiesta.psi_n.T)
 
     # Interpolate b_pol (to be used when evaluating the flux expansion)
-    b_pol = np.sqrt(fiesta.b_r**2 + fiesta.b_theta**2 + fiesta.b_z**2).T
+    b_pol = fiesta.b_theta.T #np.sqrt(fiesta.b_r**2 + fiesta.b_theta**2 + fiesta.b_z**2).T
     b_pol_interp = Interpolate2DCubic(fiesta.r_vec, fiesta.z_vec, b_pol)
 
     r_div = []
