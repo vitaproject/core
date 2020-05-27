@@ -4,11 +4,18 @@ import os
 from shutil import copy
 
 _RESOURCE_ROOT = os.path.expanduser("~/.vita")
-if not os.path.isdir(_RESOURCE_ROOT) :
-    _RESOURCE_ROOT = os.environ['VITADATA']
+if not os.path.isdir(_RESOURCE_ROOT):
 
-    if not os.path.isdir(_RESOURCE_ROOT) :
-        raise ValueError("Set environment variable VITADATA to the location of the vita data folder containing machine configurations")
+    try:
+        _RESOURCE_ROOT = os.environ['VITADATA']
+
+        if not os.path.isdir(_RESOURCE_ROOT):
+            raise ValueError("Set environment variable VITADATA to the location of the vita data folder containing "
+                             "machine configurations")
+
+    except KeyError:
+        print('Warning - no vita resource root path set.')
+        _RESOURCE_ROOT = None
 
 
 def _test_allowed_characters(string):
