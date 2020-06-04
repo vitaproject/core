@@ -83,7 +83,7 @@ Plasma parameters:
   - The convolution of an exponential with a Gaussian has been proven in [Eich2013]_ to be the best fit to the
     experimental observations for diverted plasma configurations. This function defines the profile of the scrape-off
     layer (SOL) at the equatorial plane. The parameters defining this function correspond to the power fall-off width,
-    :math:`\\lambda`, and the spreading factor, :math:`S`. Their values can be manually fixed or estimated---as
+    :math:`\lambda`, and the spreading factor, :math:`S`. Their values can be manually fixed or estimated---as
     defined in [Riccardo2016]_---as a function of the plasma current, :math:`I_p`, toroidal field, :math:`B_t`,
     integrated density, :math:`n_e`, SOL power, :math:`P_{SOL}`, ELM frequency, :math:`f_{ELM}`, and the standard
     deviation of the radial field current, :math:`\sigma_{RF}`.
