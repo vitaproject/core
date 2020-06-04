@@ -15,10 +15,10 @@ def project_heat_flux(x_pos_omp, heat_flux_profile, map_dict):
 
     .. math::
 
-       q_{parallel_surf} = \\frac{R_{omp}}{R_{surf}} * \\frac{q_{parallel_omp}}{(f_x/\\cos(\\alpha))},
+       q_{parallel\\_surf} = \\frac{R_{omp}}{R_{surf}} * \\frac{q_{parallel\\_omp}}{(f_x/\\cos(\\alpha))},
 
     where :math:`R_{omp}`, is the radial coordinate at the OMP, :math:`R_{surf}` is the radial
-    coordinates at the surface, :math:`q_{parallel_omp}` is the parallel heat flux at the OMP,
+    coordinates at the surface, :math:`q_{parallel\\_omp}` is the parallel heat flux at the OMP,
     :math:`\\alpha` is the incidence angle of the field-lines with respect to the normal of the
     surface, and :math:`f_x` is the flux expansion:
 

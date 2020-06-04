@@ -38,9 +38,9 @@ Each of the previous contribution terms can be expressed in the reference config
 Where the conductivity tensor :math:`\mathbf{\kappa}` and the specific heat capacity :math:`c_p`, are temperature
 dependent, :math:`f(T)`, properties of the material. The density :math:`\rho` is considered constant.
 
-.. _fig-scheme-software:
+.. _fig-cad-parts:
 
-.. figure:: figures/scheme_software.png
+.. figure:: figures/cad_parts.png
    :align: center
    :width: 650px
 
@@ -48,7 +48,7 @@ dependent, :math:`f(T)`, properties of the material. The density :math:`\rho` is
 
 Fully nonlinear Finite Element (FE) approximations are used for all analyses, with some Galerkin meshfree
 enhancements [Iglesias2013]_ when applicable. Several de-featuring levels are applied when speed is a concern.
-Initial implementation uses 2D models shown in :numref:`fig-scheme-software`, but design is extensible to 3D
+Initial implementation uses 2D models shown in :numref:`fig-cad-parts`, but design is extensible to 3D
 in the future. Orthotropic effects, as well as Planck radiation or convection cooling are also foreseen.
 
 Coatings and deposits can be modelled with exact properties, by means of a proper layer formulation which is
