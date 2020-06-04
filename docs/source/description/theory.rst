@@ -25,7 +25,7 @@ Each of the previous contribution terms can be expressed in the reference config
 
 .. math::
 
-   \delta \dot \Pi_{capacitance} & = & \int_{\mathcal B} \rho c_p \frac{dT}{dt} \delta T \ dV
+   \delta \dot \Pi_{capacitance} = \int_{\mathcal B} \rho c_p \frac{dT}{dt} \delta T \ dV
 
 .. math::
 
