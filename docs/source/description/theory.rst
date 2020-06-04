@@ -14,7 +14,7 @@ provided as a black-box, which is previously validated by analyst experts, but i
 audited, and extended at any time.
 
 The formulation used for this first implementation is based on the thermal equilibrium using the Principle of
-Virtual Power. The contributions to the power virtual variation, :math:`\\delta\\dot\\Pi`, are calculated from the
+Virtual Power. The contributions to the power virtual variation, :math:`\delta \dot \Pi`, are calculated from the
 numerical integration of the following residual equation:
 
 .. math::
@@ -29,13 +29,13 @@ Each of the previous contribution terms can be expressed in the reference config
 
 .. math::
 
-   \delta \dot \Pi_{external} & = & \int_{\mathcal \partial B} \bs q \delta T \cdot \bs n \ dS
+   \delta \dot \Pi_{external} = \int_{\mathcal \partial B} \bs q \delta T \cdot \bs n \ dS
 
 .. math::
 
-   \delta \dot \Pi_{conduction} & = & \int_{\mathcal B} \left( \bs \kappa \nabla T \right) \cdot \nabla \delta T \ dV
+   \delta \dot \Pi_{conduction} = \int_{\mathcal B} \left( \bs \kappa \nabla T \right) \cdot \nabla \delta T \ dV
 
-Where the conductivity tensor :math:`\\bs\\kappa` and the specific heat capacity :math:`c_p`, are temperature
+Where the conductivity tensor :math:`\bs \kappa` and the specific heat capacity :math:`c_p`, are temperature
 dependent, :math:`f(T)`, properties of the material. The density :math:`\rho` is considered constant.
 
 .. _fig-scheme-software:
