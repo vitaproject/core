@@ -8,7 +8,7 @@ Introduction and functionality
 ==============================
 
 Vitaproject is part of a comprehensive tool-set for divertor modeling. The function and objectives of each tool, as
-shown in Figure :numref:`fig-scheme-overview`_, vary depending on the operating phase. Vitaproject aims to deliver
+shown in Figure :numref:`fig-scheme-overview`, vary depending on the operating phase. Vitaproject aims to deliver
 the following functionality:
 
 Design, assessment and preparation for operations:
@@ -109,7 +109,7 @@ Analysis parameters:
   simulation time is input using the analysis duration parameter.
 
 
-The accuracy of VITA has been tested to experimental data with satisfactory results. Figure :numref:`fig-comparison`_
+The accuracy of VITA has been tested to experimental data with satisfactory results. Figure :numref:`fig-comparison`
 compares the response of two H-mode medium and high power pulses with the IR camera signal used for experiment data
 analysis, which is much more accurate than the ones used for the protection of the JET-ILW [Jouve2011]_. Due to
 the large number of signals used for recreating the loading conditions, there is of course an overall associated
