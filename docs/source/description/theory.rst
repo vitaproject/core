@@ -44,7 +44,7 @@ dependent, :math:`f(T)`, properties of the material. The density :math:`\rho` is
 
 Fully nonlinear Finite Element (FE) approximations are used for all analyses, with some Galerkin meshfree
 enhancements [Iglesias2013]_ when applicable. Several de-featuring levels are applied when speed is a concern.
-Initial implementation uses 2D models shown in Figure :numref:`fig-scheme-software`, but design is extensible to 3D
+Initial implementation uses 2D models shown in :numref:`fig-scheme-software`, but design is extensible to 3D
 in the future. Orthotropic effects, as well as Planck radiation or convection cooling are also foreseen.
 
 Coatings and deposits can be modelled with exact properties, by means of a proper layer formulation which is
