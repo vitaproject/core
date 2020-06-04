@@ -165,6 +165,7 @@ def map_psi_omp_to_divertor(x_axis_omp, divertor_coords, fiesta):
       2D projection
     :rtype: dict
     :return: A dictionary containing:
+
             "R_div" : an n-x-1 array
                 with the R-coordinates at the divertor tile
                 corresponding to the same psi_n as at the OMP
