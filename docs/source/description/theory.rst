@@ -29,13 +29,13 @@ Each of the previous contribution terms can be expressed in the reference config
 
 .. math::
 
-   \delta \dot \Pi_{external} = \int_{\mathcal \partial B} \bs q \delta T \cdot \bs n \ dS
+   \delta \dot \Pi_{external} = \int_{\mathcal \partial B} \mathbf{q} \delta T \cdot \mathbf{n} \ dS
 
 .. math::
 
-   \delta \dot \Pi_{conduction} = \int_{\mathcal B} \left( \bs \kappa \nabla T \right) \cdot \nabla \delta T \ dV
+   \delta \dot \Pi_{conduction} = \int_{\mathcal B} \left( \mathbf{\kappa} \nabla T \right) \cdot \nabla \delta T \ dV
 
-Where the conductivity tensor :math:`\bs \kappa` and the specific heat capacity :math:`c_p`, are temperature
+Where the conductivity tensor :math:`\mathbf{\kappa}` and the specific heat capacity :math:`c_p`, are temperature
 dependent, :math:`f(T)`, properties of the material. The density :math:`\rho` is considered constant.
 
 .. _fig-scheme-software:
