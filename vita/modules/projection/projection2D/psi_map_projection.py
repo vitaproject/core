@@ -154,25 +154,17 @@ def _calculate_angles(v_1_vectors, v_2):
     return angles
 
 def map_psi_omp_to_divertor(x_axis_omp, divertor_coords, fiesta):
-    '''
+    """
     Function mapping the normalised psi from the specified coordinates at the
     OMP to the specified coordinates at the divertor. Currently the divertor is
     assumed to be represented by a 1D polynomial function, y = ax + b.
 
-    Parameters
-    ----------
-    x_axis_omp : n-x-1 np.array
-        Numpy array with the radial coordinates we wish to map at the OMP
-    fiesta : Fiesta
-        A Fiesta object with the 2D equilibrium we wish to map
-    divertor_coords : 2-x-2 np.array
-        A 2-x-2 numpy array containg the corner points of the divertor in the
-        2D projection
-
-    Returns
-    -------
-    divertor_map : dictionary
-        A dictionary containing:
+    :param np.ndarray x_axis_omp: Numpy array with the radial coordinates we wish to map at the OMP
+    :param Fiesta fiesta: A Fiesta object with the 2D equilibrium we wish to map
+    :param np.ndarray divertor_coords: A 2-x-2 numpy array containg the corner points of the divertor in the
+      2D projection
+    :rtype: dict
+    :return: A dictionary containing:
             "R_div" : an n-x-1 array
                 with the R-coordinates at the divertor tile
                 corresponding to the same psi_n as at the OMP
@@ -185,8 +177,7 @@ def map_psi_omp_to_divertor(x_axis_omp, divertor_coords, fiesta):
             "Flux_expansion" : an n-x-1 array
                 with the flux expasion at the divertor tile
                 corresponding to the same psi_n as at the OMP
-
-    '''
+    """
 
     # Define the 1D polynomial that represents the divertor
     divertor_x = divertor_coords[0]
