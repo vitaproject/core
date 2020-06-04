@@ -39,8 +39,10 @@ Please post a question on the `github issue queue <https://github.com/vitaprojec
    :caption: Table of Contents
    :name: mastertoc
 
-   introduction
-   installation
+   description/installation
+   description/description
+   description/theory
+   description/workflow
 
 
 .. toctree::
