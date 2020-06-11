@@ -36,7 +36,7 @@ for i in field_line_dict:
     ax.plot(i['R'],i['Z'])
 f.gca().set_aspect('equal', adjustable='box')
 f.gca().set_ylim([-1.0, 0])
-
+plt.gca().set_xlim([0.0, 1.0])
 
 imageFile = getOption('imageFile')
 if imageFile :

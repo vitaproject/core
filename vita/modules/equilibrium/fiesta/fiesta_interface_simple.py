@@ -36,7 +36,7 @@ class Fiesta():
         """
 
         try:
-            from vita.modules.cherab import MagneticField
+            from vita.modules.projection.cherab import MagneticField
         except ImportError:
             raise RuntimeError("CHERAB integration not installed.")
 

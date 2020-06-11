@@ -4,11 +4,18 @@ import os
 from shutil import copy
 
 _RESOURCE_ROOT = os.path.expanduser("~/.vita")
-if not os.path.isdir(_RESOURCE_ROOT) :
-    _RESOURCE_ROOT = os.environ['VITADATA']
+if not os.path.isdir(_RESOURCE_ROOT):
 
-    if not os.path.isdir(_RESOURCE_ROOT) :
-        raise ValueError("Set environment variable VITADATA to the location of the vita data folder containing machine configurations")
+    try:
+        _RESOURCE_ROOT = os.environ['VITADATA']
+
+        if not os.path.isdir(_RESOURCE_ROOT):
+            raise ValueError("Set environment variable VITADATA to the location of the vita data folder containing "
+                             "machine configurations")
+
+    except KeyError:
+        print('Warning - no vita resource root path set.')
+        _RESOURCE_ROOT = None
 
 
 def _test_allowed_characters(string):
@@ -39,8 +46,8 @@ def add_resource(machine, type, id, path, symlink=False):
     _test_allowed_characters(machine)
     _test_allowed_characters(id)
 
-    if type not in ["configuration", "equilibrium", "geometry", "mesh"]:
-        raise ValueError("Resources must be of type ['configuration', 'equilibrium', 'geometry', 'mesh'].")
+    if type not in ["configuration", "equilibrium", "geometry", "mesh", "representation"]:
+        raise ValueError("Resources must be of type ['configuration', 'equilibrium', 'geometry', 'mesh', 'representation'].")
 
     directory = os.path.join(_RESOURCE_ROOT, machine, type)
     # create directory structure if missing
@@ -79,8 +86,8 @@ def update_resource(machine, type, id, path, symlink=False):
     _test_allowed_characters(machine)
     _test_allowed_characters(id)
 
-    if type not in ["configuration", "equilibrium", "geometry", "mesh"]:
-        raise ValueError("Resources must be of type ['configuration', 'equilibrium', 'geometry', 'mesh'].")
+    if type not in ["configuration", "equilibrium", "geometry", "mesh", "representation"]:
+        raise ValueError("Resources must be of type ['configuration', 'equilibrium', 'geometry', 'mesh', 'representation'].")
 
     directory = os.path.join(_RESOURCE_ROOT, machine, type)
     if not os.path.isdir(directory):
@@ -106,8 +113,10 @@ def list_resources():
     dict_list['machines'] = next(os.walk(dict_list['path']))[1]
     dict_list['equilibrium'] = {}
     dict_list['geometry'] = {}
+    dict_list['mesh'] = {}
+    dict_list['representation'] = {}
     for machine in dict_list['machines']:
-        for resource in ['equilibrium', 'geometry']:
+        for resource in ['equilibrium', 'geometry', 'mesh', 'representation']:
             localpath = _RESOURCE_ROOT + '/' + machine + '/' + resource
             if not os.path.isdir(localpath): # resource type not found
                 dict_list[resource][machine] = []
@@ -129,8 +138,8 @@ def get_resource(machine, type, id):
     _test_allowed_characters(machine)
     _test_allowed_characters(id)
 
-    if type not in ["configuration", "equilibrium", "geometry", "mesh"]:
-        raise ValueError("Resources must be of type ['configuration', 'equilibrium', 'geometry', 'mesh'].")
+    if type not in ["configuration", "equilibrium", "geometry", "mesh", "representation"]:
+        raise ValueError("Resources must be of type ['configuration', 'equilibrium', 'geometry', 'mesh', 'representation'].")
 
     directory = os.path.join(_RESOURCE_ROOT, machine, type)
     if not os.path.isdir(directory):
@@ -161,8 +170,8 @@ def remove_resource(machine, type, id, prompt_user=False):
     _test_allowed_characters(machine)
     _test_allowed_characters(id)
 
-    if type not in ["configuration", "equilibrium", "mesh"]:
-        raise ValueError("Resources must be of type ['configuration', 'equilibrium', 'mesh'].")
+    if type not in ["configuration", "equilibrium", "geometry", "mesh", "representation"]:
+        raise ValueError("Resources must be of type ['configuration', 'equilibrium', 'geometry', 'mesh', 'representation'].")
 
     directory = os.path.join(_RESOURCE_ROOT, machine, type)
     if not os.path.isdir(directory):

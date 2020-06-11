@@ -4,8 +4,8 @@ from mayavi import mlab
 from raysect.core import Point3D, World, rotate_z
 from raysect.primitive import import_ply
 
-from vita.modules.cherab import FieldlineTracer, RK2, RK4, load_wall_configuration
-from vita.modules.fiesta import Fiesta
+from vita.modules.projection.cherab import FieldlineTracer, RK2, RK4, load_wall_configuration
+from vita.modules.equilibrium.fiesta import Fiesta
 from vita.utility import get_resource
 
 

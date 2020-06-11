@@ -2,7 +2,7 @@ name: Vita Regeneration
 
 on:
   # Trigger the workflow on push or pull request,
-  # but only for the master branch
+  # but only for the develop and master branches
   push:
     branches:
       - develop
@@ -22,7 +22,22 @@ jobs:
     steps:
 
     - name: Download repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v1
+      with:
+        ref: develop
+
+    - name: Merge into actions branch
+      uses: devmasx/merge-branch@v1.1.0
+      with:
+          type: now
+          target_branch: 'actions'
+      env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+    - name: Switch to actions branch
+      uses: actions/checkout@v1
+      with:
+        ref: actions
 
     - name: Install software packages
       run: |
@@ -36,8 +51,9 @@ jobs:
 
     - name: Run unit tests
       run: |
-        python3 vita/modules/utils/Vector2.py
-        python3 vita/modules/utils/getOption.py
+        export PYTHONPATH=.                                                     # Location of python modules
+        export VITADATA=data                                                    # Location of machine configurations
+        python3 -m unittest
 
     - name: Run plots
       run: |
@@ -58,9 +74,9 @@ jobs:
        #python3 tests/2Dprojections/test4e-psi-fieldline-compare.py    --imageFile out/test4e-psi-fieldline-compare.svg
        #python3 tests/2Dprojections/test5a-compare-to-3D-map.py        --imageFile out/test5a-compare-to-3D-map.svg
 
-    - name: Generate documentation
-      run: |
-        perl github/generateDocumentation.pl
+    # - name: Generate documentation
+    #   run: |
+    #     perl github/generateDocumentation.pl
 
     - name: Upload results
       env:

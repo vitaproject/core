@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 from mayavi import mlab
 from raysect.core import Point3D, World
 
-from vita.modules.cherab import FieldlineTracer, RK2
-from vita.modules.fiesta import Fiesta
+from vita.modules.projection.cherab import FieldlineTracer, RK2
+from vita.modules.equilibrium.fiesta import Fiesta
 from vita.utility import get_resource
 
 

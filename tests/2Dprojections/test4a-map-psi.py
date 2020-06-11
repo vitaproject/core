@@ -11,9 +11,10 @@ from vita.modules.equilibrium.fiesta.fiesta_interface import Fiesta
 from vita.modules.projection.projection2D.psi_map_projection import map_psi_omp_to_divertor
 from vita.utility import get_resource
 from vita.modules.sol_heat_flux.eich.eich import Eich
+from vita.modules.utils.getOption import getOption
 
 if __name__ == '__main__':
-    FILEPATH = get_resource("ST40", "equilibrium", "eq002")
+    FILEPATH = get_resource("ST40-IVC1", "equilibrium", "eq_006_2T_export")
 
     FIESTA = Fiesta(FILEPATH)
 
@@ -39,7 +40,7 @@ if __name__ == '__main__':
     ANGLES = np.array([DIVERTOR_MAP[key]["alpha"] for key in DIVERTOR_MAP])
     F_X = np.array([DIVERTOR_MAP[key]["f_x"] for key in DIVERTOR_MAP])
     plt.figure()
-    plt.plot(R_DIV, ANGLES)
+    plt.plot(R_DIV, ANGLES*180/np.pi)
 
     plt.figure()
     plt.plot(R_DIV, F_X)
@@ -49,3 +50,10 @@ if __name__ == '__main__':
 
     plt.figure()
     plt.plot(R_DIV, Q_PARALLEL*X_AFTER_LCFS/(R_DIV*F_X/np.cos(ANGLES)))
+    
+    imageFile = getOption('imageFile')
+    if imageFile :
+        plt.savefig(imageFile)
+    else :
+        plt.show()
+  
