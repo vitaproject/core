@@ -12,16 +12,15 @@ import scipy.io as sio
 from vita.modules.utils import intersection
 
 
-class Fiesta():
-    '''
+class Fiesta:
+    """
     Class for tracing the magnetic field lines given a FIESTA equlibrium
 
     :param str filename: the path to the FIESTA MATLAB save file.
 
     :ivar VectorFunction3D b_field: A 3D vector function of the magnetic field.
 
-    member functions:
-    '''
+    """
     def __init__(self, filename):
         self.filename = filename
         self.read_fiesta_model()
@@ -29,8 +28,7 @@ class Fiesta():
     @property
     def b_field(self):
         """
-        Function for getting the magnetic a 3D vector function of the magnetic
-        field
+        Function for getting the magnetic a 3D vector function of the magnetic field.
         """
 
         try:
