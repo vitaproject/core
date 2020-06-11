@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'VITA'
+project = 'Vitaproject'
 copyright = '2020, Tokamak Energy Ltd'
 author = 'Tokamak Energy Ltd'
 
