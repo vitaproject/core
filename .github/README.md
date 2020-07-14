@@ -16,11 +16,7 @@ python setup.py develop
 python setup.py develop --include-cherab
 
 
-<<<<<<< HEAD
-# Actions
-=======
 # Actions 
->>>>>>> eddc12ab7b1956f1acce8434850d46d3482cb8db
 
 ## Fork
 

@@ -13,6 +13,7 @@ from vita.modules.projection.projection2D.field_line.field_line_projection impor
 from vita.modules.projection.projection2D.field_line.field_line import FieldLine
 from vita.modules.equilibrium.fiesta.fiesta_interface import Fiesta
 from vita.modules.sol_heat_flux.eich.eich import Eich
+from vita.modules.utils.getOption import getOption
 
 
 if __name__ == '__main__':
@@ -20,7 +21,7 @@ if __name__ == '__main__':
     #HESELDATA = HESELdata(HESEL_FILE_PATH)
     #HESELDATA.evaluate_parallel_heat_fluxes()
 
-    FILEPATH = get_resource("ST40", "equilibrium", "eq002")
+    FILEPATH = get_resource("ST40-IVC1", "equilibrium", "eq_006_2T_export")
 
     FIESTA = Fiesta(FILEPATH)
 
@@ -59,3 +60,9 @@ if __name__ == '__main__':
 
     plt.figure()
     plt.plot(R_DIV, Q_PARALLEL*X_AFTER_LCFS/(R_DIV*F_X/np.cos(ANGLES)))
+        
+    imageFile = getOption('imageFile')
+    if imageFile :
+        plt.savefig(imageFile)
+    else :
+        plt.show()

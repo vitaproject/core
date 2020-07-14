@@ -1,0 +1,80 @@
+<html>
+<meta charset="utf-8"/>
+<style>
+.def {color: red}
+tr:nth-child(even) {background-color: #fff6ff}
+tr:nth-child(odd)  {background-color: #fffff6}
+</style>
+<body>
+
+<p><table cellpadding=10>
+<tr><th>Method<th>Description<th>Example
+<tr><td><h3>_get_rectangle_intersections</h3><p>(func1, func2) <td><p>
+    Function dividing two functions of [x,y] coordinates into rectangles
+    corresponding to the number of elements in each function and evaluating
+    the indices where the rectangles intersect.
+
+    <p><b>Input</b>: func1, a numpy array with the two numpy arrays corresponding to x and y
+                  for the first function
+           func2, a numpy array with the two numpy arrays corresponding to x and y
+                  for the second function
+
+    <p><b>Return</b>: (i, j), a tuple where
+                    i is a numpy array with the indices for the
+                    intersections in the first function and
+                    j is a numpy array with the indices for the
+                    intersections in the second function
+ <tr><td><h3>intersection</h3><p>(func1, func2, robust=True) <td><p>
+    Function for calculated the intersection between two curves.
+    Computes the (x,y) locations where two curves intersect.
+
+    The theory is;
+    Given two line segments, L1 and L2,
+
+    with L1 endpoints:  (x1(1),y1(1)) and (x1(2),y1(2))
+    and  L2 endpoints:  (x2(1),y2(1)) and (x2(2),y2(2))
+
+    we can write four equations with four unknowns and then solve them.  The
+    four unknowns are t1, t2, x0 and y0, where (x0,y0) is the intersection of
+    L1 and L2, t1 is the distance from the starting point of L1 to the
+    intersection relative to the length of L1 and t2 is the distance from the
+    starting point of L2 to the intersection relative to the length of L2.
+    So, the four equations are
+
+        (x1(2) - x1(1))*t1 = x0 - x1(1)
+        (x2(2) - x2(1))*t2 = x0 - x2(1)
+        (y1(2) - y1(1))*t1 = y0 - y1(1)
+        (y2(2) - y2(1))*t2 = y0 - y2(1)
+
+    Rearranging and writing in matrix form gives
+
+        [x1(2)-x1(1)       0       -1   0;      [t1;      [-x1(1);
+              0       x2(2)-x2(1)  -1   0;   *   t2;   =   -x2(1);
+         y1(2)-y1(1)       0        0  -1;       x0;       -y1(1);
+              0       y2(2)-y2(1)   0  -1]       y0]       -y2(1)]
+
+    Let's call that A*T = B.  We can solve for T with T = A/B.
+
+    Once we have our solution we just have to look at t1 and t2 to determine
+    whether L1 and L2 intersect.  If 0 <= t1 < 1 and 0 <= t2 < 1 then the two
+    line segments cross and we can include (x0,y0) in the output.
+
+    To avoid having to do this for every line segment, it is checked if the line
+    segments can possibly intersect by dividing line segments into rectangles
+    and testing for an overlap between the triangles.
+
+    <p><b>Input</b>: func1, a numpy array with the two numpy arrays corresponding to x and y
+                  for the first function
+           func2, a numpy array with the two numpy arrays corresponding to x and y
+                  for the second function
+
+    <p><b>Return</b>: i,    a numpy array of floats with the sum of the indices and distances
+                  [0; 1[ to the intersections of func1
+            j,    a numpy array of floats with the sum of the indices and distances
+                  [0; 1[ to the intersections of func2
+            x0,   a numpy array with the x positions of the intersections
+            y0,   a numpy array with the y positions of the intersections
+
+</table>
+</body>
+</html>

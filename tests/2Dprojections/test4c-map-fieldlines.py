@@ -11,6 +11,7 @@ from vita.utility import get_resource
 from vita.modules.equilibrium.fiesta import Fiesta
 from vita.modules.projection.projection2D.field_line.field_line import FieldLine
 from vita.modules.projection.projection2D.field_line.map_field_lines import map_field_lines
+from vita.modules.utils.getOption import getOption
 
 if __name__ == "__main__":
     #FILEPATH = '/home/jmbols/Postdoc/ST40/Programme 1/Equilibrium/eq001_limited.mat'
@@ -39,3 +40,9 @@ if __name__ == "__main__":
     for I in X_AFTER_LCFS:
         plt.plot(FIELD_LINES[I]['R'], FIELD_LINES[I]['Z'])
         plt.plot(FIELD_LINES[I]['Vessel_Intersect'][0], FIELD_LINES[I]['Vessel_Intersect'][1], '*')
+            
+    imageFile = getOption('imageFile')
+    if imageFile :
+        plt.savefig(imageFile)
+    else :
+        plt.show()

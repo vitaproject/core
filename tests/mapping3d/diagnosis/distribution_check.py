@@ -9,8 +9,8 @@ from cherab.tools.primitives import axisymmetric_mesh_from_polygon
 from cherab.tools.equilibrium import plot_equilibrium
 
 from vita.modules.sol_heat_flux.eich import Eich
-from vita.modules.cherab import FieldlineTracer, RK2, InterfaceSurface, sample_power_at_surface
-from vita.modules.cherab import load_wall_configuration
+from vita.modules.projection.cherab import FieldlineTracer, RK2, InterfaceSurface, sample_power_at_surface
+from vita.modules.projection.cherab import load_wall_configuration
 from vita.modules.equilibrium import Fiesta
 from vita.utility import get_resource
 

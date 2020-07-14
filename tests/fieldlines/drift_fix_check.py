@@ -5,8 +5,8 @@ from raysect.core import Point3D, World, rotate_z
 from raysect.primitive import import_ply
 from cherab.tools.equilibrium import plot_equilibrium
 
-from vita.modules.cherab import FieldlineTracer, RK2, RK4
-from vita.modules.fiesta import Fiesta
+from vita.modules.projection.cherab import FieldlineTracer, RK2, RK4
+from vita.modules.equilibrium.fiesta import Fiesta
 from vita.utility import get_resource
 
 

@@ -7,32 +7,33 @@ Created on Thu Mar 26 09:11:19 2020
 """
 import numpy as np
 
+
 def project_heat_flux(x_pos_omp, heat_flux_profile, map_dict):
-    '''
+    """
     Function for mapping the heat flux from the OMP to the divertor. The heat
     flux at a different position is given by:
 
-        q_parallel_surf = R_omp/R_surf*q_parallel_omp/(f_x/cos(alpha)),
+    .. math::
 
-    where R_omp, is the radial coordinate at the OMP, R_surf is the radial coordinates
-    at the surface, q_parallel_omp is the parallel heat flux at the OMP, alpha
-    is the incidence angle of the field-lines with respect to the normal of the
-    surface, and f_x is the flux expansion:
-        
-        f_x = R_omp*B_pol(R_omp, Z_omp)/(R_surf*B_pol(R_surf, Z_surf)),
+       q_{parallel\\_surf} = \\frac{R_{omp}}{R_{surf}} * \\frac{q_{parallel\\_omp}}{(f_x/\\cos(\\alpha))},
 
-    where Z_omp is the vertical position of the OMP (usually 0), Z_surf is
-    the vertical position of the surface, and B_pol is the poloidal magnetic
+    where :math:`R_{omp}`, is the radial coordinate at the OMP, :math:`R_{surf}` is the radial
+    coordinates at the surface, :math:`q_{parallel\\_omp}` is the parallel heat flux at the OMP,
+    :math:`\\alpha` is the incidence angle of the field-lines with respect to the normal of the
+    surface, and :math:`f_x` is the flux expansion:
+
+    .. math::
+
+       f_x = R_{omp}*B_{pol}(R_{omp}, Z_{omp})/(R_{surf}*B_{pol}(R_{surf}, Z_{surf})),
+
+    where :math:`Z_{omp}` is the vertical position of the OMP (usually 0), :math:`Z_{surf}` is
+    the vertical position of the surface, and :math:`B_{pol}` is the poloidal magnetic
     field and the given coordinates.
 
-    Parameters
-    ----------
-    x_pos_omp : n-by-1 np.array
-        Radial coordinates at the OMP
-    heat_flux_profile : n-by-1 np.array
-        Parallel heat flux at the given coordinates
-    map_dict : dictionary
-        Python dictionary with:
+    :param np.ndarray x_pos_omp: Radial coordinates at the OMP
+    :param np.ndarray heat_flux_profile: Parallel heat flux at the given coordinates
+    :param dict map_dict: a python dictionary with:
+
             keys: float
                 x_pos_omp[i], each position at the omp has a corresponding mapped position
             values: dictionary
@@ -43,13 +44,11 @@ def project_heat_flux(x_pos_omp, heat_flux_profile, map_dict):
                     "alpha" : float, incidence angle with respect to the normal
                                      of the surface
                 
+    :rtype: np.ndarray
+    :return: q_surf, the parallel heat flux at the surface position
 
-    Returns
-    -------
-    q_surf : n-by-1 np.array
-        parallel heat flux at the surface position
+    """
 
-    '''
     q_surf = np.zeros(len(x_pos_omp))
     for i in range(len(x_pos_omp)):
         q_surf[i] = x_pos_omp[i]/map_dict[x_pos_omp[i]]["R_pos"] * \
