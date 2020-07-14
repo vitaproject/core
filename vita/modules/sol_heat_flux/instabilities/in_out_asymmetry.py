@@ -28,7 +28,7 @@ class DivertorPowerSharing(object):
         self.lambda_io = lambda_io
         self.p_io_0drsep = p_io_0drsep
         self.p_io_infdrsep = p_io_infdrsep
-        self.p_i = self.p_tot*self._calculate_in_out_asymmetry()
+        self.p_i = self._calculate_in_out_asymmetry()
         self.p_o = self.p_tot - self.p_i
         self.p_il, self.p_iu = self._calculate_hfs_up_down_asymmetry()
         self.p_ol, self.p_ou = self._calculate_lfs_up_down_asymmetry()
