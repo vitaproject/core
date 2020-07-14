@@ -57,9 +57,9 @@ psin2d = equilibrium.psi_normalised
 # HFS mapping
 r0_hfs = fiesta.get_midplane_lcfs()[0]
 r0_lfs = fiesta.get_midplane_lcfs()[1]
-footprint = Eich(1, 0.0001, r0_lfs=r0_lfs, r0_hfs=r0_hfs)  # lambda_q=2.5, S=0.5
+footprint = Eich(1, 0.001, r0_lfs=r0_lfs, r0_hfs=r0_hfs)  # lambda_q=2.5, S=0.5
 
-x = np.linspace(-1, 10, 100)
+x = np.linspace(-0.001, 0.01, 100)
 footprint.set_coordinates(x)
 footprint.s_disconnected_dn_max = 2.1
 footprint.fx_in_out = 5.
