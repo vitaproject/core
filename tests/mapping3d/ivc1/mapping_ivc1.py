@@ -34,9 +34,9 @@ psin2d = equilibrium.psi_normalised
 # setup the heatflux profile #
 
 # specify and load heatflux profile
-footprint = Eich(1, 0.0001)  # lambda_q=2.5, S=0.5
+footprint = Eich(0.001, 0.0001)  # lambda_q=2.5, S=0.5
 
-x = np.linspace(-1, 10, 100)
+x = np.linspace(-0.01, 0.1, 100)
 footprint.set_coordinates(x)
 footprint.s_disconnected_dn_max = 2.1
 footprint.fx_in_out = 5.
@@ -45,6 +45,7 @@ footprint.plot_heat_power_density()
 
 POINT_A = Point2D(0.345941, -0.593439)
 POINT_B = Point2D(0.51091, -0.757166)
+
 power_profile = sample_power_at_surface(POINT_A, POINT_B, equilibrium, footprint)
 interface_power = 1e6  # 1MW
 angle_period = 45
