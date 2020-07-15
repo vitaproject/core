@@ -41,12 +41,18 @@ jobs:
 
     - name: Install software packages
       run: |
+        echo Debug: Tell CPAN to automatically install dependancies
         export PERL_MM_USE_DEFAULT=1
+        echo Debug: Perform CPAN installations
         sudo cpan install Data::Table::Text GitHub::Crud Data::Dump 1>/dev/null
+        echo Debug: Perform apt updates
         sudo apt update  -qq
+        echo Debug: apt install python-configobj tree
         sudo apt install -qq python-configobj tree
         mkdir -p out
+        echo Debug: run tree
         tree
+        echo Debug: pip install some python3 packages
         python3 -m pip install --upgrade pip --user vtk scipy numpy matplotlib cherab h5py
 
     - name: Run unit tests
