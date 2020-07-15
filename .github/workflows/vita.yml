@@ -41,6 +41,8 @@ jobs:
 
     - name: Install software packages
       run: |
+        echo Debug: Updating CPAN
+        cpan[1]> upgrade
         echo Debug: Tell CPAN to automatically install dependancies
         export PERL_MM_USE_DEFAULT=1
         echo Debug: Perform CPAN installations
