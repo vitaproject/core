@@ -105,8 +105,8 @@ class DivertorPowerSharing(object):
             The power that flows to the upper LFS divertor
 
         '''
-        p_ol = self.p_o/(1 + np.exp(-self.d_rsep/self.lambda_q_lfs))
+        p_ol = self.p_o/(1 + np.exp(self.d_rsep/self.lambda_q_lfs))
 
-        p_ou = self.p_o/(1 + np.exp(self.d_rsep/self.lambda_q_lfs))
+        p_ou = self.p_o/(1 + np.exp(-self.d_rsep/self.lambda_q_lfs))
 
         return p_ol, p_ou
