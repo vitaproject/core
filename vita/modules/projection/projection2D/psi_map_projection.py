@@ -173,8 +173,8 @@ def map_psi_omp_to_divertor(x_axis_omp, divertor_coords, fiesta, location='lfs')
 
     :param np.ndarray x_axis_omp: Numpy array with the radial coordinates we wish to map at the OMP
     :param Fiesta fiesta: A Fiesta object with the 2D equilibrium we wish to map
-    :param np.ndarray divertor_coords: A 2-x-2 numpy array containg the corner points of the divertor in the
-      2D projection
+    :param np.ndarray divertor_coords: A 2-x-2 numpy array containg the corner
+                                       points of the divertor in the 2D projection
     :param string location: a string with the location to evaluate, either 'hfs'
                             or 'lfs'. Default is 'lfs'
     :rtype: dict
