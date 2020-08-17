@@ -233,16 +233,17 @@ def map_psi_omp_to_divertor(x_axis_omp, divertor_coords, fiesta, location='lfs')
         # Evaluate the corresponding point just above the divertor (for
         # calculating the angle of incidence)
         r_above = _shooting_algorithm(divertor_x, psi_n_interp,
-                                      divertor_polyfit_above, psi_n)
+                                      divertor_polyfit_above, psi_n, location=location)
 
         # Evaluate the corresponding point just below the divertor (for
         # calculating the angle of incidence)
         r_below = _shooting_algorithm(divertor_x, psi_n_interp,
-                                      divertor_polyfit_below, psi_n)
+                                      divertor_polyfit_below, psi_n, location=location)
 
         # Calculate the flux expansion
         f_x = _flux_expansion(b_pol_interp, [point, 0],
                               [r_mid, divertor_polyfit(r_mid)])
+
         r_div.append(r_mid)
         r_div_above.append(r_above)
         r_div_below.append(r_below)
