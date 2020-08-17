@@ -8,7 +8,7 @@ Created on Wed Mar 18 11:05:27 2020
 
 import numpy as np
 
-class DivertorPowerSharing(object):
+class DivertorPowerSharing():
     '''
     Class for storing the in-out and up-down power asymmetries calculated based
     on the C-mod paper:
