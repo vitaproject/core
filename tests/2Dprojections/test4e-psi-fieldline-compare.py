@@ -26,7 +26,7 @@ if __name__ == "__main__":
     FIELD_LINE = FieldLine(FILEPATH)
     MID_PLANE_LOC = FIESTA.get_midplane_lcfs()[1]
 
-    FOOTPRINT = Eich(0.0025, 0.0005, r0_lfs=MID_PLANE_LOC)  # lambda_q=2.5, S=0.5
+    FOOTPRINT = Eich(0.0025, 0.0005, r0_lfs=MID_PLANE_LOC+0.001)  # lambda_q=2.5, S=0.5
 
     X_OMP = np.linspace(0, 10, 100)*1e-3
     FOOTPRINT.set_coordinates(X_OMP)
