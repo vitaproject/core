@@ -35,9 +35,9 @@ psin2d = equilibrium.psi_normalised
 # setup the heatflux profile #
 
 # specify and load heatflux profile
-footprint = Eich(0.001, 0.0001)  # lambda_q=2.5, S=0.5
+footprint = Eich(2.5E-3, 0.0001E-3)  # lambda_q=2.5, S=0.5
 
-x = np.linspace(-0.01, 0.1, 100)
+x = np.linspace(-1, 10, 100)*1E-3
 footprint.set_coordinates(x)
 footprint.s_disconnected_dn_max = 2.1
 footprint.fx_in_out = 5.
@@ -54,4 +54,4 @@ interface_surface = InterfaceSurface(POINT_A, POINT_B, power_profile, interface_
 interface_surface.histogram_plot()
 
 interface_surface.map_power(interface_power, angle_period, field_tracer, world,
-                            num_of_fieldlines=5000, phi_offset=-angle_period/2-5, debug_output=True)
+                            num_of_fieldlines=30000, phi_offset=-angle_period/2-5, debug_output=True)
