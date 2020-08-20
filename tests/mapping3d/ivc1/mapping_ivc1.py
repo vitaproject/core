@@ -2,7 +2,8 @@
 import numpy as np
 from raysect.core import Point2D, World
 
-from vita.modules.sol_heat_flux.eich import Eich
+
+from vita.modules.sol_heat_flux.eich.eich import Eich
 from vita.modules.projection.cherab import FieldlineTracer, RK2, InterfaceSurface, sample_power_at_surface
 from vita.modules.projection.cherab import load_wall_configuration
 from vita.modules.equilibrium.fiesta import Fiesta
