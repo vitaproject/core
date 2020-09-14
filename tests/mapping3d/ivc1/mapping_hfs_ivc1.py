@@ -2,8 +2,8 @@
 import numpy as np
 from raysect.core import Point2D, World
 
-from vita.modules.sol_heat_flux.eich import Eich
-from vita.modules.projection.cherab import FieldlineTracer, RK2, InterfaceSurface, sample_power_at_surface
+from vita.modules.sol_heat_flux.eich.eich import Eich
+from vita.modules.projection.cherab import FieldlineTracer, RK2, RK4, InterfaceSurface, sample_power_at_surface
 from vita.modules.projection.cherab import load_wall_configuration
 from vita.modules.equilibrium.fiesta import Fiesta
 from vita.utility import get_resource
@@ -55,15 +55,17 @@ psin2d = equilibrium.psi_normalised
 
 
 # HFS mapping
-footprint = Eich(1, 0.0001)  # lambda_q=2.5, S=0.5
+r0_hfs = fiesta.get_midplane_lcfs()[0]
+r0_lfs = fiesta.get_midplane_lcfs()[1]
+footprint = Eich(1, 0.001, r0_lfs=r0_lfs, r0_hfs=r0_hfs)  # lambda_q=2.5, S=0.5
 
-x = np.linspace(-1, 10, 100)
+x = np.linspace(-0.001, 0.01, 100)
 footprint.set_coordinates(x)
 footprint.s_disconnected_dn_max = 2.1
 footprint.fx_in_out = 5.
 footprint.calculate_heat_flux_density("hfs")
 
-field_tracer = FieldlineTracer(b_field, method=RK2(step_size=0.0001, direction="negative"))
+field_tracer = FieldlineTracer(b_field, method=RK4(step_size=0.0001, direction="negative"))
 
 # HFS interface
 POINT_A = Point2D(0.25, -0.5)
@@ -80,3 +82,4 @@ interface_surface.histogram_plot()
 
 interface_surface.map_power(interface_power, angle_period, field_tracer, world,
                             num_of_fieldlines=5000, phi_offset=-angle_period/2, debug_output=True)
+interface_surface.poloidal_trajectory_plot(field_tracer, world, equilibrium)

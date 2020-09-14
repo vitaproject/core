@@ -2,18 +2,13 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Oct 22 09:53:55 2019
-
 Addapted from: ReadEQDSK
-
 Original AUTHOR: Leonardo Pigatto
 Maintainer: jmbols
-
 DESCRIPTION
 Python function to read EQDSK files
-
 CALLING SEQUENCE
 out = ReadEQDSK(in_filename)
-
 CHANGE HISTORY:
 -started on 29/09/2015 - porting from Matlab
 -16/10/2015 - generators introduced for reading input file
@@ -22,7 +17,6 @@ CHANGE HISTORY:
 -02/2018 - added  backwards compatibility with python 2
 -15/07/2020 - changed to comply with PEP8
 NOTES:
-
 """
 try:
     import builtins                  # <- python 3
@@ -87,17 +81,14 @@ class Equdsk():
     def read_eqdsk(self, in_filename):
         '''
         Function for reading the equdsk variables given a filename
-
         Parameters
         ----------
         in_filename : string
             A string with the equdsk filename to load
-
         Raises
         ------
         IOError
             Raises error if the array is not loaded.
-
         Returns
         -------
         None
@@ -227,11 +218,9 @@ class Equdsk():
     def get_midplane_lcfs(self, psi_p=1.0001):
         '''
         Function for getting the inner and outer radial position of the LCFS at the midplane
-
         input: self,  a reference to the object itself
                psi_p, the flux surface of the LCFS, standard is psi_p = 1.005
                (otherwise the field-line is located inside the LCFS)
-
         return: Rcross, a list with the outer and inner radial position of the mid-plane LCFS
         '''
 
