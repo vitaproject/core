@@ -164,11 +164,11 @@ class Fiesta:
         b_vacuum_radius = self.b_vac_radius
         b_vacuum_magnitude = self.b_vac
 
-        lcfs_polygon = self.lcfs_polygon  # shape 2xM, indexing to remove duplicated point
-        if np.all(lcfs_polygon[:, 0] == lcfs_polygon[:, -1]):
-            lcfs_polygon = lcfs_polygon[:, 0:-1]
+        # ensure no duplicate points in polygons
+        lcfs_polygon = self._prune_duplicate_vertices(self.lcfs_polygon)
 
         limiter_polygon = np.array([self.r_limiter, self.z_limiter])  # 2xM
+        limiter_polygon = self._prune_duplicate_vertices(limiter_polygon)
 
         time = 0.0
 
@@ -178,6 +178,30 @@ class Fiesta:
                                       lcfs_polygon, limiter_polygon, time)
 
         return equilibrium
+
+    @staticmethod
+    def _prune_duplicate_vertices(polygon):
+        """
+        Removes duplicate vertices from a 2xM array.
+
+        Used to ensure a simple polygon (i.e. the ear splitting algorithm in Cherab can be used).
+        """
+
+        polygon_vertices = list(zip(polygon[0, :], polygon[1, :]))
+        prunned_vertices = []
+        unique_vertices = set()
+
+        for i in range(len(polygon_vertices)):
+
+            vertex = polygon_vertices[i]
+
+            if vertex not in unique_vertices:
+                unique_vertices.add(vertex)
+                prunned_vertices.append(vertex)
+
+        polygon_vertices = np.array(list(zip(*prunned_vertices)))
+
+        return polygon_vertices
 
 
 if __name__ == '__main__':
