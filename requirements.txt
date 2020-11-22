@@ -3,4 +3,5 @@ numpy
 scipy
 matplotlib
 h5py
+vtk
 cherab
