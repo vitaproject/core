@@ -9,7 +9,8 @@ import numpy as np
 from cherab.core.math import Interpolate2DCubic
 
 def _shooting_algorithm(x_lims, function, function_z_from_r,
-                        psi_target, tol=1.e-8, n_max=50):
+                        psi_target, tol=1.e-8, n_max=50,
+                        location='lfs'):
     '''
     Function implementing the shooting algorithm.
     Given the function psi = f(r), where psi is known and f is a known function
@@ -22,6 +23,8 @@ def _shooting_algorithm(x_lims, function, function_z_from_r,
         4. If no, then break and return x_mid. If yes then check if
            f(x_mid) - y < 0.
         5. If f(x_mid) - y < 0, set x_mid = x_lower, else set x_mid = x_upper
+           if the location is set to lfs, if it is hfs it is opposite, otherwise
+           return an error
         6. Repeat until n iteration or the error is below the tolerance
 
     Parameters
@@ -43,6 +46,9 @@ def _shooting_algorithm(x_lims, function, function_z_from_r,
     n_max : integer
         Maximum number of iterations allowed.
         Default is 50
+    location : string
+        Which position to look at. Either 'lfs' or 'hfs'.
+        Default is lfs
 
     Returns
     -------
@@ -56,10 +62,16 @@ def _shooting_algorithm(x_lims, function, function_z_from_r,
         x_mid = (x_lower + x_upper)/2
         psi = function(x_mid, function_z_from_r(x_mid))
         if abs(psi - psi_target) > tol:
-            if (psi - psi_target) < 0.:
-                x_lower = x_mid
-            else:
-                x_upper = x_mid
+            if location == 'lfs':
+                if (psi - psi_target) < 0.:
+                    x_lower = x_mid
+                else:
+                    x_upper = x_mid
+            elif location == 'hfs':
+                if (psi - psi_target) < 0.:
+                    x_upper = x_mid
+                else:
+                    x_lower = x_mid
         else:
             break
     return x_mid
@@ -153,7 +165,7 @@ def _calculate_angles(v_1_vectors, v_2):
 
     return angles
 
-def map_psi_omp_to_divertor(x_axis_omp, divertor_coords, fiesta):
+def map_psi_omp_to_divertor(x_axis_omp, divertor_coords, fiesta, location='lfs'):
     """
     Function mapping the normalised psi from the specified coordinates at the
     OMP to the specified coordinates at the divertor. Currently the divertor is
@@ -161,8 +173,10 @@ def map_psi_omp_to_divertor(x_axis_omp, divertor_coords, fiesta):
 
     :param np.ndarray x_axis_omp: Numpy array with the radial coordinates we wish to map at the OMP
     :param Fiesta fiesta: A Fiesta object with the 2D equilibrium we wish to map
-    :param np.ndarray divertor_coords: A 2-x-2 numpy array containg the corner points of the divertor in the
-      2D projection
+    :param np.ndarray divertor_coords: A 2-x-2 numpy array containg the corner
+                                       points of the divertor in the 2D projection
+    :param string location: a string with the location to evaluate, either 'hfs'
+                            or 'lfs'. Default is 'lfs'
     :rtype: dict
     :return: A dictionary containing:
 
@@ -201,7 +215,7 @@ def map_psi_omp_to_divertor(x_axis_omp, divertor_coords, fiesta):
     psi_n_interp = Interpolate2DCubic(fiesta.r_vec, fiesta.z_vec, fiesta.psi_n.T)
 
     # Interpolate b_pol (to be used when evaluating the flux expansion)
-    b_pol = np.sqrt(fiesta.b_r**2 + fiesta.b_theta**2 + fiesta.b_z**2).T
+    b_pol = fiesta.b_theta.T #np.sqrt(fiesta.b_r**2 + fiesta.b_theta**2 + fiesta.b_z**2).T
     b_pol_interp = Interpolate2DCubic(fiesta.r_vec, fiesta.z_vec, b_pol)
 
     r_div = []
@@ -214,21 +228,22 @@ def map_psi_omp_to_divertor(x_axis_omp, divertor_coords, fiesta):
 
         # Evaluate the corresponding point at the divertor
         r_mid = _shooting_algorithm(divertor_x, psi_n_interp,
-                                    divertor_polyfit, psi_n)
+                                    divertor_polyfit, psi_n, location=location)
 
         # Evaluate the corresponding point just above the divertor (for
         # calculating the angle of incidence)
         r_above = _shooting_algorithm(divertor_x, psi_n_interp,
-                                      divertor_polyfit_above, psi_n)
+                                      divertor_polyfit_above, psi_n, location=location)
 
         # Evaluate the corresponding point just below the divertor (for
         # calculating the angle of incidence)
         r_below = _shooting_algorithm(divertor_x, psi_n_interp,
-                                      divertor_polyfit_below, psi_n)
+                                      divertor_polyfit_below, psi_n, location=location)
 
         # Calculate the flux expansion
         f_x = _flux_expansion(b_pol_interp, [point, 0],
                               [r_mid, divertor_polyfit(r_mid)])
+
         r_div.append(r_mid)
         r_div_above.append(r_above)
         r_div_below.append(r_below)

@@ -61,7 +61,7 @@ def load_wall_configuration(config_file, parent):
 
         mesh = importer(mesh_file, scaling=scaling, name=name, transform=rotate_z(rotation_offset))
         for i in range(mesh_instances):
-            mesh.instance(material=material, parent=parent, transform=rotate_z(i * 45), name=name)
+            mesh.instance(material=material, parent=parent, transform=rotate_z(i * period), name=name)
 
 
 _import_functions = {

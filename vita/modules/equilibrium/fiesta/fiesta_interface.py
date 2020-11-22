@@ -46,16 +46,26 @@ class Fiesta:
 
         input: self, a reference the object itself
 
-        output: self.r_limiter, a numpy array with the radial coordinates of the vessel limits
-                self.z_limiter, a numpy array with the vertical coordinates of the vessel limits
-                self.r_vec,     a numpy array with the radial grid coordinates
-                self.z_vec,     a numpy array with the vertical grid coordinates
-                self.psi_n,
-                self.b_r,       a numpy array with the radial magnetic field component
-                self.b_z        a numpy array with the vertical field component
-                self.b_phi,     a numpy array with the toroidal field component
-                self.b_theta,   a numpy array with the poloidal magnetic field component
-                self.i_rod      a float with the current in the rod
+        output: self.r_limiter,    a numpy array with the radial coordinates of the vessel limits
+                self.z_limiter,    a numpy array with the vertical coordinates of the vessel limits
+                self.r_vec,        a numpy array with the radial grid coordinates
+                self.z_vec,        a numpy array with the vertical grid coordinates
+                self.psi,          a numpy array with the flux coordinates
+                self.psi_n,        a numpy array with the normalised flux coordinate
+                self.psi_axis,
+                self.psi_lcfs,
+                self.mag_axis,
+                self.b_r,          a numpy array with the radial magnetic field component
+                self.b_z           a numpy array with the vertical field component
+                self.b_phi,        a numpy array with the toroidal field component
+                self.b_theta,      a numpy array with the poloidal magnetic field component
+                self.b_vac_radius, a
+                self.b_vac,
+                self.i_rod,        a float with the current in the rod
+                self.x_points,
+                self.f_profile,
+                self.q_profile,
+                self.lcfs_polygon,
         '''
         # Read data from .mat file
         mat = sio.loadmat(self.filename, mat_dtype=True, squeeze_me=True)
@@ -67,10 +77,10 @@ class Fiesta:
         # Get grid data
         self.r_vec = mat['r']
         self.z_vec = mat['z']
+        self.psi_n = mat['psi_n']
 
         # Get magnetic data
         self.psi = mat['psi']
-        self.psi_n = mat['psi_n']
         self.psi_axis = mat['psi_a']
         self.psi_lcfs = mat['psi_b']
         self.mag_axis = mat['mag_axis']
@@ -86,7 +96,7 @@ class Fiesta:
         self.q_profile = mat['q_profile']
         self.lcfs_polygon = mat['lcfs_polygon']
 
-    def get_midplane_lcfs(self, psi_p=1.005):
+    def get_midplane_lcfs(self, psi_p=1.0005):
         '''
         Function for getting the inner and outer radial position of the LCFS at the midplane
 
@@ -96,8 +106,8 @@ class Fiesta:
 
         return: Rcross, a list with the outer and inner radial position of the mid-plane LCFS
         '''
-
         r_vec, z_vec = np.meshgrid(self.r_vec, self.z_vec)
+
         # Get contour
         cont = plt.contour(r_vec, z_vec, self.psi_n, [psi_p])
         cont = cont.allsegs[0]
@@ -135,8 +145,8 @@ class Fiesta:
         except ImportError:
             raise RuntimeError("CHERAB integration not installed.")
 
-        r_vec = self.r_vec
-        z_vec = self.z_vec
+        r_vec, z_vec = self.r_vec, self.z_vec
+
         psi = np.swapaxes(self.psi, 0, 1)
         psi_axis = self.psi_axis
         psi_lcfs = self.psi_lcfs
@@ -154,11 +164,11 @@ class Fiesta:
         b_vacuum_radius = self.b_vac_radius
         b_vacuum_magnitude = self.b_vac
 
-        lcfs_polygon = self.lcfs_polygon  # shape 2xM, indexing to remove duplicated point
-        if np.all(lcfs_polygon[:, 0] == lcfs_polygon[:, -1]):
-            lcfs_polygon = lcfs_polygon[:, 0:-1]
+        # ensure no duplicate points in polygons
+        lcfs_polygon = self._prune_duplicate_vertices(self.lcfs_polygon)
 
         limiter_polygon = np.array([self.r_limiter, self.z_limiter])  # 2xM
+        limiter_polygon = self._prune_duplicate_vertices(limiter_polygon)
 
         time = 0.0
 
@@ -168,6 +178,30 @@ class Fiesta:
                                       lcfs_polygon, limiter_polygon, time)
 
         return equilibrium
+
+    @staticmethod
+    def _prune_duplicate_vertices(polygon):
+        """
+        Removes duplicate vertices from a 2xM array.
+
+        Used to ensure a simple polygon (i.e. the ear splitting algorithm in Cherab can be used).
+        """
+
+        polygon_vertices = list(zip(polygon[0, :], polygon[1, :]))
+        prunned_vertices = []
+        unique_vertices = set()
+
+        for i in range(len(polygon_vertices)):
+
+            vertex = polygon_vertices[i]
+
+            if vertex not in unique_vertices:
+                unique_vertices.add(vertex)
+                prunned_vertices.append(vertex)
+
+        polygon_vertices = np.array(list(zip(*prunned_vertices)))
+
+        return polygon_vertices
 
 
 if __name__ == '__main__':

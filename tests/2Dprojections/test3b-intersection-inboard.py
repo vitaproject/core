@@ -64,8 +64,8 @@ else :
 print(midplane_range)
 fx = []
 for i in range(len(midplane_range)-1):
-    fx.append( math.hypot(x_p[i+1] - x_p[i], y_p[i+1] - y_p[i]) /
-              ( midplane_range[i+1] - midplane_range[i] ) *
+    fx.append( math.hypot(x_p[i] - x_p[i+1], y_p[i] - y_p[i+1]) /
+              ( midplane_range[i] - midplane_range[i+1] ) *
               ( x_p[i] / midplane_range[i] )
              )
 print("Flux_expansion = ", fx)

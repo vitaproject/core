@@ -3,7 +3,6 @@ import numpy as np
 from mayavi import mlab
 from raysect.core import Point3D, World
 from raysect.primitive import import_obj
-
 from vita.modules.projection.cherab import FieldlineTracer, RK2
 from vita.modules.equilibrium.fiesta import Fiesta
 from vita.utility import get_resource
