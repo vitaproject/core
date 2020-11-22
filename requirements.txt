@@ -2,3 +2,6 @@ cython
 numpy
 scipy
 matplotlib
+vtk
+h5py
+cherab

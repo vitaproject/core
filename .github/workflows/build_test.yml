@@ -24,4 +24,5 @@ jobs:
 
     - name: Run unit tests
       run: |
+        export VITADATA=data  # Location of machine configurations
         python -m unittest
