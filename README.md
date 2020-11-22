@@ -1,4 +1,4 @@
-https://github.com/vitaproject/core/workflows/Build%20test/badge.svg
+![Build Status](https://github.com/vitaproject/core/workflows/Build%20test/badge.svg)
 
 # Installation instructions
 
