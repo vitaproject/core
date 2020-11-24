@@ -7,7 +7,7 @@ try:
     from .machine_configuration import load_wall_configuration
     from .b_field import MagneticField
     from .tracer import FieldlineTracer, Euler, RK2, RK4
-    from .interface_surface import InterfaceSurface, sample_power_at_surface
+    from .interface_surface import InterfaceSurface, sample_power_at_surface, sample_power_at_surface_psi
 
 except ImportError:
     pass
