@@ -529,3 +529,4 @@ def sample_power_at_surface_psi(point_a, point_b, equilibrium, heat_load,
         powers_along_interface = powers_along_interface[::-1]
 
     return np.array(powers_along_interface)
+
