@@ -58,7 +58,7 @@ def _shooting_algorithm(x_lims, function, function_z_from_r,
     '''
     x_lower = x_lims[0]
     x_upper = x_lims[1]
-    for _ in range(n_max):
+    for i in range(n_max):
         x_mid = (x_lower + x_upper)/2
         psi = function(x_mid, function_z_from_r(x_mid))
         if abs(psi - psi_target) > tol:
@@ -74,6 +74,8 @@ def _shooting_algorithm(x_lims, function, function_z_from_r,
                     x_lower = x_mid
         else:
             break
+    if i==49:
+        print("Warning: map_psi_omp_to_divertor._shooting_algorithm\n Convergence not reached")
     return x_mid
 
 def _flux_expansion(b_pol, points_omp, points_div):
