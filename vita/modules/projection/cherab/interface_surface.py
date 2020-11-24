@@ -16,6 +16,8 @@ from cherab.tools.equilibrium import EFITEquilibrium, plot_equilibrium
 from cherab.core.math import Interpolate1DCubic
 
 from vita.modules.sol_heat_flux.mid_plane_heat_flux import HeatLoad
+from vita.modules.equilibrium import Fiesta
+from vita.modules.projection.projection2D.psi_map_projection import map_psi_omp_to_divertor
 
 
 class InterfaceSurface:
@@ -203,6 +205,7 @@ class InterfaceSurface:
 
                 mesh_primitive = meshes[mesh_name]
                 powers = mesh_powers[mesh_name]
+
                 hitpoints = np.array(mesh_hitpoints[mesh_name])
 
                 output_filename = mesh_name + ".vtk"
@@ -356,7 +359,7 @@ def sample_power_at_surface(point_a, point_b, equilibrium, heat_load,
     :param int num_samples: the number of heat profile samples over the range.
     :param float lcfs_radii_min: lower bound for lcfs radius search.
     :param float lcfs_radii_max: upper bound for lcfs radius search.
-    :param str side: the LFS or HFS of the tokamak (default='HFS').
+    :param str side: the LFS or HFS of the tokamak (default='LFS').
     """
 
     if not isinstance(point_a, Point2D):
@@ -371,8 +374,8 @@ def sample_power_at_surface(point_a, point_b, equilibrium, heat_load,
     if not point_a.distance_to(point_b) > 0:
         raise ValueError("Point A and Point B cannot be co-located.")
 
-    if not isinstance(equilibrium, EFITEquilibrium):
-        raise TypeError("The specified equilibrium must be an EFITEquilibrium.")
+    if not isinstance(equilibrium, Fiesta):
+        raise TypeError("The specified equilibrium must be a Fiesta object.")
 
     if not isinstance(heat_load, HeatLoad):
         raise TypeError("The specified heat_load variable must be of type HeatLoad, e.g. Eich().)")
@@ -380,6 +383,7 @@ def sample_power_at_surface(point_a, point_b, equilibrium, heat_load,
     if not (isinstance(num_samples, int) and num_samples > 0):
         raise TypeError("The number of spatial samples num_samples must be an integer > 0.")
 
+    equilibrium = equilibrium.to_cherab_equilibrium()
     psin2d = equilibrium.psi_normalised
 
     # TODO - this is bad, needs to be refactored somehow
@@ -467,5 +471,61 @@ def sample_power_at_surface(point_a, point_b, equilibrium, heat_load,
         interface_psin.append(psin)
         q = psin_to_q_func(psin) * flux_expansion_factor
         powers_along_interface.append(q)
+
+    return np.array(powers_along_interface)
+
+def sample_power_at_surface_psi(point_a, point_b, equilibrium, heat_load,
+                            s_min=-0.01, s_max=0.1, num_samples=1000,
+                            lcfs_radii_min=0.7, lcfs_radii_max=0.9, side="LFS"):
+    """
+    Sample the power profile from an upstream heat profile along an interface surface in the divertor.
+
+    :param Point2D point_a: A 2D point representing the start of the interface surface.
+    :param Point2D point_b: A 2D point representing the end of the interface surface.
+    :param EFITEquilibrium equilibrium: the equilibrium to use for the mapping.
+    :param HeatLoad heat_load: the upstream mid-plane heat profile.
+    :param float s_min: the lower range for heat profile sampling.
+    :param float s_max: the upper range for heat profile sampling.
+    :param int num_samples: the number of heat profile samples over the range.
+    :param float lcfs_radii_min: lower bound for lcfs radius search.
+    :param float lcfs_radii_max: upper bound for lcfs radius search.
+    :param str side: the LFS or HFS of the tokamak (default='LFS').
+    """
+
+    if not isinstance(point_a, Point2D):
+        raise TypeError("Variable point_a must be a Point2D")
+
+    if not isinstance(point_b, Point2D):
+        raise TypeError("Variable point_b must be a Point2D")
+
+    if not point_b.x >= point_a.x:
+        raise ValueError("Point B must be the outer radial point, or vertically aligned with Point A.")
+
+    if not point_a.distance_to(point_b) > 0:
+        raise ValueError("Point A and Point B cannot be co-located.")
+
+    if not isinstance(equilibrium, Fiesta):
+        raise TypeError("The specified equilibrium must be an EFITEquilibrium.")
+
+    if not isinstance(heat_load, HeatLoad):
+        raise TypeError("The specified heat_load variable must be of type HeatLoad, e.g. Eich().)")
+
+    if not (isinstance(num_samples, int) and num_samples > 0):
+        raise TypeError("The number of spatial samples num_samples must be an integer > 0.")
+
+    side = side.lower()
+
+    x_axis_omp_global = heat_load.get_global_coordinates(location=side)
+    divertor_coords = np.array([[point_a[0], point_b[0]], [point_a[1], point_b[1]]])
+    psi_map = map_psi_omp_to_divertor(x_axis_omp_global, divertor_coords, equilibrium, location=side)
+
+    r_div = np.array([psi_map[key]["R_pos"] for key in psi_map])
+    angles = np.array([psi_map[key]["alpha"] for key in psi_map])
+    f_x = np.array([psi_map[key]["f_x"] for key in psi_map])
+
+    powers_along_interface = heat_load._q*x_axis_omp_global/(r_div*f_x/np.cos(angles))
+
+    if side=="hfs":
+        powers_along_interface = powers_along_interface[::-1]
 
     return np.array(powers_along_interface)
