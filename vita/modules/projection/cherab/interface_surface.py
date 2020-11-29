@@ -224,9 +224,11 @@ class InterfaceSurface:
 
     def _write_mesh_power_vtk(self, filename, powers, mesh_primitive):
 
+        normalised_power = powers.copy()
+
         # normalise power per area
-        for i in range(powers.shape[0]):
-            if powers[i] > 0:
+        for i in range(normalised_power.shape[0]):
+            if normalised_power[i] > 0:
                 triangle = mesh_primitive.data.triangle(i)
                 p1 = mesh_primitive.data.vertex(triangle[0])
                 p2 = mesh_primitive.data.vertex(triangle[1])
@@ -234,9 +236,9 @@ class InterfaceSurface:
                 v12 = p1.vector_to(p2)
                 v13 = p1.vector_to(p3)
                 tri_area = v12.cross(v13).length / 2
-                powers[i] /= tri_area
+                normalised_power[i] /= tri_area
 
-        export_vtk(mesh_primitive, filename, triangle_data={"power": powers})
+        export_vtk(mesh_primitive, filename, triangle_data={"power": powers, "normalised_power": normalised_power})
 
     def _write_mesh_points_vtk(self, filename, points, power_per_point):
 
