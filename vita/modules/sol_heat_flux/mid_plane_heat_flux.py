@@ -157,8 +157,9 @@ class HeatLoad():
 
         '''
         plt.plot(self._s, self._q)
-        plt.xlabel('$s$')
-        plt.ylabel('$q(s)$')
+        plt.xlabel('$s$ - Distance (m)')
+        plt.ylabel('$q(s)$ - Normalised power')
+        plt.title('Outer mid-plane heat profile')
 
         imageFile = getOption('imageFile')
         if imageFile :

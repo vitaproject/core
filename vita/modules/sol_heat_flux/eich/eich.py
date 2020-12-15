@@ -19,7 +19,7 @@ class Eich(HeatLoad):
         calculate_heat_flux_density: Function for calculating the heat-flux given
         a set of input parameters.
     '''
-    def __init__(self, lambda_q=1.5e-3, S=0., r0_lfs=0., r0_hfs=0.):
+    def __init__(self, lambda_q=1.5e-3, S=0., r0_lfs=0., r0_hfs=0., q_0 = 1.):
         '''
         Inputs for the class are
 
@@ -42,7 +42,7 @@ class Eich(HeatLoad):
         HeatLoad.__init__(self, r0_lfs, r0_hfs)
         self.lambda_q = lambda_q
         self.S = S
-        self.q_0 = 1.
+        self.q_0 = q_0
         self.model_type = "Eich"
 
     def calculate_heat_flux_density(self, where="lfs-mp"):
