@@ -178,6 +178,9 @@ class InterfaceSurface:
                 seedpoints.append(seed_point)
 
             else:
+                if debug_output:
+                    print(f'Fieldline {i} reached the maximum tracing length of '
+                          f'{max_tracing_length} m and found no intersections.')
                 null_intersections += 1
                 lost_power += power_per_fieldline
 
